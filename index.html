@@ -46,6 +46,9 @@
       background: #d6d3d1;
       border-radius: 9999px;
     }
+    button, a, select, input, textarea {
+      cursor: pointer;
+    }
   </style>
 </head>
 <body class="text-brand-dark min-h-screen flex flex-col antialiased">
@@ -74,19 +77,19 @@
         <div class="h-6 w-px bg-stone-200 hidden sm:block"></div>
 
         <nav class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl">
-          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs cursor-pointer">
+          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs">
             <i class="ph-bold ph-cooking-pot text-sm"></i>
             <span>Prep & Recipes</span>
           </button>
-          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer">
+          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
             <i class="ph-bold ph-fork-knife text-sm"></i>
             <span>Kitchen SOPs</span>
           </button>
-          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer">
+          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
             <i class="ph-bold ph-coffee text-sm"></i>
             <span>Barista & Bar</span>
           </button>
-          <button onclick="setSection('training')" id="tab-training" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer">
+          <button onclick="setSection('training')" id="tab-training" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
             <i class="ph-bold ph-certificate text-sm"></i>
             <span>Training</span>
           </button>
@@ -100,7 +103,7 @@
             class="w-full bg-stone-100 border border-transparent focus:border-stone-400 focus:bg-white rounded-lg pl-8 pr-3 py-1 text-xs outline-none transition font-medium">
         </div>
 
-        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition cursor-pointer">
+        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition">
           <i id="manager-icon" class="ph-bold ph-lock-key text-xs"></i>
           <span id="manager-label" class="hidden sm:inline">Staff Mode</span>
         </button>
@@ -119,14 +122,14 @@
         <span class="text-stone-400 text-[10px]">Changes sync across all tablets live.</span>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition cursor-pointer">
+        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition">
           <i class="ph-bold ph-plus-circle"></i>
           <span>+ Add Spec (File / Drive / Text)</span>
         </button>
-        <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition cursor-pointer">
+        <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition">
           Change PIN
         </button>
-        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold cursor-pointer">
+        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold">
           Lock Hub
         </button>
       </div>
@@ -150,7 +153,7 @@
         <i class="ph-bold ph-notebook"></i>
       </div>
       <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider">No specs loaded yet</h3>
-      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode and drop in your first HTML, PDF, or Photo.</p>
+      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode (PIN: 1234) and drop in your first spec.</p>
     </div>
 
     <!-- TRAINING VIEW -->
@@ -192,22 +195,21 @@
         </div>
         <div class="flex items-center gap-2">
           <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold"></div>
-          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg cursor-pointer">
+          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-x"></i>
           </button>
         </div>
       </div>
       
-      <!-- Modal Content Body -->
       <div id="modal-body-content" class="flex-1 overflow-y-auto p-4 sm:p-5 custom-scrollbar"></div>
       
       <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
         <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
         <div class="flex items-center gap-2">
-          <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition cursor-pointer">
+          <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition">
             Delete Spec
           </button>
-          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg cursor-pointer">Done</button>
+          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg">Done</button>
         </div>
       </div>
     </div>
@@ -230,18 +232,18 @@
       </div>
 
       <div class="grid grid-cols-3 gap-2 max-w-[200px] mx-auto mb-3">
-        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">1</button>
-        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">2</button>
-        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">3</button>
-        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">4</button>
-        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">5</button>
-        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">6</button>
-        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">7</button>
-        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">8</button>
-        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">9</button>
-        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600 cursor-pointer">C</button>
-        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">0</button>
-        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600 cursor-pointer">Cancel</button>
+        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">1</button>
+        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">2</button>
+        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">3</button>
+        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">4</button>
+        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">5</button>
+        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">6</button>
+        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">7</button>
+        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">8</button>
+        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">9</button>
+        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600">C</button>
+        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">0</button>
+        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600">Cancel</button>
       </div>
     </div>
   </div>
@@ -254,7 +256,7 @@
           <h3 class="text-sm font-black text-stone-900 uppercase">Add / Drop In New Spec</h3>
           <p class="text-[11px] text-stone-500">Drop HTML, PDF, Photo, or link a Google Drive folder</p>
         </div>
-        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800 cursor-pointer"><i class="ph-bold ph-x text-base"></i></button>
+        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
       </div>
 
       <!-- Drag & Drop Zone -->
@@ -298,7 +300,6 @@
           </div>
         </div>
 
-        <!-- Google Drive Folder or Direct Link Input -->
         <div>
           <label class="block font-bold text-stone-700 mb-1 flex items-center justify-between">
             <span>Google Drive Folder or Doc Link (Optional)</span>
@@ -311,13 +312,11 @@
           </div>
         </div>
 
-        <!-- Manual Ingredients / Notes -->
         <div>
           <label class="block font-bold text-stone-700 mb-1">Ingredients (Optional if file dropped)</label>
           <textarea id="import-ingredients" rows="3" placeholder="Sourdough: 2 slices&#10;Poached Eggs: 2 pcs" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
 
-        <!-- Manual Method / Steps -->
         <div>
           <label class="block font-bold text-stone-700 mb-1">Method / SOP Notes (Optional if file dropped)</label>
           <textarea id="import-steps" rows="3" placeholder="Drop eggs into simmering water 3 mins&#10;Plate and garnish" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
@@ -325,28 +324,15 @@
       </div>
 
       <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-stone-100">
-        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100 cursor-pointer">Cancel</button>
-        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs cursor-pointer">Save & Broadcast Everywhere</button>
+        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100">Cancel</button>
+        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs">Save & Broadcast Everywhere</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Initialize Firebase
-    const firebaseConfig = {
-      apiKey: "AIzaSyBbrvyDhGxJEQ4TN-9iO-WQixvb8GhfVQE",
-      authDomain: "lula-hub.firebaseapp.com",
-      projectId: "lula-hub",
-      storageBucket: "lula-hub.firebasestorage.app",
-      messagingSenderId: "461988583707",
-      appId: "1:461988583707:web:96dca60800ad120def5bbe"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    // App State
-    window.specs = [];
+    // State
+    window.specs = JSON.parse(localStorage.getItem('lula_local_specs') || '[]');
     let managerPin = localStorage.getItem('lula_pin') || '1234';
     window.currentSection = 'recipes';
     let currentCategory = 'all';
@@ -357,8 +343,7 @@
     let currentModalSpec = null;
     let currentScale = 1;
 
-    // File buffer for drops
-    let stagedFileType = null; // 'html', 'pdf', 'image'
+    let stagedFileType = null;
     let stagedFileData = null;
     let stagedFileName = '';
 
@@ -368,20 +353,40 @@
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
 
-    // Live Database Listener
-    db.collection("lula_specs").onSnapshot((snapshot) => {
-      const items = [];
-      snapshot.forEach(doc => {
-        items.push({ id: doc.id, ...doc.data() });
-      });
-      // Sort newest first
-      items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-      window.specs = items;
-      renderCatalog();
-      if (window.currentSection === 'training') renderTraining();
-    }, (error) => {
-      console.error("Firestore error:", error);
-    });
+    // Firebase Connection
+    let db = null;
+    try {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBbrvyDhGxJEQ4TN-9iO-WQixvb8GhfVQE",
+        authDomain: "lula-hub.firebaseapp.com",
+        projectId: "lula-hub",
+        storageBucket: "lula-hub.firebasestorage.app",
+        messagingSenderId: "461988583707",
+        appId: "1:461988583707:web:96dca60800ad120def5bbe"
+      };
+      if (window.firebase) {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+
+        db.collection("lula_specs").onSnapshot((snapshot) => {
+          const items = [];
+          snapshot.forEach(doc => {
+            items.push({ id: doc.id, ...doc.data() });
+          });
+          items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          window.specs = items;
+          localStorage.setItem('lula_local_specs', JSON.stringify(items));
+          renderCatalog();
+          if (window.currentSection === 'training') renderTraining();
+        }, (err) => {
+          console.warn("Cloud offline / sync error:", err);
+        });
+      }
+    } catch (e) {
+      console.warn("Firebase init skipped:", e);
+    }
 
     function init() {
       setupDropZone();
@@ -393,19 +398,27 @@
       window.currentSection = sec;
       currentCategory = 'all';
       document.querySelectorAll('.nav-tab').forEach(t => {
-        t.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer';
+        t.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900';
       });
-      document.getElementById(`tab-${sec}`).className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs cursor-pointer';
+      const activeTab = document.getElementById(`tab-${sec}`);
+      if (activeTab) {
+        activeTab.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs';
+      }
+
+      const catBar = document.getElementById('category-bar-wrapper');
+      const catalog = document.getElementById('catalog-view');
+      const emptyState = document.getElementById('empty-state');
+      const trainingView = document.getElementById('training-view');
 
       if (sec === 'training') {
-        document.getElementById('category-bar-wrapper').classList.add('hidden');
-        document.getElementById('catalog-view').classList.add('hidden');
-        document.getElementById('empty-state').classList.add('hidden');
-        document.getElementById('training-view').classList.remove('hidden');
+        catBar.classList.add('hidden');
+        catalog.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        trainingView.classList.remove('hidden');
         renderTraining();
       } else {
-        document.getElementById('category-bar-wrapper').classList.remove('hidden');
-        document.getElementById('training-view').classList.add('hidden');
+        catBar.classList.remove('hidden');
+        trainingView.classList.add('hidden');
         renderCategoryPills();
         renderCatalog();
       }
@@ -418,7 +431,7 @@
     }
 
     function handleSearch(val) {
-      searchQuery = val.trim().toLowerCase();
+      searchQuery = (val || '').trim().toLowerCase();
       renderCatalog();
     }
 
@@ -426,7 +439,9 @@
       const el = document.getElementById('category-pills');
       const cats = CATEGORIES[window.currentSection] || ["All"];
       el.innerHTML = cats.map(c => `
-        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${ currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200' }">${c}</button>
+        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
+          currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+        }">${c}</button>
       `).join('');
     }
 
@@ -463,4 +478,424 @@
         if (isDrive) { badgeIcon = 'ph-google-drive-logo'; }
 
         return `
-          <div
+          <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
+            ${item.image ? `
+              <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
+                </span>
+              </div>
+            ` : `
+              <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
+                <i class="ph-bold ${isHtml ? 'ph-file-code' : (isPdf ? 'ph-file-pdf' : (isDrive ? 'ph-google-drive-logo' : 'ph-cooking-pot'))} text-2xl"></i>
+                <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
+                </span>
+              </div>
+            `}
+            <div class="p-2.5">
+              <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
+              <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Standard'} • ${item.shelfLife || 'Fresh'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openDetail(id) {
+      currentModalSpec = (window.specs || []).find(s => s.id === id);
+      if (!currentModalSpec) return;
+      currentScale = 1;
+
+      document.getElementById('modal-title').innerText = currentModalSpec.title;
+      document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
+      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
+      document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Standards & Quality Protocol';
+
+      const deleteBtn = document.getElementById('modal-delete-btn');
+      if (isManager) {
+        deleteBtn.classList.remove('hidden');
+      } else {
+        deleteBtn.classList.add('hidden');
+      }
+
+      renderDetailContent();
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      document.getElementById('modal-body-content').innerHTML = '';
+    }
+
+    function setScale(s) {
+      currentScale = s;
+      renderDetailContent();
+    }
+
+    function renderDetailContent() {
+      const scaleEl = document.getElementById('modal-scale-controls');
+      const body = document.getElementById('modal-body-content');
+
+      if (currentModalSpec.fileType === 'html') {
+        scaleEl.innerHTML = '';
+        body.innerHTML = `
+          <div class="w-full h-[70vh] rounded-xl overflow-hidden border border-brand-border bg-white shadow-xs">
+            <iframe id="sop-iframe" class="w-full h-full border-0"></iframe>
+          </div>
+        `;
+        const iframe = document.getElementById('sop-iframe');
+        iframe.srcdoc = currentModalSpec.fileData;
+        return;
+      }
+
+      if (currentModalSpec.fileType === 'pdf') {
+        scaleEl.innerHTML = '';
+        body.innerHTML = `
+          <div class="w-full h-[70vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex flex-col">
+            <object data="${currentModalSpec.fileData}" type="application/pdf" class="w-full flex-1">
+              <div class="p-6 text-center text-xs text-stone-600">
+                <i class="ph-bold ph-file-pdf text-3xl text-rose-600 mb-2"></i>
+                <p>PDF loaded.</p>
+                <a href="${currentModalSpec.fileData}" download="${currentModalSpec.title}.pdf" class="mt-2 inline-block bg-stone-900 text-white font-bold px-3 py-1.5 rounded-lg">Download PDF</a>
+              </div>
+            </object>
+          </div>
+        `;
+        return;
+      }
+
+      if (currentModalSpec.driveUrl) {
+        scaleEl.innerHTML = '';
+        let embedUrl = currentModalSpec.driveUrl;
+        if (embedUrl.includes('/view') || embedUrl.includes('/edit')) {
+          embedUrl = embedUrl.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview');
+        }
+        body.innerHTML = `
+          <div class="w-full h-[70vh] rounded-xl overflow-hidden border border-brand-border bg-white flex flex-col">
+            <div class="bg-stone-100 px-3 py-1.5 flex items-center justify-between text-xs border-b border-stone-200">
+              <span class="font-bold flex items-center gap-1.5 text-stone-700">
+                <i class="ph-bold ph-google-drive-logo text-emerald-600"></i> Google Drive Cloud Resource
+              </span>
+              <a href="${currentModalSpec.driveUrl}" target="_blank" class="text-brand-accent hover:underline font-bold flex items-center gap-1">
+                <span>Open in Drive</span> <i class="ph-bold ph-arrow-square-out"></i>
+              </a>
+            </div>
+            <iframe src="${embedUrl}" class="w-full flex-1 border-0"></iframe>
+          </div>
+        `;
+        return;
+      }
+
+      scaleEl.innerHTML = [0.5, 1, 2].map(m => `
+        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
+      `).join('');
+
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
+            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
+            <ul class="divide-y divide-stone-200 text-xs">
+              ${(currentModalSpec.ingredients || []).map(ing => {
+                const num = parseFloat(ing.amount);
+                const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
+                  ? Math.round(num * currentScale * 10) / 10 
+                  : ing.amount;
+                return `
+                  <li class="py-1.5 flex justify-between">
+                    <span class="text-stone-700">${ing.name}</span>
+                    <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </div>
+          <div>
+            ${currentModalSpec.image ? `
+              <div class="rounded-xl overflow-hidden border border-brand-border mb-3 max-h-48 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
+                <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
+              </div>
+            ` : ''}
+            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method</h4>
+            <ol class="space-y-2 text-xs">
+              ${(currentModalSpec.steps || []).map((st, i) => `
+                <li class="flex items-start gap-2">
+                  <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
+                  <span class="text-stone-700">${st}</span>
+                </li>
+              `).join('')}
+            </ol>
+          </div>
+        </div>
+      `;
+    }
+
+    // MANAGER PIN & LOCK
+    function toggleManagerLock() {
+      if (isManager) {
+        lockManager();
+      } else {
+        openPinModal('Enter PIN to access manager mode', () => {
+          isManager = true;
+          document.getElementById('manager-toolbar').classList.remove('hidden');
+          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
+          document.getElementById('manager-label').innerText = 'Manager';
+        });
+      }
+    }
+
+    function lockManager() {
+      isManager = false;
+      document.getElementById('manager-toolbar').classList.add('hidden');
+      document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
+      document.getElementById('manager-label').innerText = 'Staff Mode';
+    }
+
+    function promptChangePin() {
+      openPinModal('Enter current PIN first', () => {
+        const newPin = prompt('Enter new 4-digit PIN:');
+        if (newPin && newPin.length === 4 && !isNaN(newPin)) {
+          managerPin = newPin;
+          localStorage.setItem('lula_pin', newPin);
+          alert('Manager PIN updated successfully.');
+        } else {
+          alert('Invalid PIN. Must be exactly 4 digits.');
+        }
+      });
+    }
+
+    function openPinModal(subtext, cb) {
+      pinBuffer = '';
+      pinCallback = cb;
+      document.getElementById('pin-subtext').innerText = subtext;
+      updateDots();
+      document.getElementById('pin-modal').classList.remove('hidden');
+    }
+
+    function closePinModal() {
+      document.getElementById('pin-modal').classList.add('hidden');
+      pinBuffer = '';
+    }
+
+    function pressPin(d) {
+      if (pinBuffer.length < 4) {
+        pinBuffer += d;
+        updateDots();
+        if (pinBuffer.length === 4) {
+          setTimeout(() => {
+            if (pinBuffer === managerPin) {
+              const cb = pinCallback;
+              closePinModal();
+              if (cb) cb();
+            } else {
+              alert('Incorrect PIN');
+              pinBuffer = '';
+              updateDots();
+            }
+          }, 100);
+        }
+      }
+    }
+
+    function clearPin() {
+      pinBuffer = '';
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll('#pin-dots > div');
+      dots.forEach((dot, idx) => {
+        dot.className = idx < pinBuffer.length 
+          ? 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900' 
+          : 'w-3 h-3 rounded-full border border-stone-400';
+      });
+    }
+
+    // DRAG AND DROP SETUP
+    function setupDropZone() {
+      const dropZone = document.getElementById('drop-zone');
+      if (!dropZone) return;
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+      });
+      dropZone.addEventListener('dragover', () => dropZone.classList.add('border-brand-accent', 'bg-rose-50/50'));
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-brand-accent', 'bg-rose-50/50'));
+      dropZone.addEventListener('drop', (e) => {
+        dropZone.classList.remove('border-brand-accent', 'bg-rose-50/50');
+        const dt = e.dataTransfer;
+        if (dt.files.length) processFile(dt.files[0]);
+      });
+    }
+
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      if (files.length) processFile(files[0]);
+    }
+
+    function processFile(file) {
+      stagedFileName = file.name;
+      const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
+      const titleInput = document.getElementById('import-title');
+      if (!titleInput.value) {
+        titleInput.value = cleanTitle;
+      }
+
+      const dropTitle = document.getElementById('drop-title');
+      const dropSub = document.getElementById('drop-sub');
+      const dropIcon = document.getElementById('drop-icon');
+
+      if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+        stagedFileType = 'html';
+        const reader = new FileReader();
+        reader.onload = (e) => { stagedFileData = e.target.result; };
+        reader.readAsText(file);
+        dropIcon.className = "ph-duotone ph-code text-3xl text-emerald-600 mb-1 inline-block";
+        dropTitle.innerText = `HTML Spec Attached: ${file.name}`;
+        dropSub.innerText = "Interactive SOP card loaded and ready to broadcast.";
+      } else if (file.name.endsWith('.pdf')) {
+        stagedFileType = 'pdf';
+        const reader = new FileReader();
+        reader.onload = (e) => { stagedFileData = e.target.result; };
+        reader.readAsDataURL(file);
+        dropIcon.className = "ph-duotone ph-file-pdf text-3xl text-rose-600 mb-1 inline-block";
+        dropTitle.innerText = `PDF Attached: ${file.name}`;
+        dropSub.innerText = "PDF document ready to embed.";
+      } else if (file.type.startsWith('image/')) {
+        stagedFileType = 'image';
+        const reader = new FileReader();
+        reader.onload = (e) => { stagedFileData = e.target.result; };
+        reader.readAsDataURL(file);
+        dropIcon.className = "ph-duotone ph-image text-3xl text-blue-600 mb-1 inline-block";
+        dropTitle.innerText = `Photo Attached: ${file.name}`;
+        dropSub.innerText = "Image will be used as full-screen pass reference.";
+      }
+    }
+
+    function openImportModal() {
+      stagedFileType = null;
+      stagedFileData = null;
+      stagedFileName = '';
+      document.getElementById('drop-icon').className = "ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block";
+      document.getElementById('drop-title').innerText = "Drop your file here, or browse";
+      document.getElementById('drop-sub').innerText = "Supports .HTML (SOP generator), .PDF files, or Photos (.JPG, .PNG)";
+      document.getElementById('import-modal').classList.remove('hidden');
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+
+    async function saveImportedSpec() {
+      const sec = document.getElementById('import-section').value;
+      const cat = document.getElementById('import-category').value.trim() || 'General';
+      const title = document.getElementById('import-title').value.trim();
+      const targetTime = document.getElementById('import-time').value.trim() || 'Standard';
+      const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
+      const driveUrl = document.getElementById('import-drive').value.trim() || '';
+      const rawIng = document.getElementById('import-ingredients').value.trim();
+      const rawSteps = document.getElementById('import-steps').value.trim();
+
+      if (!title) {
+        alert('Please enter a spec title.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('import-submit-btn');
+      submitBtn.innerText = 'Broadcasting to Tablets...';
+      submitBtn.disabled = true;
+
+      const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
+        const parts = line.split(':');
+        return { name: parts[0]?.trim(), amount: parts[1]?.trim() || '', unit: '' };
+      });
+      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
+
+      const specId = 'spec-' + Date.now();
+      const payload = {
+        title,
+        section: sec,
+        category: cat,
+        targetTime,
+        shelfLife,
+        driveUrl,
+        fileType: stagedFileType || (driveUrl ? 'drive' : 'text'),
+        fileData: stagedFileData || null,
+        image: stagedFileType === 'image' ? stagedFileData : '',
+        color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
+        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec' }],
+        steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.'],
+        timestamp: Date.now()
+      };
+
+      if (db) {
+        try {
+          await db.collection("lula_specs").doc(specId).set(payload);
+        } catch (err) {
+          console.warn("Cloud save issue, saving locally:", err);
+          window.specs.unshift({ id: specId, ...payload });
+          localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+          renderCatalog();
+        }
+      } else {
+        window.specs.unshift({ id: specId, ...payload });
+        localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+        renderCatalog();
+      }
+
+      closeImportModal();
+      document.getElementById('import-title').value = '';
+      document.getElementById('import-category').value = '';
+      document.getElementById('import-drive').value = '';
+      document.getElementById('import-ingredients').value = '';
+      document.getElementById('import-steps').value = '';
+
+      submitBtn.innerText = 'Save & Broadcast Everywhere';
+      submitBtn.disabled = false;
+    }
+
+    async function deleteCurrentSpec() {
+      if (!currentModalSpec) return;
+      if (!confirm(`Delete "${currentModalSpec.title}" across all tablets?`)) return;
+
+      if (db) {
+        try {
+          await db.collection("lula_specs").doc(currentModalSpec.id).delete();
+        } catch (err) {
+          console.warn("Cloud delete failed, deleting locally:", err);
+        }
+      }
+      window.specs = window.specs.filter(s => s.id !== currentModalSpec.id);
+      localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+      closeDetailModal();
+      renderCatalog();
+    }
+
+    function renderTraining() {
+      const tbody = document.getElementById('training-matrix-body');
+      if (!window.specs || window.specs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-stone-400 font-medium">No specs added to training passport yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = window.specs.map(s => `
+        <tr class="hover:bg-stone-50">
+          <td class="py-2.5 px-4 font-bold text-stone-900">${s.title}</td>
+          <td class="py-2.5 px-3 uppercase text-[10px] font-bold text-stone-500">${s.fileType || 'Doc'}</td>
+          <td class="py-2.5 px-3 text-stone-500">${s.category}</td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-4 text-right text-[10px] font-bold text-stone-400">IN TRAINING</td>
+        </tr>
+      `).join('');
+    }
+
+    // Initialize immediately
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
+    }
+  </script>
+</body>
+</html>
