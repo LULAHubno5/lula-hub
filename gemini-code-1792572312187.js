@@ -1,0 +1,9 @@
+{
+  id: "focaccia-prep",
+  title: "Rosemary & Sea Salt Focaccia",
+  section: "recipes",
+  category: "Bread & Doughs",
+  targetTime: "24h Ferment",
+  shelfLife: "2 Days Ambient",
+  ...
+}
