@@ -2,375 +2,1124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LULA SOP - Vegan Tall Buttermilk Pancakes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LULA | Kitchen, Bar & Training Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Firebase Compat Libraries -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            'lula-green': '#374629',
-            'lula-gold': '#c59b6d',
-            'lula-beige': '#fbf9f5',
-            'lula-border': '#e6e3dd',
-            'lula-dark': '#2c3525',
-            'lula-gray': '#5c6257'
-          },
-          fontFamily: {
-            serif: ['"Playfair Display"', 'Georgia', 'serif'],
-            sans: ['"Plus Jakarta Sans"', 'sans-serif']
+            brand: {
+              cream: '#FFF9F5',
+              dark: '#1C1917',
+              pink: '#F472B6',
+              accent: '#E11D48',
+              border: '#E7E5E4'
+            }
           }
         }
       }
     }
   </script>
   <style>
-    @page {
-      size: A4 landscape;
-      margin: 0 !important;
+    body {
+      background-color: #FFF9F5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
     }
-    @media print {
-      html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        background: #fff !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
-      }
-      .no-print {
-        display: none !important;
-      }
-      .page-container {
-        box-shadow: none !important;
-        border: none !important;
-        width: 297mm !important;
-        height: 210mm !important;
-        max-height: 210mm !important;
-        overflow: hidden !important;
-        margin: 0 !important;
-        padding: 7mm !important;
-      }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
     }
-    .page-container {
-      width: 297mm;
-      height: 210mm;
-      max-height: 210mm;
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f5f5f4;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d6d3d1;
+      border-radius: 9999px;
+    }
+    button, a, select, input, textarea {
+      cursor: pointer;
     }
   </style>
 </head>
-<body class="bg-stone-100 font-sans text-stone-800 antialiased p-4 min-h-screen flex flex-col items-center justify-start">
+<body class="text-brand-dark min-h-screen flex flex-col antialiased">
 
-  <!-- Interactive Screen Control Deck -->
-  <div class="no-print w-full max-w-[297mm] mb-3 flex items-center justify-between bg-white px-5 py-2.5 rounded-xl border border-stone-200 shadow-sm">
-    <div class="flex items-center gap-2">
-      <span class="text-xs font-bold tracking-wider text-lula-gray uppercase mr-2">Batch Scaler:</span>
-      <button onclick="runScaleAction(1)" class="scale-btn active px-3 py-1 text-xs font-semibold rounded-md border border-lula-green bg-lula-green text-white transition-all cursor-pointer" data-scale="1">1x (12 Pancakes)</button>
-      <button onclick="runScaleAction(2)" class="scale-btn px-3 py-1 text-xs font-semibold rounded-md border border-stone-300 text-stone-700 hover:bg-stone-100 transition-all cursor-pointer" data-scale="2">2x (24 Pancakes)</button>
-      <button onclick="runScaleAction(3)" class="scale-btn px-3 py-1 text-xs font-semibold rounded-md border border-stone-300 text-stone-700 hover:bg-stone-100 transition-all cursor-pointer" data-scale="3">3x (36 Pancakes)</button>
-      <button onclick="runScaleAction(4)" class="scale-btn px-3 py-1 text-xs font-semibold rounded-md border border-stone-300 text-stone-700 hover:bg-stone-100 transition-all cursor-pointer" data-scale="4">4x (48 Pancakes)</button>
-    </div>
-    
-    <div class="flex items-center gap-2">
-      <button onclick="triggerPrint()" class="inline-flex items-center gap-2 bg-lula-green hover:bg-[#2c3525] text-white text-xs font-semibold px-4 py-1.5 rounded-md transition shadow cursor-pointer">
-        <i class="fa-solid fa-print text-lula-gold"></i>
-        Print / Preview
-      </button>
-      <button onclick="downloadPDF()" class="inline-flex items-center gap-2 bg-[#2c3525] hover:bg-stone-900 text-white text-xs font-semibold px-4 py-1.5 rounded-md transition shadow cursor-pointer">
-        <i class="fa-solid fa-file-pdf text-lula-gold"></i>
-        Download PDF
-      </button>
-    </div>
-  </div>
-
-  <!-- A4 Landscape Sheet -->
-  <div id="sop-card" class="page-container bg-white border border-stone-300 shadow-lg relative flex flex-col justify-between overflow-hidden p-6 box-border">
-
-    <!-- Top Brand Green Accent Strip -->
-    <div class="absolute top-0 left-0 right-0 h-1.5 bg-lula-green"></div>
-
-    <!-- Header Section -->
-    <div class="pt-1">
-      <div class="flex items-end justify-between border-b border-lula-border pb-2">
-        <div>
-          <span class="text-[10px] font-bold uppercase tracking-widest text-lula-gold block">Bakery / Breakfast Spec (Vegan Adaptation)</span>
-          <h1 class="text-2xl font-bold font-serif text-lula-green tracking-tight uppercase leading-none">Vegan Tall "Buttermilk" Pancakes</h1>
-        </div>
-        <div class="text-right">
-          <span class="text-[10px] font-bold text-stone-400 tracking-widest uppercase block">LULA Standard Operating Procedure</span>
-          <span class="text-xs font-semibold text-lula-dark">REF: SOP-BRK-019-VG</span>
-        </div>
-      </div>
-
-      <!-- 5-Column Metadata Cards -->
-      <div class="grid grid-cols-5 gap-2 mt-2">
-        <div class="bg-lula-beige border border-lula-border/70 rounded p-1.5">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-lula-gold block">Dish Component</span>
-          <span class="text-[11px] font-bold text-lula-dark leading-tight block truncate">Soufflé-Style Puck (4cm)</span>
-        </div>
-        <div class="bg-lula-beige border border-lula-border/70 rounded p-1.5">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-lula-gold block">Batch Target Yield</span>
-          <span id="meta-yield" class="text-[11px] font-bold text-lula-dark leading-tight block">12 Pancakes (6 Stacks)</span>
-        </div>
-        <div class="bg-lula-beige border border-lula-border/70 rounded p-1.5">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-lula-gold block">Equipment & Settings</span>
-          <span class="text-[11px] font-bold text-lula-dark leading-tight block truncate">Rational Combi @ 152°C, 50% Steam</span>
-        </div>
-        <div class="bg-lula-beige border border-lula-border/70 rounded p-1.5">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-lula-gold block">Shelf Life (FIFO)</span>
-          <span class="text-[11px] font-bold text-lula-dark leading-tight block truncate">3 Days Chilled / 1 Mo Frozen</span>
-        </div>
-        <div class="bg-lula-beige border border-lula-border/70 rounded p-1.5">
-          <span class="text-[9px] font-bold uppercase tracking-wider text-lula-gold block">Storage Vessel</span>
-          <span class="text-[11px] font-bold text-lula-dark leading-tight block truncate">Parchment-layered GN Pan</span>
-        </div>
-      </div>
-
-      <!-- Critical Quality Directive Bar -->
-      <div class="bg-stone-900 border-l-4 border-lula-gold text-white text-[10px] px-3 py-1 rounded mt-2 flex items-center justify-between">
+  <!-- TOP HEADER -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-brand-border px-4 py-2.5 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <div class="flex items-center gap-3">
         <div class="flex items-center gap-2">
-          <i class="fa-solid fa-triangle-exclamation text-lula-gold text-xs"></i>
-          <span><strong>CRITICAL ZERO-EGG BINDER PROTOCOL:</strong> Use cooked cornflour gel to lock internal steam without deflating. Mix wet into dry on Speed 1 for 25–30s max; leave lumpy. Mandate 12–15m bench rest before portioning into 10.2cm sprayed rings.</span>
-        </div>
-        <span class="text-[9px] font-semibold tracking-wider uppercase text-stone-300 ml-4 shrink-0">Bake: 152°C / 12–13 Min</span>
-      </div>
-    </div>
-
-    <!-- Main Content Split (Master Ingredients vs Prep Workflow) -->
-    <div class="grid grid-cols-12 gap-3.5 my-2 flex-grow items-start overflow-hidden">
-
-      <!-- Left Column: Ingredients Master Table -->
-      <div class="col-span-6 border border-lula-border rounded-lg overflow-hidden bg-white flex flex-col max-h-[120mm]">
-        <div class="bg-lula-green px-3 py-1 flex items-center justify-between text-white">
-          <h2 class="text-xs font-bold tracking-wide uppercase">Ingredients Master</h2>
-          <span class="text-[10px] font-semibold text-lula-gold">12-Pancake Calibrated Scale (~135g Fill)</span>
-        </div>
-
-        <div class="overflow-y-auto">
-          <table class="w-full text-left text-[9.5px] border-collapse">
-            <thead>
-              <tr class="bg-stone-50 border-b border-lula-border text-[8.5px] font-bold uppercase tracking-wider text-stone-500">
-                <th class="px-2 py-1">Ingredient</th>
-                <th class="px-1.5 py-1 text-right w-14">1x Base</th>
-                <th class="px-1.5 py-1 text-right w-16 text-lula-green">Scaled</th>
-                <th class="px-2 py-1 text-stone-400">Spec / Line Notes</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-stone-100">
-              <!-- Section: Starch Gel Binder Matrix -->
-              <tr class="bg-stone-100/70 font-semibold text-[8.5px] text-lula-gray uppercase tracking-wider">
-                <td colspan="4" class="px-2 py-0.5">1. Starch Gel Matrix (Zero-Egg Replacement)</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="18" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Cornflour (Cornstarch)</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">18g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">18g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Whisked cold with water</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="132" data-unit="ml">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Cold Water</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">132ml</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">132ml</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Simmered 60–90s into 150g translucent gel</td>
-              </tr>
-
-              <!-- Section: Vegan Buttermilk & Wet Matrix -->
-              <tr class="bg-stone-100/70 font-semibold text-[8.5px] text-lula-gray uppercase tracking-wider">
-                <td colspan="4" class="px-2 py-0.5">2. Vegan Buttermilk & Wet Emulsion</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="540" data-unit="ml">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Soy Milk (High Protein)</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">540ml</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">540ml</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Mandatory soy for protein lift / micro-curds</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="18" data-unit="ml">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Apple Cider Vinegar / Lemon</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">18ml</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">18ml</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Rest 5m in soy milk to curdle</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="90" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Plant Block Butter</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">90g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">90g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Melted lukewarm (Flora Plant / Naturli)</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="8" data-unit="ml">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Vanilla Bean Paste / Extract</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">8ml</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">8ml</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Pure aromatic vanilla</td>
-              </tr>
-
-              <!-- Section: Aerated Dry Flour Matrix -->
-              <tr class="bg-stone-100/70 font-semibold text-[8.5px] text-lula-gray uppercase tracking-wider">
-                <td colspan="4" class="px-2 py-0.5">3. Dry Aeration Matrix</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="450" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Plain Flour (Culinary Grade)</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">450g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">450g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Sifted thoroughly</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="60" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Caster Sugar</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">60g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">60g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">White fine baker's caster</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="21" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Baking Powder</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">21g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">21g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Extra lift to replace egg structure</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="5" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Bicarbonate of Soda</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">5g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">5g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Calibrated to stop muffin doming</td>
-              </tr>
-              <tr class="hover:bg-stone-50" data-base-val="6" data-unit="g">
-                <td class="px-2 py-0.5 font-medium text-stone-800">Fine Sea Salt</td>
-                <td class="px-1.5 py-0.5 text-right text-stone-500" contenteditable="true" onblur="updateBaseVal(this)">6g</td>
-                <td class="px-1.5 py-0.5 text-right font-bold text-lula-green scaled-val">6g</td>
-                <td class="px-2 py-0.5 text-[8.5px] text-stone-500">Cuts sweetness & balances fats</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Right Column: Preparation Workflow & Standards -->
-      <div class="col-span-6 flex flex-col gap-2 max-h-[120mm]">
-
-        <!-- Workflow Box -->
-        <div class="border border-lula-border rounded-lg bg-white overflow-hidden p-2.5 shadow-sm">
-          <div class="flex items-center justify-between border-b border-lula-border pb-1 mb-1.5">
-            <h2 class="text-xs font-bold tracking-wide uppercase text-lula-green">Processing & Preparation Workflow</h2>
-            <span class="text-[9px] font-bold text-lula-gold uppercase tracking-wider">Rational Sequence</span>
+          <div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-white font-black tracking-wider text-sm shadow-sm">
+            L
           </div>
-
-          <ol class="space-y-1 text-[9.5px] text-stone-700 leading-snug">
-            <li class="flex items-start gap-1.5">
-              <span class="bg-lula-green text-white rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold text-[8px] shrink-0 mt-0.5">1</span>
-              <span><strong class="text-stone-900">Cook Starch Gel:</strong> Whisk 18g cornflour into 132ml cold water. Simmer on induction for 60–90s until clear and gelatinised. Let cool 5m.</span>
-            </li>
-            <li class="flex items-start gap-1.5">
-              <span class="bg-lula-green text-white rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold text-[8px] shrink-0 mt-0.5">2</span>
-              <span><strong class="text-stone-900">Vegan Buttermilk:</strong> Whisk 18ml cider vinegar into 540ml soy milk. Rest 5m until curdled. Whisk in warm plant butter, cooled starch gel, and vanilla.</span>
-            </li>
-            <li class="flex items-start gap-1.5">
-              <span class="bg-lula-green text-white rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold text-[8px] shrink-0 mt-0.5">3</span>
-              <span><strong class="text-stone-900">Dry Aeration & Stir:</strong> Sift flour, sugar, baking powder, bicarb, and salt into bowl. Add wet mix. Stir on Low for 25–30s max; leave lumpy.</span>
-            </li>
-            <li class="flex items-start gap-1.5">
-              <span class="bg-lula-green text-white rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold text-[8px] shrink-0 mt-0.5">4</span>
-              <span><strong class="text-stone-900">Rest & Tray Setup:</strong> Rest batter 12–15m to develop bubble matrix. Spray twelve 10.2cm seamless rings on silicone mats over 1/1 GN grids.</span>
-            </li>
-            <li class="flex items-start gap-1.5">
-              <span class="bg-lula-green text-white rounded-full w-3.5 h-3.5 flex items-center justify-center font-bold text-[8px] shrink-0 mt-0.5">5</span>
-              <span><strong class="text-stone-900">Portion & Combi Bake:</strong> Scale 135g batter per ring (~1/3 height). Drop-tap tray twice on bench to level. Bake in Rational (152°C, 50% Steam, Fan 2) for 12–13m (Core: 92°C–94°C). Lift rings immediately; cool 20m[cite: 1].</span>
-            </li>
-          </ol>
-        </div>
-
-        <!-- Service & Quality Pass Standards -->
-        <div class="border border-lula-gold/40 bg-stone-50/80 rounded-lg p-2">
-          <div class="flex items-center gap-1.5 text-lula-green mb-1">
-            <i class="fa-solid fa-award text-lula-gold text-xs"></i>
-            <h3 class="text-[9.5px] font-bold tracking-wider uppercase">LULA Service Reheat & Cross-Contamination Standard</h3>
-          </div>
-          <div class="grid grid-cols-3 gap-2 text-[8.5px] text-stone-600">
-            <div>
-              <strong class="block text-stone-900">Ambient / Chilled (90s):</strong>
-              Flash at 200°C for 90s on fresh parchment, or sear on flat-top in 5g plant butter under cloche (45s/side)[cite: 1].
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h1 class="text-sm font-black tracking-tight uppercase leading-none">LULA</h1>
+              <div id="cloud-status" class="flex items-center gap-1 pl-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[9px] font-bold text-emerald-600 uppercase">Live Cloud Sync</span>
+              </div>
             </div>
-            <div>
-              <strong class="block text-stone-900">From Frozen (3–3.5m):</strong>
-              Brush top with plant butter; bake at 200°C on dedicated clean parchment to eliminate dairy contamination[cite: 1].
-            </div>
-            <div>
-              <strong class="block text-stone-900">Visual Benchmark:</strong>
-              4cm tall, level soufflé puck with crisp golden faces and an ultra-light, pillowy interior crumb.
-            </div>
+            <p class="text-[10px] text-stone-500 font-medium tracking-wider uppercase">Hub • Victoria Mills</p>
           </div>
         </div>
 
+        <div class="h-6 w-px bg-stone-200 hidden sm:block"></div>
+
+        <nav class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl">
+          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs">
+            <i class="ph-bold ph-cooking-pot text-sm"></i>
+            <span>Prep & Recipes</span>
+          </button>
+          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+            <i class="ph-bold ph-fork-knife text-sm"></i>
+            <span>Kitchen SOPs</span>
+          </button>
+          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+            <i class="ph-bold ph-coffee text-sm"></i>
+            <span>Barista & Bar</span>
+          </button>
+          <button onclick="setSection('training')" id="tab-training" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+            <i class="ph-bold ph-certificate text-sm"></i>
+            <span>Training</span>
+          </button>
+        </nav>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <div class="relative w-40 sm:w-64">
+          <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm"></i>
+          <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Search specs..." 
+            class="w-full bg-stone-100 border border-transparent focus:border-stone-400 focus:bg-white rounded-lg pl-8 pr-3 py-1 text-xs outline-none transition font-medium">
+        </div>
+
+        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition">
+          <i id="manager-icon" class="ph-bold ph-lock-key text-xs"></i>
+          <span id="manager-label" class="hidden sm:inline">Staff Mode</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MANAGER ADMIN TOOLBAR -->
+  <div id="manager-toolbar" class="hidden bg-stone-900 text-stone-100 px-4 py-2 border-b border-stone-800 transition">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-bold uppercase tracking-wider text-[11px] text-stone-300">Manager Unlocked</span>
+        <span class="text-stone-500">|</span>
+        <span class="text-stone-400 text-[10px]">Changes sync across all tablets live.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition">
+          <i class="ph-bold ph-plus-circle"></i>
+          <span>+ Add Spec</span>
+        </button>
+        <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition">
+          Change PIN
+        </button>
+        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold">
+          Lock Hub
+        </button>
       </div>
     </div>
-
-    <!-- Footer -->
-    <div class="border-t border-lula-border pt-1.5 flex items-center justify-between text-[8.5px] text-lula-gray">
-      <span>LULA KITCHEN STANDARDS — CONFIDENTIAL & PROPRIETARY. EVERY BATCH MUST MATCH THIS MASTER INDEX FOR COMPLETE FLAVOR REPLICABILITY.</span>
-      <span class="font-mono">AUTHORISED: HEAD CHEF</span>
-    </div>
-
   </div>
 
-  <!-- Interactive Scaling Logic -->
+  <!-- CATEGORY PILLS -->
+  <div id="category-bar-wrapper" class="bg-white border-b border-brand-border px-4 py-2 sticky top-[49px] z-30 shadow-xs">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
+      <div id="category-pills" class="flex items-center gap-1.5 flex-nowrap min-w-max"></div>
+      <div id="active-count" class="text-[11px] font-semibold text-stone-400 whitespace-nowrap pl-2"></div>
+    </div>
+  </div>
+
+  <!-- MAIN VIEW -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
+    <div id="catalog-view" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"></div>
+    
+    <div id="empty-state" class="text-center py-20">
+      <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-3 text-stone-400 text-xl">
+        <i class="ph-bold ph-notebook"></i>
+      </div>
+      <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider">No specs loaded yet</h3>
+      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode (PIN: 1234) and add your first spec.</p>
+    </div>
+
+    <!-- TRAINING VIEW -->
+    <div id="training-view" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-stone-900 to-stone-800 text-white rounded-2xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="inline-block bg-brand-pink/20 text-brand-pink text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded mb-1">Standard</span>
+          <h2 class="text-lg font-black tracking-tight">Staff Sign-Off & Passports</h2>
+          <p class="text-xs text-stone-300 mt-0.5">3 perfect executions signed off by manager before running solo.</p>
+        </div>
+      </div>
+      <div class="bg-white rounded-xl border border-brand-border overflow-hidden shadow-xs">
+        <table class="w-full text-left text-xs">
+          <thead class="bg-stone-50 text-stone-500 font-bold border-b border-brand-border uppercase text-[10px] tracking-wider">
+            <tr>
+              <th class="py-2.5 px-4">Spec / Dish</th>
+              <th class="py-2.5 px-3">Type</th>
+              <th class="py-2.5 px-3">Category</th>
+              <th class="py-2.5 px-3 text-center">Attempt 1</th>
+              <th class="py-2.5 px-3 text-center">Attempt 2</th>
+              <th class="py-2.5 px-3 text-center">Attempt 3</th>
+              <th class="py-2.5 px-4 text-right">Status</th>
+            </tr>
+          </thead>
+          <tbody id="training-matrix-body" class="divide-y divide-brand-border"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- DETAIL MODAL -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-1 sm:p-4">
+    <div id="modal-container" class="bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200">
+      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/75 shrink-0">
+        <div>
+          <span id="modal-category-badge" class="bg-stone-200 text-stone-800 text-[10px] font-black uppercase px-2 py-0.5 rounded">Category</span>
+          <h2 id="modal-title" class="text-base font-black text-stone-900 mt-1">Title</h2>
+          <p id="modal-meta" class="text-[11px] text-stone-500 font-medium"></p>
+        </div>
+        <div class="flex items-center gap-2">
+          <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold"></div>
+          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
+            <i class="ph-bold ph-x"></i>
+          </button>
+        </div>
+      </div>
+      
+      <!-- Modal Content Body -->
+      <div id="modal-body-content" class="flex-1 overflow-y-auto p-2 sm:p-4 custom-scrollbar"></div>
+      
+      <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
+        <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
+        <div class="flex items-center gap-2">
+          <button id="modal-edit-btn" onclick="openEditModalForCurrentSpec()" class="hidden bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
+            <i class="ph-bold ph-pencil-simple"></i> Edit Spec
+          </button>
+          <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition">
+            Delete Spec
+          </button>
+          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MANAGER PIN PAD MODAL -->
+  <div id="pin-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xs rounded-2xl p-5 shadow-2xl text-center border border-stone-200">
+      <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-2 text-xl">
+        <i class="ph-bold ph-lock-key"></i>
+      </div>
+      <h3 class="text-sm font-black text-stone-900 uppercase">Manager PIN</h3>
+      <p id="pin-subtext" class="text-xs text-stone-500 mt-0.5 mb-4">Enter PIN to authorize</p>
+
+      <div id="pin-dots" class="flex justify-center gap-2 mb-5">
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+      </div>
+
+      <div class="grid grid-cols-3 gap-2 max-w-[200px] mx-auto mb-3">
+        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">1</button>
+        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">2</button>
+        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">3</button>
+        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">4</button>
+        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">5</button>
+        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">6</button>
+        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">7</button>
+        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">8</button>
+        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">9</button>
+        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600">C</button>
+        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">0</button>
+        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTI-FORMAT ADD / EDIT SPEC MODAL -->
+  <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border border-stone-200 custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
+        <div>
+          <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add / Drop In New Spec</h3>
+          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Drop HTML, PDF, Photo, or paste raw HTML code</p>
+        </div>
+        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
+        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-4 text-center cursor-pointer transition mb-3">
+        <i id="drop-icon" class="ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block"></i>
+        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Drop your file or photo here, or browse</h4>
+        <p id="drop-sub" class="text-[10px] text-stone-500">Photos automatically attach as the cover & plating guide</p>
+        <input type="file" id="file-input" onchange="handleFileSelect(event)" accept=".html,.htm,.pdf,image/*" class="hidden">
+      </div>
+
+      <!-- Raw HTML Code Paste Toggle Box -->
+      <div class="mb-4 bg-stone-50 border border-stone-200 rounded-xl p-3">
+        <div class="flex items-center justify-between mb-1.5 cursor-pointer" onclick="toggleRawHtmlBox()">
+          <span class="text-xs font-bold text-stone-800 flex items-center gap-1.5">
+            <i class="ph-bold ph-code text-rose-600"></i> Or Paste Raw HTML Code Directly
+          </span>
+          <span id="raw-html-toggle-icon" class="text-xs font-bold text-stone-400">Show +</span>
+        </div>
+        <div id="raw-html-container" class="hidden mt-2">
+          <textarea id="import-raw-html" rows="4" placeholder="Paste <!DOCTYPE html> or <div>...</div> code here directly without downloading files..." 
+            oninput="handleRawHtmlInput(this.value)"
+            class="w-full bg-white p-2.5 rounded-lg border border-stone-300 font-mono text-[11px] leading-relaxed"></textarea>
+          <p class="text-[10px] text-stone-500 mt-1">Pasting HTML here will load it as an interactive card in the tablet viewer automatically.</p>
+        </div>
+      </div>
+
+      <input type="hidden" id="edit-spec-id" value="">
+
+      <div class="space-y-3 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Section</label>
+            <select id="import-section" onchange="handleSectionChangeInModal(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
+              <option value="recipes">Prep & Recipes</option>
+              <option value="sops">Kitchen SOPs</option>
+              <option value="barista">Barista & Bar</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Category (Sub-Section)</label>
+            <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium"></select>
+            <input type="text" id="import-category-custom" placeholder="Type custom category..." class="hidden mt-1.5 w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
+          <input type="text" id="import-title" placeholder="e.g. Master Cookie Dough" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Target Time</label>
+            <input type="text" id="import-time" placeholder="e.g. 15 Mins Prep / 24h Chill" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Shelf Life</label>
+            <input type="text" id="import-shelf" placeholder="e.g. 5 Days Chilled / 3 Mos Frozen" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1 flex items-center justify-between">
+            <span>Google Drive Folder or Link (Optional)</span>
+            <span class="text-[10px] text-brand-accent font-semibold">Live Embed</span>
+          </label>
+          <div class="relative">
+            <i class="ph-bold ph-google-drive-logo absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400"></i>
+            <input type="url" id="import-drive" placeholder="https://drive.google.com/drive/folders/..." 
+              class="w-full bg-stone-100 border border-stone-200 rounded-lg pl-8 pr-3 py-1.5 text-xs outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Ingredients (Optional if HTML pasted or file dropped)</label>
+          <textarea id="import-ingredients" rows="3" placeholder="Unsalted Butter: 250g&#10;Light Brown Sugar: 180g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Method / SOP Steps (Optional if HTML pasted or file dropped)</label>
+          <textarea id="import-steps" rows="3" placeholder="Cream butter and sugar until smooth&#10;Fold in flour and chocolate chips" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-stone-100">
+        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100">Cancel</button>
+        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs">Save & Broadcast Everywhere</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    function updateBaseVal(cell) {
-      const row = cell.closest('tr');
-      const text = cell.innerText.trim();
-      const numMatch = text.match(/[\d.]+/);
-      if (numMatch) {
-        row.dataset.baseVal = numMatch[0];
-        const activeBtn = document.querySelector('.scale-btn.active');
-        const scale = activeBtn ? parseFloat(activeBtn.dataset.scale) : 1;
-        runScaleAction(scale);
+    // State
+    window.specs = JSON.parse(localStorage.getItem('lula_local_specs') || '[]');
+    let managerPin = localStorage.getItem('lula_pin') || '1234';
+    window.currentSection = 'recipes';
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let isManager = false;
+    let pinBuffer = '';
+    let pinCallback = null;
+    let currentModalSpec = null;
+    let currentScale = 1;
+
+    let stagedFileType = null;
+    let stagedFileData = null;
+    let stagedImage = null;
+    let stagedFileName = '';
+
+    const CATEGORIES = {
+      recipes: ["All", "Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
+      sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
+      barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
+    };
+
+    function toggleRawHtmlBox() {
+      const container = document.getElementById('raw-html-container');
+      const toggle = document.getElementById('raw-html-toggle-icon');
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        toggle.innerText = 'Hide -';
+      } else {
+        container.classList.add('hidden');
+        toggle.innerText = 'Show +';
       }
     }
 
-    function runScaleAction(multiplier) {
-      document.querySelectorAll('.scale-btn').forEach(btn => {
-        if (parseFloat(btn.dataset.scale) === multiplier) {
-          btn.classList.add('active', 'bg-lula-green', 'text-white', 'border-lula-green');
-          btn.classList.remove('text-stone-700', 'border-stone-300');
-        } else {
-          btn.classList.remove('active', 'bg-lula-green', 'text-white', 'border-lula-green');
-          btn.classList.add('text-stone-700', 'border-stone-300');
-        }
-      });
-
-      const yieldMeta = document.getElementById('meta-yield');
-      if (yieldMeta) {
-        const count = multiplier * 12;
-        yieldMeta.innerText = `${count} Pancakes (${count / 2} Stacks)`;
+    function handleRawHtmlInput(val) {
+      if (val && val.trim().length > 10) {
+        stagedFileType = 'html';
+        stagedFileData = val.trim();
+        const dropTitle = document.getElementById('drop-title');
+        const dropSub = document.getElementById('drop-sub');
+        const dropIcon = document.getElementById('drop-icon');
+        dropIcon.className = "ph-duotone ph-code text-3xl text-rose-600 mb-1 inline-block";
+        dropTitle.innerText = "Raw HTML Code Detected";
+        dropSub.innerText = "Will render as interactive SOP card in tablet view.";
+      } else if (!stagedFileName) {
+        stagedFileType = null;
+        stagedFileData = null;
       }
-
-      document.querySelectorAll('tr[data-base-val]').forEach(row => {
-        const base = parseFloat(row.dataset.baseVal);
-        const unit = row.dataset.unit || '';
-        const scaledCell = row.querySelector('.scaled-val');
-        if (!isNaN(base) && scaledCell) {
-          let scaled = base * multiplier;
-          let formatted = Number.isInteger(scaled) ? scaled : scaled.toFixed(1);
-          scaledCell.innerText = `${formatted}${unit}`;
-        }
-      });
     }
 
-    function triggerPrint() {
-      window.print();
+    function updateCategoryDropdown(sectionVal, selectedCategory) {
+      const select = document.getElementById('import-category-select');
+      const customInput = document.getElementById('import-category-custom');
+      const subCats = (CATEGORIES[sectionVal] || []).filter(c => c !== "All");
+
+      select.innerHTML = subCats.map(c => `<option value="${c}">${c}</option>`).join('') + `<option value="__custom__">Custom...</option>`;
+
+      if (selectedCategory && subCats.includes(selectedCategory)) {
+        select.value = selectedCategory;
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      } else if (selectedCategory) {
+        select.value = '__custom__';
+        customInput.classList.remove('hidden');
+        customInput.value = selectedCategory;
+      } else {
+        select.value = subCats[0] || '';
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
     }
 
-    function downloadPDF() {
-      const element = document.getElementById('sop-card');
-      const opt = {
-        margin: 0,
-        filename: 'LULA_SOP_Vegan_Tall_Pancakes.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+    function handleSectionChangeInModal(sec) {
+      updateCategoryDropdown(sec);
+    }
+
+    function handleCategorySelectChange(val) {
+      const customInput = document.getElementById('import-category-custom');
+      if (val === '__custom__') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
+    }
+
+    function getSelectedCategoryFromModal() {
+      const select = document.getElementById('import-category-select');
+      const customInput = document.getElementById('import-category-custom');
+      if (select.value === '__custom__') {
+        return customInput.value.trim() || 'General';
+      }
+      return select.value;
+    }
+
+    // Firebase Connection
+    let db = null;
+    try {
+      const firebaseConfig = {
+        apiKey: "AIzaSyBbrvyDhGxJEQ4TN-9iO-WQixvb8GhfVQE",
+        authDomain: "lula-hub.firebaseapp.com",
+        projectId: "lula-hub",
+        storageBucket: "lula-hub.firebasestorage.app",
+        messagingSenderId: "461988583707",
+        appId: "1:461988583707:web:96dca60800ad120def5bbe"
       };
-      html2pdf().set(opt).from(element).save();
+      if (window.firebase) {
+        if (!firebase.apps.length) {
+          firebase.initializeApp(firebaseConfig);
+        }
+        db = firebase.firestore();
+
+        db.collection("lula_specs").onSnapshot((snapshot) => {
+          const items = [];
+          snapshot.forEach(doc => {
+            items.push({ id: doc.id, ...doc.data() });
+          });
+          items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+          window.specs = items;
+          localStorage.setItem('lula_local_specs', JSON.stringify(items));
+          renderCatalog();
+          if (window.currentSection === 'training') renderTraining();
+        }, (err) => {
+          console.warn("Cloud offline / sync error:", err);
+        });
+      }
+    } catch (e) {
+      console.warn("Firebase init skipped:", e);
+    }
+
+    function init() {
+      setupDropZone();
+      renderCategoryPills();
+      renderCatalog();
+    }
+
+    function setSection(sec) {
+      window.currentSection = sec;
+      currentCategory = 'all';
+      document.querySelectorAll('.nav-tab').forEach(t => {
+        t.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900';
+      });
+      const activeTab = document.getElementById(`tab-${sec}`);
+      if (activeTab) {
+        activeTab.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs';
+      }
+
+      const catBar = document.getElementById('category-bar-wrapper');
+      const catalog = document.getElementById('catalog-view');
+      const emptyState = document.getElementById('empty-state');
+      const trainingView = document.getElementById('training-view');
+
+      if (sec === 'training') {
+        catBar.classList.add('hidden');
+        catalog.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        trainingView.classList.remove('hidden');
+        renderTraining();
+      } else {
+        catBar.classList.remove('hidden');
+        trainingView.classList.add('hidden');
+        renderCategoryPills();
+        renderCatalog();
+      }
+    }
+
+    function setCategory(cat) {
+      currentCategory = cat.toLowerCase();
+      renderCategoryPills();
+      renderCatalog();
+    }
+
+    function handleSearch(val) {
+      searchQuery = (val || '').trim().toLowerCase();
+      renderCatalog();
+    }
+
+    function renderCategoryPills() {
+      const el = document.getElementById('category-pills');
+      const cats = CATEGORIES[window.currentSection] || ["All"];
+      el.innerHTML = cats.map(c => `
+        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
+          currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+        }">${c}</button>
+      `).join('');
+    }
+
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-view');
+      const empty = document.getElementById('empty-state');
+      const items = (window.specs || []).filter(item => {
+        if (item.section !== window.currentSection) return false;
+        if (currentCategory !== 'all' && item.category?.toLowerCase() !== currentCategory) return false;
+        if (searchQuery && !item.title?.toLowerCase().includes(searchQuery)) return false;
+        return true;
+      });
+
+      document.getElementById('active-count').innerText = `${items.length} items`;
+      
+      if (items.length === 0) {
+        grid.innerHTML = '';
+        grid.classList.add('hidden');
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.classList.remove('hidden');
+      grid.innerHTML = items.map(item => {
+        const isHtml = item.fileType === 'html';
+        const isPdf = item.fileType === 'pdf';
+        const isDrive = !!item.driveUrl;
+
+        let badgeIcon = 'ph-file-text';
+        let badgeText = item.category || 'General';
+        if (isHtml) { badgeIcon = 'ph-code'; }
+        if (isPdf) { badgeIcon = 'ph-file-pdf'; }
+        if (isDrive) { badgeIcon = 'ph-google-drive-logo'; }
+
+        return `
+          <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
+            ${item.image ? `
+              <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+                <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
+                </span>
+              </div>
+            ` : `
+              <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
+                <i class="ph-bold ${isHtml ? 'ph-file-code' : (isPdf ? 'ph-file-pdf' : (isDrive ? 'ph-google-drive-logo' : 'ph-cooking-pot'))} text-2xl"></i>
+                <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+                  <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
+                </span>
+              </div>
+            `}
+            <div class="p-2.5">
+              <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
+              <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Standard'} • ${item.shelfLife || 'Fresh'}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openDetail(id) {
+      currentModalSpec = (window.specs || []).find(s => s.id === id);
+      if (!currentModalSpec) return;
+      currentScale = 1;
+
+      const container = document.getElementById('modal-container');
+      const isHtml = currentModalSpec.fileType === 'html';
+
+      // Expand to wide landscape modal for full A4 SOPs
+      if (isHtml) {
+        container.className = "bg-white w-full max-w-[96vw] xl:max-w-7xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
+      } else {
+        container.className = "bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
+      }
+
+      document.getElementById('modal-title').innerText = currentModalSpec.title;
+      document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
+      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
+      document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Standards & Quality Protocol';
+
+      const editBtn = document.getElementById('modal-edit-btn');
+      const deleteBtn = document.getElementById('modal-delete-btn');
+      if (isManager) {
+        editBtn.classList.remove('hidden');
+        deleteBtn.classList.remove('hidden');
+      } else {
+        editBtn.classList.add('hidden');
+        deleteBtn.classList.add('hidden');
+      }
+
+      renderDetailContent();
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      document.getElementById('modal-body-content').innerHTML = '';
+    }
+
+    function setScale(s) {
+      currentScale = s;
+      renderDetailContent();
+    }
+
+    function renderDetailContent() {
+      const scaleEl = document.getElementById('modal-scale-controls');
+      const body = document.getElementById('modal-body-content');
+
+      // 1. Interactive HTML Card View (Full-Bleed, Auto-Fit)
+      if (currentModalSpec.fileType === 'html') {
+        scaleEl.innerHTML = '';
+        body.innerHTML = `
+          <div class="w-full h-[76vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex items-center justify-center p-0">
+            <iframe id="sop-iframe" class="w-full h-full border-0 bg-white"></iframe>
+          </div>
+        `;
+        
+        // Inject content and ensure left margin is not clipped
+        const iframe = document.getElementById('sop-iframe');
+        const customWrapper = `
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <style>
+                body { margin: 0; padding: 4px; display: flex; justify-content: center; background-color: #f5f5f4; }
+                .sop-outer-wrapper { width: 100%; max-width: 1140px; margin: 0 auto; }
+              </style>
+            </head>
+            <body>
+              <div class="sop-outer-wrapper">
+                ${currentModalSpec.fileData}
+              </div>
+            </body>
+          </html>
+        `;
+        iframe.srcdoc = currentModalSpec.fileData.includes('<html') ? currentModalSpec.fileData : customWrapper;
+        return;
+      }
+
+      // 2. PDF Document Viewer
+      if (currentModalSpec.fileType === 'pdf') {
+        scaleEl.innerHTML = '';
+        body.innerHTML = `
+          <div class="w-full h-[76vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex flex-col">
+            <object data="${currentModalSpec.fileData}" type="application/pdf" class="w-full flex-1">
+              <div class="p-6 text-center text-xs text-stone-600">
+                <i class="ph-bold ph-file-pdf text-3xl text-rose-600 mb-2"></i>
+                <p>PDF loaded.</p>
+                <a href="${currentModalSpec.fileData}" download="${currentModalSpec.title}.pdf" class="mt-2 inline-block bg-stone-900 text-white font-bold px-3 py-1.5 rounded-lg">Download PDF</a>
+              </div>
+            </object>
+          </div>
+        `;
+        return;
+      }
+
+      // 3. Google Drive Live Embed View
+      if (currentModalSpec.driveUrl) {
+        scaleEl.innerHTML = '';
+        let embedUrl = currentModalSpec.driveUrl;
+        if (embedUrl.includes('/view') || embedUrl.includes('/edit')) {
+          embedUrl = embedUrl.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview');
+        }
+        body.innerHTML = `
+          <div class="w-full h-[76vh] rounded-xl overflow-hidden border border-brand-border bg-white flex flex-col">
+            <div class="bg-stone-100 px-3 py-1.5 flex items-center justify-between text-xs border-b border-stone-200">
+              <span class="font-bold flex items-center gap-1.5 text-stone-700">
+                <i class="ph-bold ph-google-drive-logo text-emerald-600"></i> Google Drive Cloud Resource
+              </span>
+              <a href="${currentModalSpec.driveUrl}" target="_blank" class="text-brand-accent hover:underline font-bold flex items-center gap-1">
+                <span>Open in Drive</span> <i class="ph-bold ph-arrow-square-out"></i>
+              </a>
+            </div>
+            <iframe src="${embedUrl}" class="w-full flex-1 border-0"></iframe>
+          </div>
+        `;
+        return;
+      }
+
+      // 4. Default Scalable Recipe + Attached Photo Plating Standard View
+      scaleEl.innerHTML = [0.5, 1, 2].map(m => `
+        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
+      `).join('');
+
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200 flex flex-col justify-between">
+            <div>
+              <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
+              <ul class="divide-y divide-stone-200 text-xs">
+                ${(currentModalSpec.ingredients || []).map(ing => {
+                  const num = parseFloat(ing.amount);
+                  const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
+                    ? Math.round(num * currentScale * 10) / 10 
+                    : ing.amount;
+                  return `
+                    <li class="py-1.5 flex justify-between">
+                      <span class="text-stone-700">${ing.name}</span>
+                      <span class="font-bold text-stone-900 font-mono">${displayAmt} ${ing.unit || ''}</span>
+                    </li>
+                  `;
+                }).join('')}
+              </ul>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-3">
+            ${currentModalSpec.image ? `
+              <div class="rounded-xl overflow-hidden border border-brand-border shadow-xs bg-stone-100 max-h-56 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
+                <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
+              </div>
+            ` : ''}
+            <div>
+              <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method / Build Steps</h4>
+              <ol class="space-y-2 text-xs">
+                ${(currentModalSpec.steps || []).map((st, i) => `
+                  <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
+                    <span class="text-stone-700">${st}</span>
+                  </li>
+                `).join('')}
+              </ol>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // OPEN EDIT MODAL PRE-POPULATED
+    function openEditModalForCurrentSpec() {
+      if (!currentModalSpec) return;
+      closeDetailModal();
+
+      document.getElementById('form-modal-heading').innerText = "Edit Spec";
+      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or re-categorize";
+      document.getElementById('edit-spec-id').value = currentModalSpec.id;
+
+      const sec = currentModalSpec.section || 'recipes';
+      document.getElementById('import-section').value = sec;
+      updateCategoryDropdown(sec, currentModalSpec.category);
+
+      document.getElementById('import-title').value = currentModalSpec.title || '';
+      document.getElementById('import-time').value = currentModalSpec.targetTime || '';
+      document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
+      document.getElementById('import-drive').value = currentModalSpec.driveUrl || '';
+
+      const rawHtmlBox = document.getElementById('import-raw-html');
+      if (currentModalSpec.fileType === 'html') {
+        rawHtmlBox.value = currentModalSpec.fileData || '';
+        document.getElementById('raw-html-container').classList.remove('hidden');
+        document.getElementById('raw-html-toggle-icon').innerText = 'Hide -';
+      } else {
+        rawHtmlBox.value = '';
+        document.getElementById('raw-html-container').classList.add('hidden');
+        document.getElementById('raw-html-toggle-icon').innerText = 'Show +';
+      }
+
+      const ingText = (currentModalSpec.ingredients || []).map(i => `${i.name}: ${i.amount || ''} ${i.unit || ''}`.trim()).join('\n');
+      document.getElementById('import-ingredients').value = ingText;
+
+      const stepsText = (currentModalSpec.steps || []).join('\n');
+      document.getElementById('import-steps').value = stepsText;
+
+      stagedFileType = currentModalSpec.fileType || null;
+      stagedFileData = currentModalSpec.fileData || null;
+      stagedImage = currentModalSpec.image || null;
+
+      const dropTitle = document.getElementById('drop-title');
+      const dropSub = document.getElementById('drop-sub');
+      const dropIcon = document.getElementById('drop-icon');
+
+      if (stagedImage) {
+        dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
+        dropTitle.innerText = "Cover photo currently attached";
+        dropSub.innerText = "Drop a new photo to replace, or keep as is.";
+      }
+
+      document.getElementById('import-modal').classList.remove('hidden');
+    }
+
+    // MANAGER PIN & LOCK
+    function toggleManagerLock() {
+      if (isManager) {
+        lockManager();
+      } else {
+        openPinModal('Enter PIN to access manager mode', () => {
+          isManager = true;
+          document.getElementById('manager-toolbar').classList.remove('hidden');
+          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
+          document.getElementById('manager-label').innerText = 'Manager';
+        });
+      }
+    }
+
+    function lockManager() {
+      isManager = false;
+      document.getElementById('manager-toolbar').classList.add('hidden');
+      document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
+      document.getElementById('manager-label').innerText = 'Staff Mode';
+    }
+
+    function promptChangePin() {
+      openPinModal('Enter current PIN first', () => {
+        const newPin = prompt('Enter new 4-digit PIN:');
+        if (newPin && newPin.length === 4 && !isNaN(newPin)) {
+          managerPin = newPin;
+          localStorage.setItem('lula_pin', newPin);
+          alert('Manager PIN updated successfully.');
+        } else {
+          alert('Invalid PIN. Must be exactly 4 digits.');
+        }
+      });
+    }
+
+    function openPinModal(subtext, cb) {
+      pinBuffer = '';
+      pinCallback = cb;
+      document.getElementById('pin-subtext').innerText = subtext;
+      updateDots();
+      document.getElementById('pin-modal').classList.remove('hidden');
+    }
+
+    function closePinModal() {
+      document.getElementById('pin-modal').classList.add('hidden');
+      pinBuffer = '';
+    }
+
+    function pressPin(d) {
+      if (pinBuffer.length < 4) {
+        pinBuffer += d;
+        updateDots();
+        if (pinBuffer.length === 4) {
+          setTimeout(() => {
+            if (pinBuffer === managerPin) {
+              const cb = pinCallback;
+              closePinModal();
+              if (cb) cb();
+            } else {
+              alert('Incorrect PIN');
+              pinBuffer = '';
+              updateDots();
+            }
+          }, 100);
+        }
+      }
+    }
+
+    function clearPin() {
+      pinBuffer = '';
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll('#pin-dots > div');
+      dots.forEach((dot, idx) => {
+        dot.className = idx < pinBuffer.length 
+          ? 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900' 
+          : 'w-3 h-3 rounded-full border border-stone-400';
+      });
+    }
+
+    // DRAG AND DROP SETUP
+    function setupDropZone() {
+      const dropZone = document.getElementById('drop-zone');
+      if (!dropZone) return;
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropZone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+      });
+      dropZone.addEventListener('dragover', () => dropZone.classList.add('border-brand-accent', 'bg-rose-50/50'));
+      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-brand-accent', 'bg-rose-50/50'));
+      dropZone.addEventListener('drop', (e) => {
+        dropZone.classList.remove('border-brand-accent', 'bg-rose-50/50');
+        const dt = e.dataTransfer;
+        if (dt.files.length) processFile(dt.files[0]);
+      });
+    }
+
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      if (files.length) processFile(files[0]);
+    }
+
+    function processFile(file) {
+      stagedFileName = file.name;
+      const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
+      const titleInput = document.getElementById('import-title');
+      if (!titleInput.value) {
+        titleInput.value = cleanTitle;
+      }
+
+      const dropTitle = document.getElementById('drop-title');
+      const dropSub = document.getElementById('drop-sub');
+      const dropIcon = document.getElementById('drop-icon');
+
+      if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
+        stagedFileType = 'html';
+        const reader = new FileReader();
+        reader.onload = (e) => { 
+          stagedFileData = e.target.result;
+          document.getElementById('import-raw-html').value = stagedFileData;
+        };
+        reader.readAsText(file);
+        dropIcon.className = "ph-duotone ph-code text-3xl text-emerald-600 mb-1 inline-block";
+        dropTitle.innerText = `HTML Attached: ${file.name}`;
+        dropSub.innerText = "Interactive SOP card loaded and ready to broadcast.";
+      } else if (file.name.endsWith('.pdf')) {
+        stagedFileType = 'pdf';
+        const reader = new FileReader();
+        reader.onload = (e) => { stagedFileData = e.target.result; };
+        reader.readAsDataURL(file);
+        dropIcon.className = "ph-duotone ph-file-pdf text-3xl text-rose-600 mb-1 inline-block";
+        dropTitle.innerText = `PDF Attached: ${file.name}`;
+        dropSub.innerText = "PDF document ready to embed.";
+      } else if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e) => { stagedImage = e.target.result; };
+        reader.readAsDataURL(file);
+        dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
+        dropTitle.innerText = `Photo Attached: ${file.name}`;
+        dropSub.innerText = "Cover photo set. Ingredients and method below will be preserved!";
+      }
+    }
+
+    function openImportModal() {
+      document.getElementById('edit-spec-id').value = '';
+      document.getElementById('form-modal-heading').innerText = "Add / Drop In New Spec";
+      document.getElementById('form-modal-subheading').innerText = "Drop HTML, PDF, Photo, or paste raw HTML code";
+      document.getElementById('import-title').value = '';
+      
+      const currentSec = window.currentSection === 'training' ? 'recipes' : window.currentSection;
+      document.getElementById('import-section').value = currentSec;
+      updateCategoryDropdown(currentSec);
+
+      document.getElementById('import-time').value = '';
+      document.getElementById('import-shelf').value = '';
+      document.getElementById('import-drive').value = '';
+      document.getElementById('import-ingredients').value = '';
+      document.getElementById('import-steps').value = '';
+
+      document.getElementById('import-raw-html').value = '';
+      document.getElementById('raw-html-container').classList.add('hidden');
+      document.getElementById('raw-html-toggle-icon').innerText = 'Show +';
+
+      stagedFileType = null;
+      stagedFileData = null;
+      stagedImage = null;
+      stagedFileName = '';
+      document.getElementById('drop-icon').className = "ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block";
+      document.getElementById('drop-title').innerText = "Drop your file or photo here, or browse";
+      document.getElementById('drop-sub').innerText = "Photos will automatically attach as the cover & plating guide";
+      document.getElementById('import-modal').classList.remove('hidden');
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+
+    async function saveImportedSpec() {
+      const editId = document.getElementById('edit-spec-id').value;
+      const sec = document.getElementById('import-section').value;
+      const cat = getSelectedCategoryFromModal();
+      const title = document.getElementById('import-title').value.trim();
+      const targetTime = document.getElementById('import-time').value.trim() || 'Standard';
+      const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
+      const driveUrl = document.getElementById('import-drive').value.trim() || '';
+      const rawIng = document.getElementById('import-ingredients').value.trim();
+      const rawSteps = document.getElementById('import-steps').value.trim();
+      const rawHtml = document.getElementById('import-raw-html').value.trim();
+
+      if (!title) {
+        alert('Please enter a spec title.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('import-submit-btn');
+      submitBtn.innerText = 'Broadcasting to Tablets...';
+      submitBtn.disabled = true;
+
+      const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
+        const parts = line.split(':');
+        return { name: parts[0]?.trim(), amount: parts[1]?.trim() || '', unit: '' };
+      });
+      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
+
+      const specId = editId || ('spec-' + Date.now());
+      
+      let finalFileType = 'text';
+      let finalFileData = null;
+
+      if (rawHtml.length > 10) {
+        finalFileType = 'html';
+        finalFileData = rawHtml;
+      } else if (stagedFileType) {
+        finalFileType = stagedFileType;
+        finalFileData = stagedFileData;
+      } else if (driveUrl) {
+        finalFileType = 'drive';
+      }
+
+      const payload = {
+        title,
+        section: sec,
+        category: cat,
+        targetTime,
+        shelfLife,
+        driveUrl,
+        fileType: finalFileType,
+        fileData: finalFileData,
+        image: stagedImage || '',
+        color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
+        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec' }],
+        steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.'],
+        timestamp: Date.now()
+      };
+
+      if (db) {
+        try {
+          await db.collection("lula_specs").doc(specId).set(payload, { merge: true });
+        } catch (err) {
+          console.warn("Cloud save issue, saving locally:", err);
+          window.specs = window.specs.filter(s => s.id !== specId);
+          window.specs.unshift({ id: specId, ...payload });
+          localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+          renderCatalog();
+        }
+      } else {
+        window.specs = window.specs.filter(s => s.id !== specId);
+        window.specs.unshift({ id: specId, ...payload });
+        localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+        renderCatalog();
+      }
+
+      closeImportModal();
+      submitBtn.innerText = 'Save & Broadcast Everywhere';
+      submitBtn.disabled = false;
+    }
+
+    async function deleteCurrentSpec() {
+      if (!currentModalSpec) return;
+      if (!confirm(`Delete "${currentModalSpec.title}" across all tablets?`)) return;
+
+      if (db) {
+        try {
+          await db.collection("lula_specs").doc(currentModalSpec.id).delete();
+        } catch (err) {
+          console.warn("Cloud delete failed, deleting locally:", err);
+        }
+      }
+      window.specs = window.specs.filter(s => s.id !== currentModalSpec.id);
+      localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+      closeDetailModal();
+      renderCatalog();
+    }
+
+    function renderTraining() {
+      const tbody = document.getElementById('training-matrix-body');
+      if (!window.specs || window.specs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-stone-400 font-medium">No specs added to training passport yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = window.specs.map(s => `
+        <tr class="hover:bg-stone-50">
+          <td class="py-2.5 px-4 font-bold text-stone-900">${s.title}</td>
+          <td class="py-2.5 px-3 uppercase text-[10px] font-bold text-stone-500">${s.fileType || 'Doc'}</td>
+          <td class="py-2.5 px-3 text-stone-500">${s.category}</td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-4 text-right text-[10px] font-bold text-stone-400">IN TRAINING</td>
+        </tr>
+      `).join('');
+    }
+
+    if (document.readyState === 'loading') {
+      window.addEventListener('DOMContentLoaded', init);
+    } else {
+      init();
     }
   </script>
 </body>
