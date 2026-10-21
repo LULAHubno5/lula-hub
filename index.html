@@ -133,8 +133,13 @@
   <!-- MAIN VIEW -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
     <div id="catalog-view" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"></div>
-    <div id="empty-state" class="hidden text-center py-16">
-      <h3 class="text-sm font-bold text-stone-700 uppercase tracking-wider">No matching items found</h3>
+    
+    <div id="empty-state" class="text-center py-20">
+      <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-3 text-stone-400 text-xl">
+        <i class="ph-bold ph-notebook"></i>
+      </div>
+      <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider">No specs loaded yet</h3>
+      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Upload your recipe and dish photos to Google Drive, and we'll populate your official specs right here.</p>
     </div>
 
     <!-- TRAINING VIEW -->
@@ -266,108 +271,11 @@
   </div>
 
   <script>
-    // Initial Seed Specs
-    const SEED_SPECS = [
-      {
-        id: "focaccia-prep",
-        title: "Rosemary & Sea Salt Focaccia",
-        section: "recipes",
-        category: "Bread & Doughs",
-        targetTime: "24h Ferment",
-        shelfLife: "2 Days Ambient",
-        allergens: ["Gluten"],
-        haccp: "Prove at 26°C. Internal bake temp 96°C.",
-        color: "bg-amber-500",
-        icon: "ph-bread",
-        ingredients: [
-          { name: "Bread Flour", amount: 1000, unit: "g" },
-          { name: "Water (22°C)", amount: 800, unit: "g" },
-          { name: "EVOO", amount: 50, unit: "g" },
-          { name: "Fine Sea Salt", amount: 22, unit: "g" },
-          { name: "Instant Yeast", amount: 7, unit: "g" }
-        ],
-        steps: [
-          "Autolyse flour and water 30 mins.",
-          "Add yeast, mix 3 mins, then salt and oil until windowpane.",
-          "3 coil folds at 30 min intervals. Cold ferment 24h.",
-          "Dimple with EVOO, rosemary, and Maldon salt.",
-          "Bake Rational: 220°C 30% steam 10m, then 200°C dry 12m."
-        ]
-      },
-      {
-        id: "brownies-prep",
-        title: "LULA Signature Fudgy Brownies",
-        section: "recipes",
-        category: "Bakes",
-        targetTime: "45 Min Bake",
-        shelfLife: "4 Days Sealed",
-        allergens: ["Gluten", "Dairy", "Eggs"],
-        color: "bg-yellow-800",
-        icon: "ph-cake",
-        ingredients: [
-          { name: "70% Dark Chocolate", amount: 450, unit: "g" },
-          { name: "Unsalted Butter", amount: 350, unit: "g" },
-          { name: "Eggs", amount: 6, unit: "pcs" },
-          { name: "Caster Sugar", amount: 400, unit: "g" },
-          { name: "Flour", amount: 180, unit: "g" }
-        ],
-        steps: [
-          "Melt chocolate and butter over bain-marie.",
-          "Whisk eggs and sugar until pale and thick.",
-          "Fold chocolate into eggs, then gently fold flour.",
-          "Bake Rational: 160°C dry heat 32 mins."
-        ]
-      },
-      {
-        id: "turkish-eggs",
-        title: "LULA Turkish Eggs",
-        section: "sops",
-        category: "Brunch",
-        targetTime: "4.5 Mins",
-        shelfLife: "Order",
-        allergens: ["Gluten", "Dairy", "Eggs"],
-        color: "bg-rose-500",
-        icon: "ph-cooking-pot",
-        ingredients: [
-          { name: "Garlic Greek Yoghurt", amount: 150, unit: "g" },
-          { name: "Poached Eggs", amount: 2, unit: "pcs" },
-          { name: "Aleppo Chilli Butter", amount: 35, unit: "ml" },
-          { name: "Toasted Focaccia", amount: 1, unit: "slice" }
-        ],
-        steps: [
-          "Spoon 150g room-temp yoghurt into bowl with well.",
-          "Poach eggs 3 mins in simmering water.",
-          "Toast focaccia slice under salamander.",
-          "Seat drained eggs in yoghurt, drizzle hot chilli butter, serve immediately."
-        ]
-      },
-      {
-        id: "horchata-matcha",
-        title: "Iced Strawberry Horchata Matcha",
-        section: "barista",
-        category: "Matcha & Specialty",
-        targetTime: "90 Secs",
-        shelfLife: "Order",
-        allergens: ["Nuts"],
-        color: "bg-emerald-500",
-        icon: "ph-drop",
-        ingredients: [
-          { name: "Ceremonial Matcha", amount: 4, unit: "g" },
-          { name: "Hot Water", amount: 60, unit: "ml" },
-          { name: "Strawberry Puree", amount: 40, unit: "ml" },
-          { name: "House Horchata Milk", amount: 180, unit: "ml" }
-        ],
-        steps: [
-          "Whisk matcha with hot water until frothy.",
-          "Pump 40ml strawberry puree to base of cup.",
-          "Pack cup with ice cubes.",
-          "Pour horchata milk over ice, float matcha over top for 3 distinct layers."
-        ]
-      }
-    ];
+    // Pure Empty State (Ready for Real Specs)
+    let specs = [];
+    // Reset any legacy local storage demo items
+    localStorage.removeItem('lula_specs');
 
-    // State Variables
-    let specs = JSON.parse(localStorage.getItem('lula_specs')) || SEED_SPECS;
     let managerPin = localStorage.getItem('lula_pin') || '1234';
     let currentSection = 'recipes';
     let currentCategory = 'all';
@@ -400,11 +308,11 @@
       if (sec === 'training') {
         document.getElementById('category-bar-wrapper').classList.add('hidden');
         document.getElementById('catalog-view').classList.add('hidden');
+        document.getElementById('empty-state').classList.add('hidden');
         document.getElementById('training-view').classList.remove('hidden');
         renderTraining();
       } else {
         document.getElementById('category-bar-wrapper').classList.remove('hidden');
-        document.getElementById('catalog-view').classList.remove('hidden');
         document.getElementById('training-view').classList.add('hidden');
         renderCategoryPills();
         renderCatalog();
@@ -426,14 +334,13 @@
       const el = document.getElementById('category-pills');
       const cats = CATEGORIES[currentSection] || ["All"];
       el.innerHTML = cats.map(c => `
-        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
-          currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-        }">${c}</button>
+        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${ currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200' }">${c}</button>
       `).join('');
     }
 
     function renderCatalog() {
       const grid = document.getElementById('catalog-view');
+      const empty = document.getElementById('empty-state');
       const items = specs.filter(item => {
         if (item.section !== currentSection) return false;
         if (currentCategory !== 'all' && item.category.toLowerCase() !== currentCategory) return false;
@@ -443,6 +350,15 @@
 
       document.getElementById('active-count').innerText = `${items.length} items`;
       
+      if (items.length === 0) {
+        grid.innerHTML = '';
+        grid.classList.add('hidden');
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.classList.remove('hidden');
       grid.innerHTML = items.map(item => `
         <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
           <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
@@ -451,7 +367,7 @@
           </div>
           <div class="p-2.5">
             <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
-            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Prep'} • ${item.shelfLife || 'Fresh'}</div>
+            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime \vert{}\vert{} 'Prep'} •${item.shelfLife || 'Fresh'}</div>
           </div>
         </div>
       `).join('');
@@ -464,7 +380,7 @@
 
       document.getElementById('modal-title').innerText = currentModalSpec.title;
       document.getElementById('modal-category-badge').innerText = currentModalSpec.category;
-      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
+      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime \vert{}\vert{} ''} •${currentModalSpec.shelfLife || ''}`;
       document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Quality Standard';
 
       renderDetailContent();
@@ -483,180 +399,4 @@
     function renderDetailContent() {
       const scaleEl = document.getElementById('modal-scale-controls');
       scaleEl.innerHTML = [0.5, 1, 2].map(m => `
-        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
-      `).join('');
-
-      const body = document.getElementById('modal-body-content');
-      body.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
-            <ul class="divide-y divide-stone-200 text-xs">
-              ${(currentModalSpec.ingredients || []).map(ing => `
-                <li class="py-1.5 flex justify-between">
-                  <span class="text-stone-700">${ing.name}</span>
-                  <span class="font-bold text-stone-900 font-mono">${typeof ing.amount === 'number' ? ing.amount * currentScale : ing.amount} ${ing.unit || ''}</span>
-                </li>
-              `).join('')}
-            </ul>
-          </div>
-          <div>
-            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method</h4>
-            <ol class="space-y-2 text-xs">
-              ${(currentModalSpec.steps || []).map((st, i) => `
-                <li class="flex items-start gap-2">
-                  <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
-                  <span class="text-stone-700">${st}</span>
-                </li>
-              `).join('')}
-            </ol>
-          </div>
-        </div>
-      `;
-    }
-
-    // MANAGER PIN & LOCK
-    function toggleManagerLock() {
-      if (isManager) {
-        lockManager();
-      } else {
-        openPinModal('Enter PIN to access manager mode', () => {
-          isManager = true;
-          document.getElementById('manager-toolbar').classList.remove('hidden');
-          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
-          document.getElementById('manager-label').innerText = 'Manager';
-        });
-      }
-    }
-
-    function lockManager() {
-      isManager = false;
-      document.getElementById('manager-toolbar').classList.add('hidden');
-      document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
-      document.getElementById('manager-label').innerText = 'Staff Mode';
-    }
-
-    function promptChangePin() {
-      openPinModal('Enter current PIN first', () => {
-        const newPin = prompt('Enter new 4-digit PIN:');
-        if (newPin && newPin.length === 4 && !isNaN(newPin)) {
-          managerPin = newPin;
-          localStorage.setItem('lula_pin', newPin);
-          alert('Manager PIN updated successfully.');
-        } else {
-          alert('Invalid PIN. Must be exactly 4 digits.');
-        }
-      });
-    }
-
-    function openPinModal(subtext, cb) {
-      pinBuffer = '';
-      pinCallback = cb;
-      document.getElementById('pin-subtext').innerText = subtext;
-      updateDots();
-      document.getElementById('pin-modal').classList.remove('hidden');
-    }
-
-    function closePinModal() {
-      document.getElementById('pin-modal').classList.add('hidden');
-      pinBuffer = '';
-    }
-
-    function pressPin(d) {
-      if (pinBuffer.length < 4) {
-        pinBuffer += d;
-        updateDots();
-        if (pinBuffer.length === 4) {
-          setTimeout(() => {
-            if (pinBuffer === managerPin) {
-              const cb = pinCallback;
-              closePinModal();
-              if (cb) cb();
-            } else {
-              alert('Incorrect PIN');
-              pinBuffer = '';
-              updateDots();
-            }
-          }, 100);
-        }
-      }
-    }
-
-    function clearPin() {
-      pinBuffer = '';
-      updateDots();
-    }
-
-    function updateDots() {
-      const dots = document.querySelectorAll('#pin-dots > div');
-      dots.forEach((dot, idx) => {
-        dot.className = idx < pinBuffer.length 
-          ? 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900' 
-          : 'w-3 h-3 rounded-full border border-stone-400';
-      });
-    }
-
-    // ADD SPEC DIRECTLY
-    function openImportModal() {
-      document.getElementById('import-modal').classList.remove('hidden');
-    }
-    function closeImportModal() {
-      document.getElementById('import-modal').classList.add('hidden');
-    }
-    function saveImportedSpec() {
-      const sec = document.getElementById('import-section').value;
-      const cat = document.getElementById('import-category').value.trim() || 'General';
-      const title = document.getElementById('import-title').value.trim();
-      const rawIng = document.getElementById('import-ingredients').value.trim();
-      const rawSteps = document.getElementById('import-steps').value.trim();
-
-      if (!title) {
-        alert('Please enter a spec title.');
-        return;
-      }
-
-      const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
-        const parts = line.split(':');
-        return { name: parts[0]?.trim(), amount: parts[1]?.trim() || '', unit: '' };
-      });
-
-      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
-
-      const newSpec = {
-        id: 'spec-' + Date.now(),
-        title,
-        section: sec,
-        category: cat,
-        targetTime: 'Standard',
-        shelfLife: 'Daily',
-        color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
-        icon: 'ph-cooking-pot',
-        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per binder' }],
-        steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.']
-      };
-
-      specs.unshift(newSpec);
-      localStorage.setItem('lula_specs', JSON.stringify(specs));
-      closeImportModal();
-      renderCatalog();
-      alert(`Spec "${title}" added.`);
-    }
-
-    function renderTraining() {
-      const tbody = document.getElementById('training-matrix-body');
-      tbody.innerHTML = specs.map(s => `
-        <tr class="hover:bg-stone-50">
-          <td class="py-2.5 px-4 font-bold text-stone-900">${s.title}</td>
-          <td class="py-2.5 px-3 text-stone-500">${s.category}</td>
-          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
-          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
-          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
-          <td class="py-2.5 px-4 text-right text-[10px] font-bold text-stone-400">IN TRAINING</td>
-        </tr>
-      `).join('');
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs
