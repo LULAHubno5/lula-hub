@@ -278,15 +278,19 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-stone-700 mb-1">Section</label>
-            <select id="import-section" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
+            <select id="import-section" onchange="handleSectionChangeInModal(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
               <option value="recipes">Prep & Recipes</option>
               <option value="sops">Kitchen SOPs</option>
               <option value="barista">Barista & Bar</option>
             </select>
           </div>
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Category</label>
-            <input type="text" id="import-category" placeholder="e.g. Bakes, Bread, Brunch" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-stone-700 mb-1">Category (Sub-Section)</label>
+            <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
+              <!-- Options populated dynamically -->
+            </select>
+            <!-- Custom input fallback -->
+            <input type="text" id="import-category-custom" placeholder="Type custom category..." class="hidden mt-1.5 w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
 
@@ -358,6 +362,53 @@
       sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
+
+    // Populate Category Dropdown dynamically based on selected section
+    function updateCategoryDropdown(sectionVal, selectedCategory) {
+      const select = document.getElementById('import-category-select');
+      const customInput = document.getElementById('import-category-custom');
+      const subCats = (CATEGORIES[sectionVal] || []).filter(c => c !== "All");
+
+      select.innerHTML = subCats.map(c => `<option value="${c}">${c}</option>`).join('') + `<option value="__custom__">Custom...</option>`;
+
+      if (selectedCategory && subCats.includes(selectedCategory)) {
+        select.value = selectedCategory;
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      } else if (selectedCategory) {
+        select.value = '__custom__';
+        customInput.classList.remove('hidden');
+        customInput.value = selectedCategory;
+      } else {
+        select.value = subCats[0] || '';
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
+    }
+
+    function handleSectionChangeInModal(sec) {
+      updateCategoryDropdown(sec);
+    }
+
+    function handleCategorySelectChange(val) {
+      const customInput = document.getElementById('import-category-custom');
+      if (val === '__custom__') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
+    }
+
+    function getSelectedCategoryFromModal() {
+      const select = document.getElementById('import-category-select');
+      const customInput = document.getElementById('import-category-custom');
+      if (select.value === '__custom__') {
+        return customInput.value.trim() || 'General';
+      }
+      return select.value;
+    }
 
     // Firebase Connection
     let db = null;
@@ -649,8 +700,10 @@
       document.getElementById('form-modal-subheading').innerText = "Update details, rename, or re-categorize";
       document.getElementById('edit-spec-id').value = currentModalSpec.id;
 
-      document.getElementById('import-section').value = currentModalSpec.section || 'recipes';
-      document.getElementById('import-category').value = currentModalSpec.category || '';
+      const sec = currentModalSpec.section || 'recipes';
+      document.getElementById('import-section').value = sec;
+      updateCategoryDropdown(sec, currentModalSpec.category);
+
       document.getElementById('import-title').value = currentModalSpec.title || '';
       document.getElementById('import-time').value = currentModalSpec.targetTime || '';
       document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
@@ -814,7 +867,11 @@
       document.getElementById('form-modal-heading').innerText = "Add / Drop In New Spec";
       document.getElementById('form-modal-subheading').innerText = "Drop HTML, PDF, Photo, or link a Google Drive folder";
       document.getElementById('import-title').value = '';
-      document.getElementById('import-category').value = '';
+      
+      const currentSec = window.currentSection === 'training' ? 'recipes' : window.currentSection;
+      document.getElementById('import-section').value = currentSec;
+      updateCategoryDropdown(currentSec);
+
       document.getElementById('import-time').value = '';
       document.getElementById('import-shelf').value = '';
       document.getElementById('import-drive').value = '';
@@ -837,7 +894,7 @@
     async function saveImportedSpec() {
       const editId = document.getElementById('edit-spec-id').value;
       const sec = document.getElementById('import-section').value;
-      const cat = document.getElementById('import-category').value.trim() || 'General';
+      const cat = getSelectedCategoryFromModal();
       const title = document.getElementById('import-title').value.trim();
       const targetTime = document.getElementById('import-time').value.trim() || 'Standard';
       const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
