@@ -206,7 +206,6 @@
       <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
         <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
         <div class="flex items-center gap-2">
-          <!-- MANAGER ACTION BUTTONS -->
           <button id="modal-edit-btn" onclick="openEditModalForCurrentSpec()" class="hidden bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
             <i class="ph-bold ph-pencil-simple"></i> Edit Spec
           </button>
@@ -267,8 +266,8 @@
       <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
         class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-4 text-center cursor-pointer transition mb-4">
         <i id="drop-icon" class="ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block"></i>
-        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Drop your file here, or browse</h4>
-        <p id="drop-sub" class="text-[10px] text-stone-500">Supports .HTML, .PDF, or Photos (.JPG, .PNG)</p>
+        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Drop your file or photo here, or browse</h4>
+        <p id="drop-sub" class="text-[10px] text-stone-500">Photos will automatically attach as the cover & plating guide</p>
         <input type="file" id="file-input" onchange="handleFileSelect(event)" accept=".html,.htm,.pdf,image/*" class="hidden">
       </div>
 
@@ -286,10 +285,7 @@
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Category (Sub-Section)</label>
-            <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
-              <!-- Options populated dynamically -->
-            </select>
-            <!-- Custom input fallback -->
+            <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium"></select>
             <input type="text" id="import-category-custom" placeholder="Type custom category..." class="hidden mt-1.5 w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
@@ -355,6 +351,7 @@
 
     let stagedFileType = null;
     let stagedFileData = null;
+    let stagedImage = null;
     let stagedFileName = '';
 
     const CATEGORIES = {
@@ -363,7 +360,6 @@
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
 
-    // Populate Category Dropdown dynamically based on selected section
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
@@ -598,6 +594,7 @@
       const scaleEl = document.getElementById('modal-scale-controls');
       const body = document.getElementById('modal-body-content');
 
+      // 1. Interactive HTML Card View
       if (currentModalSpec.fileType === 'html') {
         scaleEl.innerHTML = '';
         body.innerHTML = `
@@ -610,6 +607,7 @@
         return;
       }
 
+      // 2. PDF Document Viewer
       if (currentModalSpec.fileType === 'pdf') {
         scaleEl.innerHTML = '';
         body.innerHTML = `
@@ -626,6 +624,7 @@
         return;
       }
 
+      // 3. Google Drive Live Embed View
       if (currentModalSpec.driveUrl) {
         scaleEl.innerHTML = '';
         let embedUrl = currentModalSpec.driveUrl;
@@ -648,44 +647,50 @@
         return;
       }
 
+      // 4. Default Scalable Recipe + Attached Photo Plating Standard View
       scaleEl.innerHTML = [0.5, 1, 2].map(m => `
         <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
       `).join('');
 
       body.innerHTML = `
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
-            <ul class="divide-y divide-stone-200 text-xs">
-              ${(currentModalSpec.ingredients || []).map(ing => {
-                const num = parseFloat(ing.amount);
-                const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
-                  ? Math.round(num * currentScale * 10) / 10 
-                  : ing.amount;
-                return `
-                  <li class="py-1.5 flex justify-between">
-                    <span class="text-stone-700">${ing.name}</span>
-                    <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
-                  </li>
-                `;
-              }).join('')}
-            </ul>
+          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200 flex flex-col justify-between">
+            <div>
+              <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
+              <ul class="divide-y divide-stone-200 text-xs">
+                ${(currentModalSpec.ingredients || []).map(ing => {
+                  const num = parseFloat(ing.amount);
+                  const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
+                    ? Math.round(num * currentScale * 10) / 10 
+                    : ing.amount;
+                  return `
+                    <li class="py-1.5 flex justify-between">
+                      <span class="text-stone-700">${ing.name}</span>
+                      <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
+                    </li>
+                  `;
+                }).join('')}
+              </ul>
+            </div>
           </div>
-          <div>
+
+          <div class="flex flex-col gap-3">
             ${currentModalSpec.image ? `
-              <div class="rounded-xl overflow-hidden border border-brand-border mb-3 max-h-48 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
+              <div class="rounded-xl overflow-hidden border border-brand-border shadow-xs bg-stone-100 max-h-56 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
                 <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
               </div>
             ` : ''}
-            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method</h4>
-            <ol class="space-y-2 text-xs">
-              ${(currentModalSpec.steps || []).map((st, i) => `
-                <li class="flex items-start gap-2">
-                  <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
-                  <span class="text-stone-700">${st}</span>
-                </li>
-              `).join('')}
-            </ol>
+            <div>
+              <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method / Build Steps</h4>
+              <ol class="space-y-2 text-xs">
+                ${(currentModalSpec.steps || []).map((st, i) => `
+                  <li class="flex items-start gap-2">
+                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
+                    <span class="text-stone-700">${st}</span>
+                  </li>
+                `).join('')}
+              </ol>
+            </div>
           </div>
         </div>
       `;
@@ -717,6 +722,17 @@
 
       stagedFileType = currentModalSpec.fileType || null;
       stagedFileData = currentModalSpec.fileData || null;
+      stagedImage = currentModalSpec.image || null;
+
+      const dropTitle = document.getElementById('drop-title');
+      const dropSub = document.getElementById('drop-sub');
+      const dropIcon = document.getElementById('drop-icon');
+
+      if (stagedImage) {
+        dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
+        dropTitle.innerText = "Cover photo currently attached";
+        dropSub.innerText = "Drop a new photo to replace, or keep as is.";
+      }
 
       document.getElementById('import-modal').classList.remove('hidden');
     }
@@ -852,13 +868,15 @@
         dropTitle.innerText = `PDF Attached: ${file.name}`;
         dropSub.innerText = "PDF document ready to embed.";
       } else if (file.type.startsWith('image/')) {
-        stagedFileType = 'image';
+        // KEEP AS RECIPE, ATTACH IMAGE AS COVER
         const reader = new FileReader();
-        reader.onload = (e) => { stagedFileData = e.target.result; };
+        reader.onload = (e) => { 
+          stagedImage = e.target.result; 
+        };
         reader.readAsDataURL(file);
-        dropIcon.className = "ph-duotone ph-image text-3xl text-blue-600 mb-1 inline-block";
+        dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
         dropTitle.innerText = `Photo Attached: ${file.name}`;
-        dropSub.innerText = "Image will be used as full-screen pass reference.";
+        dropSub.innerText = "Cover photo set. Ingredients and method below will be preserved!";
       }
     }
 
@@ -880,10 +898,11 @@
 
       stagedFileType = null;
       stagedFileData = null;
+      stagedImage = null;
       stagedFileName = '';
       document.getElementById('drop-icon').className = "ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block";
-      document.getElementById('drop-title').innerText = "Drop your file here, or browse";
-      document.getElementById('drop-sub').innerText = "Supports .HTML, .PDF, or Photos (.JPG, .PNG)";
+      document.getElementById('drop-title').innerText = "Drop your file or photo here, or browse";
+      document.getElementById('drop-sub').innerText = "Photos will automatically attach as the cover & plating guide";
       document.getElementById('import-modal').classList.remove('hidden');
     }
 
@@ -918,6 +937,10 @@
       const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
 
       const specId = editId || ('spec-' + Date.now());
+      
+      // Keep fileType as 'text' if it's a standard recipe with an attached image
+      const finalFileType = stagedFileType ? stagedFileType : (driveUrl ? 'drive' : 'text');
+
       const payload = {
         title,
         section: sec,
@@ -925,9 +948,9 @@
         targetTime,
         shelfLife,
         driveUrl,
-        fileType: stagedFileType || (driveUrl ? 'drive' : 'text'),
+        fileType: finalFileType,
         fileData: stagedFileData || null,
-        image: stagedFileType === 'image' ? stagedFileData : '',
+        image: stagedImage || '',
         color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
         ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec' }],
         steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.'],
