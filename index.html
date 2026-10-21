@@ -1,9 +1,174 @@
-{
-  id: "focaccia-prep",
-  title: "Rosemary & Sea Salt Focaccia",
-  section: "recipes",
-  category: "Bread & Doughs",
-  targetTime: "24h Ferment",
-  shelfLife: "2 Days Ambient",
-  ...
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LULA | Kitchen, Bar & Training Hub</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              cream: '#FFF9F5',
+              dark: '#1C1917',
+              pink: '#F472B6',
+              accent: '#E11D48',
+              surface: '#FFFFFF',
+              surfaceMuted: '#FAFAF9',
+              border: '#E7E5E4'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #FFF9F5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f5f5f4;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #d6d3d1;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="text-brand-dark min-h-screen flex flex-col antialiased">
+
+  <!-- ================= TOP STICKY HEADER ================= -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-brand-border px-4 py-2.5 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      
+      <!-- Brand & Section Switcher -->
+      <div class="flex items-center gap-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-white font-black tracking-wider text-sm shadow-sm">
+            L
+          </div>
+          <div>
+            <h1 class="text-sm font-black tracking-tight uppercase leading-none">LULA</h1>
+            <p class="text-[10px] text-stone-500 font-medium tracking-wider uppercase">Hub • Victoria Mills</p>
+          </div>
+        </div>
+
+        <div class="h-6 w-px bg-stone-200 hidden sm:block"></div>
+
+        <!-- Section Navigation Tabs -->
+        <nav class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl">
+          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs">
+            <i class="ph-bold ph-cooking-pot text-sm"></i>
+            <span>Prep & Recipes</span>
+          </button>
+          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+            <i class="ph-bold ph-fork-knife text-sm"></i>
+            <span>Kitchen SOPs</span>
+          </button>
+          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+            <i class="ph-bold ph-coffee text-sm"></i>
+            <span>Barista & Bar</span>
+          </button>
+          <button onclick="setSection('training')" id="tab-training" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+            <i class="ph-bold ph-certificate text-sm"></i>
+            <span>Training & Sign-Off</span>
+          </button>
+        </nav>
+      </div>
+
+      <!-- Search & Manager Lock -->
+      <div class="flex items-center gap-2">
+        <div class="relative w-44 sm:w-64">
+          <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm"></i>
+          <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Search specs, allergens..." 
+            class="w-full bg-stone-100 border border-transparent focus:border-stone-400 focus:bg-white rounded-lg pl-8 pr-3 py-1 text-xs outline-none transition font-medium">
+        </div>
+
+        <!-- Manager Lock / Unlock -->
+        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition">
+          <i id="manager-icon" class="ph-bold ph-lock-key text-xs"></i>
+          <span id="manager-label" class="hidden sm:inline">Staff Mode</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ================= MANAGER ADMIN TOOLBAR (Hidden by default) ================= -->
+  <div id="manager-toolbar" class="hidden bg-stone-900 text-stone-100 px-4 py-2 border-b border-stone-800 transition">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="font-bold uppercase tracking-wider text-[11px] text-stone-300">Manager Mode Active</span>
+        <span class="text-stone-500">|</span>
+        <span class="text-stone-400">Edits and custom specs persist on this tablet.</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition">
+          <i class="ph-bold ph-plus-circle"></i>
+          <span>Add / Import Spec</span>
+        </button>
+        <button onclick="exportDataBackup()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-medium px-2 py-1 rounded-md border border-stone-700 transition">
+          Backup JSON
+        </button>
+        <button onclick="importDataBackup()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-medium px-2 py-1 rounded-md border border-stone-700 transition">
+          Restore JSON
+        </button>
+        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold">
+          Lock Now
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= SUB-NAVIGATION / CATEGORY PILLS ================= -->
+  <div id="category-bar-wrapper" class="bg-white border-b border-brand-border px-4 py-2 sticky top-[49px] z-30 shadow-xs">
+    <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
+      <div id="category-pills" class="flex items-center gap-1.5 flex-nowrap min-w-max">
+        <!-- Rendered by JS -->
+      </div>
+      <div id="active-count" class="text-[11px] font-semibold text-stone-400 whitespace-nowrap pl-2">
+        Showing 3 items
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= MAIN CONTENT AREA ================= -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
+    
+    <!-- Item Grid View -->
+    <div id="catalog-view" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+      <!-- Cards rendered by JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden text-center py-16">
+      <i class="ph-duotone ph-magnifying-glass text-4xl text-stone-300 mb-2 inline-block"></i>
+      <h3 class="text-sm font-bold text-stone-700 uppercase tracking-wider">No matching items found</h3>
+      <p class="text-xs text-stone-500 mt-1">Try clearing your search query or switching categories.</p>
+    </div>
+
+    <!-- ================= TRAINING & SIGN-OFF VIEW ================= -->
+    <div id="training-view" class="hidden space-y-6">
+      <!-- Training Header Banner -->
+      <div class="bg-gradient-to-r from-stone-900 to-stone-800 text-white rounded-2xl p-5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <span class="inline-block bg-brand-pink/20 text-brand-pink text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded mb-1">Station Standard</span>
+          <h2 class="text-lg font-black tracking-tight">Staff Sign-Off & Practical Passports</h2>
+          <p class="text-xs text-stone-300 mt-0.5 max-w-xl">Every kitchen and bar team member must pass station calibration and execute each core dish perfectly 3 times under manager observation before running solo.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="startCalibrationQuiz('kitchen')" class="bg-white hover:bg-stone-100 text-stone-900 text-xs font-black px-3 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+            <i class="ph-bold
