@@ -6,6 +6,11 @@
   <title>LULA | Kitchen, Bar & Training Hub</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Firebase Compat Libraries (Rock-solid across all browsers & tablets) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -16,8 +21,6 @@
               dark: '#1C1917',
               pink: '#F472B6',
               accent: '#E11D48',
-              surface: '#FFFFFF',
-              surfaceMuted: '#FAFAF9',
               border: '#E7E5E4'
             }
           }
@@ -57,7 +60,13 @@
             L
           </div>
           <div>
-            <h1 class="text-sm font-black tracking-tight uppercase leading-none">LULA</h1>
+            <div class="flex items-center gap-1.5">
+              <h1 class="text-sm font-black tracking-tight uppercase leading-none">LULA</h1>
+              <div id="cloud-status" class="flex items-center gap-1 pl-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[9px] font-bold text-emerald-600 uppercase">Live Cloud Sync</span>
+              </div>
+            </div>
             <p class="text-[10px] text-stone-500 font-medium tracking-wider uppercase">Hub • Victoria Mills</p>
           </div>
         </div>
@@ -65,19 +74,19 @@
         <div class="h-6 w-px bg-stone-200 hidden sm:block"></div>
 
         <nav class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl">
-          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs">
+          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs cursor-pointer">
             <i class="ph-bold ph-cooking-pot text-sm"></i>
             <span>Prep & Recipes</span>
           </button>
-          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer">
             <i class="ph-bold ph-fork-knife text-sm"></i>
             <span>Kitchen SOPs</span>
           </button>
-          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer">
             <i class="ph-bold ph-coffee text-sm"></i>
             <span>Barista & Bar</span>
           </button>
-          <button onclick="setSection('training')" id="tab-training" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
+          <button onclick="setSection('training')" id="tab-training" class="nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer">
             <i class="ph-bold ph-certificate text-sm"></i>
             <span>Training</span>
           </button>
@@ -91,7 +100,7 @@
             class="w-full bg-stone-100 border border-transparent focus:border-stone-400 focus:bg-white rounded-lg pl-8 pr-3 py-1 text-xs outline-none transition font-medium">
         </div>
 
-        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition">
+        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition cursor-pointer">
           <i id="manager-icon" class="ph-bold ph-lock-key text-xs"></i>
           <span id="manager-label" class="hidden sm:inline">Staff Mode</span>
         </button>
@@ -106,16 +115,18 @@
       <div class="flex items-center gap-2">
         <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span class="font-bold uppercase tracking-wider text-[11px] text-stone-300">Manager Unlocked</span>
+        <span class="text-stone-500">|</span>
+        <span class="text-stone-400 text-[10px]">Changes sync across all tablets live.</span>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition">
+        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition cursor-pointer">
           <i class="ph-bold ph-plus-circle"></i>
           <span>+ Add Spec</span>
         </button>
-        <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition">
+        <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition cursor-pointer">
           Change PIN
         </button>
-        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold">
+        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold cursor-pointer">
           Lock Hub
         </button>
       </div>
@@ -139,7 +150,7 @@
         <i class="ph-bold ph-notebook"></i>
       </div>
       <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider">No specs loaded yet</h3>
-      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Upload your recipe and dish photos to Google Drive, and we'll populate your official specs right here.</p>
+      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode and add your first spec.</p>
     </div>
 
     <!-- TRAINING VIEW -->
@@ -180,7 +191,7 @@
         </div>
         <div class="flex items-center gap-2">
           <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold"></div>
-          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
+          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg cursor-pointer">
             <i class="ph-bold ph-x"></i>
           </button>
         </div>
@@ -188,7 +199,12 @@
       <div id="modal-body-content" class="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-4"></div>
       <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs">
         <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
-        <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg">Done</button>
+        <div class="flex items-center gap-2">
+          <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition cursor-pointer">
+            Delete Spec
+          </button>
+          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg cursor-pointer">Done</button>
+        </div>
       </div>
     </div>
   </div>
@@ -210,18 +226,18 @@
       </div>
 
       <div class="grid grid-cols-3 gap-2 max-w-[200px] mx-auto mb-3">
-        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">1</button>
-        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">2</button>
-        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">3</button>
-        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">4</button>
-        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">5</button>
-        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">6</button>
-        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">7</button>
-        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">8</button>
-        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">9</button>
-        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600">C</button>
-        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">0</button>
-        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600">Cancel</button>
+        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">1</button>
+        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">2</button>
+        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">3</button>
+        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">4</button>
+        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">5</button>
+        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">6</button>
+        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">7</button>
+        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">8</button>
+        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">9</button>
+        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600 cursor-pointer">C</button>
+        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95 cursor-pointer">0</button>
+        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600 cursor-pointer">Cancel</button>
       </div>
     </div>
   </div>
@@ -230,8 +246,8 @@
   <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl border border-stone-200">
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
-        <h3 class="text-sm font-black text-stone-900 uppercase">+ Add New LULA Spec</h3>
-        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
+        <h3 class="text-sm font-black text-stone-900 uppercase">+ Add New LULA Spec (Cloud Sync)</h3>
+        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800 cursor-pointer"><i class="ph-bold ph-x text-base"></i></button>
       </div>
 
       <div class="space-y-3 text-xs">
@@ -253,31 +269,55 @@
           <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
           <input type="text" id="import-title" placeholder="e.g. Turkish Eggs" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
         </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Target Time</label>
+            <input type="text" id="import-time" placeholder="e.g. 4.5 Mins" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Shelf Life</label>
+            <input type="text" id="import-shelf" placeholder="e.g. Order / 3 Days" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Photo Image URL (Optional)</label>
+          <input type="text" id="import-image" placeholder="https://..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+        </div>
         <div>
           <label class="block font-bold text-stone-700 mb-1">Ingredients (1 per line, e.g: Greek Yoghurt: 150g)</label>
-          <textarea id="import-ingredients" rows="4" placeholder="Greek Yoghurt: 150g&#10;Poached Eggs: 2 pcs&#10;Chilli Butter: 35ml" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-ingredients" rows="4" placeholder="Garlic Greek Yoghurt: 150g&#10;Poached Eggs: 2 pcs&#10;Chilli Butter: 35ml" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
         <div>
           <label class="block font-bold text-stone-700 mb-1">Method / Build Steps (1 per line)</label>
-          <textarea id="import-steps" rows="4" placeholder="Spoon yoghurt into bowl&#10;Poach eggs 3 mins&#10;Pour hot chilli butter over" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-steps" rows="4" placeholder="Spoon yoghurt into shallow bowl&#10;Poach eggs 3 mins&#10;Drizzle hot chilli butter over eggs" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-stone-100">
-        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100">Cancel</button>
-        <button onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs">Save Spec</button>
+        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100 cursor-pointer">Cancel</button>
+        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs cursor-pointer">Save & Broadcast</button>
       </div>
     </div>
   </div>
 
   <script>
-    // Pure Empty State (Ready for Real Specs)
-    let specs = [];
-    // Reset any legacy local storage demo items
-    localStorage.removeItem('lula_specs');
+    // Initialize Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyBbrvyDhGxJEQ4TN-9iO-WQixvb8GhfVQE",
+      authDomain: "lula-hub.firebaseapp.com",
+      projectId: "lula-hub",
+      storageBucket: "lula-hub.firebasestorage.app",
+      messagingSenderId: "461988583707",
+      appId: "1:461988583707:web:96dca60800ad120def5bbe"
+    };
 
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    // App State
+    window.specs = [];
     let managerPin = localStorage.getItem('lula_pin') || '1234';
-    let currentSection = 'recipes';
+    window.currentSection = 'recipes';
     let currentCategory = 'all';
     let searchQuery = '';
     let isManager = false;
@@ -292,18 +332,33 @@
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
 
+    // Live Database Listener
+    db.collection("lula_specs").onSnapshot((snapshot) => {
+      const items = [];
+      snapshot.forEach(doc => {
+        items.push({ id: doc.id, ...doc.data() });
+      });
+      // Sort newest first
+      items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+      window.specs = items;
+      renderCatalog();
+      if (window.currentSection === 'training') renderTraining();
+    }, (error) => {
+      console.error("Firestore listener error:", error);
+    });
+
     function init() {
       renderCategoryPills();
       renderCatalog();
     }
 
     function setSection(sec) {
-      currentSection = sec;
+      window.currentSection = sec;
       currentCategory = 'all';
       document.querySelectorAll('.nav-tab').forEach(t => {
-        t.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900';
+        t.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900 cursor-pointer';
       });
-      document.getElementById(`tab-${sec}`).className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs';
+      document.getElementById(`tab-${sec}`).className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs cursor-pointer';
 
       if (sec === 'training') {
         document.getElementById('category-bar-wrapper').classList.add('hidden');
@@ -332,19 +387,21 @@
 
     function renderCategoryPills() {
       const el = document.getElementById('category-pills');
-      const cats = CATEGORIES[currentSection] || ["All"];
+      const cats = CATEGORIES[window.currentSection] || ["All"];
       el.innerHTML = cats.map(c => `
-        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${ currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200' }">${c}</button>
+        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
+          currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+        }">${c}</button>
       `).join('');
     }
 
     function renderCatalog() {
       const grid = document.getElementById('catalog-view');
       const empty = document.getElementById('empty-state');
-      const items = specs.filter(item => {
-        if (item.section !== currentSection) return false;
-        if (currentCategory !== 'all' && item.category.toLowerCase() !== currentCategory) return false;
-        if (searchQuery && !item.title.toLowerCase().includes(searchQuery)) return false;
+      const items = (window.specs || []).filter(item => {
+        if (item.section !== window.currentSection) return false;
+        if (currentCategory !== 'all' && item.category?.toLowerCase() !== currentCategory) return false;
+        if (searchQuery && !item.title?.toLowerCase().includes(searchQuery)) return false;
         return true;
       });
 
@@ -361,27 +418,41 @@
       grid.classList.remove('hidden');
       grid.innerHTML = items.map(item => `
         <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
-          <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
-            <i class="ph-bold ${item.icon || 'ph-cooking-pot'} text-2xl"></i>
-            <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">${item.category}</span>
-          </div>
+          ${item.image ? `
+            <div class="h-24 w-full bg-stone-100 overflow-hidden relative">
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 bg-black/50 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">${item.category}</span>
+            </div>
+          ` : `
+            <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
+              <i class="ph-bold ${item.icon || 'ph-cooking-pot'} text-2xl"></i>
+              <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">${item.category}</span>
+            </div>
+          `}
           <div class="p-2.5">
             <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
-            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime \vert{}\vert{} 'Prep'} •${item.shelfLife || 'Fresh'}</div>
+            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Prep'} • ${item.shelfLife || 'Fresh'}</div>
           </div>
         </div>
       `).join('');
     }
 
     function openDetail(id) {
-      currentModalSpec = specs.find(s => s.id === id);
+      currentModalSpec = (window.specs || []).find(s => s.id === id);
       if (!currentModalSpec) return;
       currentScale = 1;
 
       document.getElementById('modal-title').innerText = currentModalSpec.title;
       document.getElementById('modal-category-badge').innerText = currentModalSpec.category;
-      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime \vert{}\vert{} ''} •${currentModalSpec.shelfLife || ''}`;
+      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
       document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Quality Standard';
+
+      const deleteBtn = document.getElementById('modal-delete-btn');
+      if (isManager) {
+        deleteBtn.classList.remove('hidden');
+      } else {
+        deleteBtn.classList.add('hidden');
+      }
 
       renderDetailContent();
       document.getElementById('detail-modal').classList.remove('hidden');
@@ -399,4 +470,226 @@
     function renderDetailContent() {
       const scaleEl = document.getElementById('modal-scale-controls');
       scaleEl.innerHTML = [0.5, 1, 2].map(m => `
-        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs
+        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition cursor-pointer ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
+      `).join('');
+
+      const body = document.getElementById('modal-body-content');
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
+            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
+            <ul class="divide-y divide-stone-200 text-xs">
+              ${(currentModalSpec.ingredients || []).map(ing => {
+                const num = parseFloat(ing.amount);
+                const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
+                  ? Math.round(num * currentScale * 10) / 10 
+                  : ing.amount;
+                return `
+                  <li class="py-1.5 flex justify-between">
+                    <span class="text-stone-700">${ing.name}</span>
+                    <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </div>
+          <div>
+            ${currentModalSpec.image ? `
+              <div class="rounded-xl overflow-hidden border border-brand-border mb-3 max-h-40">
+                <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
+              </div>
+            ` : ''}
+            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method</h4>
+            <ol class="space-y-2 text-xs">
+              ${(currentModalSpec.steps || []).map((st, i) => `
+                <li class="flex items-start gap-2">
+                  <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
+                  <span class="text-stone-700">${st}</span>
+                </li>
+              `).join('')}
+            </ol>
+          </div>
+        </div>
+      `;
+    }
+
+    // MANAGER PIN & LOCK
+    function toggleManagerLock() {
+      if (isManager) {
+        lockManager();
+      } else {
+        openPinModal('Enter PIN to access manager mode', () => {
+          isManager = true;
+          document.getElementById('manager-toolbar').classList.remove('hidden');
+          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
+          document.getElementById('manager-label').innerText = 'Manager';
+        });
+      }
+    }
+
+    function lockManager() {
+      isManager = false;
+      document.getElementById('manager-toolbar').classList.add('hidden');
+      document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
+      document.getElementById('manager-label').innerText = 'Staff Mode';
+    }
+
+    function promptChangePin() {
+      openPinModal('Enter current PIN first', () => {
+        const newPin = prompt('Enter new 4-digit PIN:');
+        if (newPin && newPin.length === 4 && !isNaN(newPin)) {
+          managerPin = newPin;
+          localStorage.setItem('lula_pin', newPin);
+          alert('Manager PIN updated successfully.');
+        } else {
+          alert('Invalid PIN. Must be exactly 4 digits.');
+        }
+      });
+    }
+
+    function openPinModal(subtext, cb) {
+      pinBuffer = '';
+      pinCallback = cb;
+      document.getElementById('pin-subtext').innerText = subtext;
+      updateDots();
+      document.getElementById('pin-modal').classList.remove('hidden');
+    }
+
+    function closePinModal() {
+      document.getElementById('pin-modal').classList.add('hidden');
+      pinBuffer = '';
+    }
+
+    function pressPin(d) {
+      if (pinBuffer.length < 4) {
+        pinBuffer += d;
+        updateDots();
+        if (pinBuffer.length === 4) {
+          setTimeout(() => {
+            if (pinBuffer === managerPin) {
+              const cb = pinCallback;
+              closePinModal();
+              if (cb) cb();
+            } else {
+              alert('Incorrect PIN');
+              pinBuffer = '';
+              updateDots();
+            }
+          }, 100);
+        }
+      }
+    }
+
+    function clearPin() {
+      pinBuffer = '';
+      updateDots();
+    }
+
+    function updateDots() {
+      const dots = document.querySelectorAll('#pin-dots > div');
+      dots.forEach((dot, idx) => {
+        dot.className = idx < pinBuffer.length 
+          ? 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900' 
+          : 'w-3 h-3 rounded-full border border-stone-400';
+      });
+    }
+
+    // CLOUD FIREBASE SAVE / BROADCAST
+    function openImportModal() {
+      document.getElementById('import-modal').classList.remove('hidden');
+    }
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+
+    async function saveImportedSpec() {
+      const sec = document.getElementById('import-section').value;
+      const cat = document.getElementById('import-category').value.trim() || 'General';
+      const title = document.getElementById('import-title').value.trim();
+      const targetTime = document.getElementById('import-time').value.trim() || 'Prep';
+      const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
+      const image = document.getElementById('import-image').value.trim() || '';
+      const rawIng = document.getElementById('import-ingredients').value.trim();
+      const rawSteps = document.getElementById('import-steps').value.trim();
+
+      if (!title) {
+        alert('Please enter a spec title.');
+        return;
+      }
+
+      const submitBtn = document.getElementById('import-submit-btn');
+      submitBtn.innerText = 'Broadcasting...';
+      submitBtn.disabled = true;
+
+      const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
+        const parts = line.split(':');
+        return { name: parts[0]?.trim(), amount: parts[1]?.trim() || '', unit: '' };
+      });
+
+      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
+
+      const specId = 'spec-' + Date.now();
+      const payload = {
+        title,
+        section: sec,
+        category: cat,
+        targetTime,
+        shelfLife,
+        image,
+        color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
+        icon: 'ph-cooking-pot',
+        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per binder' }],
+        steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.'],
+        timestamp: Date.now()
+      };
+
+      try {
+        await db.collection("lula_specs").doc(specId).set(payload);
+        closeImportModal();
+        document.getElementById('import-title').value = '';
+        document.getElementById('import-category').value = '';
+        document.getElementById('import-image').value = '';
+        document.getElementById('import-ingredients').value = '';
+        document.getElementById('import-steps').value = '';
+      } catch (err) {
+        alert("Failed to save to cloud: " + err.message);
+      } finally {
+        submitBtn.innerText = 'Save & Broadcast';
+        submitBtn.disabled = false;
+      }
+    }
+
+    async function deleteCurrentSpec() {
+      if (!currentModalSpec) return;
+      if (!confirm(`Delete "${currentModalSpec.title}" everywhere?`)) return;
+
+      try {
+        await db.collection("lula_specs").doc(currentModalSpec.id).delete();
+        closeDetailModal();
+      } catch (err) {
+        alert("Failed to delete spec: " + err.message);
+      }
+    }
+
+    function renderTraining() {
+      const tbody = document.getElementById('training-matrix-body');
+      if (!window.specs || window.specs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-stone-400 font-medium">No specs added to training passport yet.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = window.specs.map(s => `
+        <tr class="hover:bg-stone-50">
+          <td class="py-2.5 px-4 font-bold text-stone-900">${s.title}</td>
+          <td class="py-2.5 px-3 text-stone-500">${s.category}</td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
+          <td class="py-2.5 px-4 text-right text-[10px] font-bold text-stone-400">IN TRAINING</td>
+        </tr>
+      `).join('');
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
