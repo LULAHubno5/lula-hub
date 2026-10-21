@@ -184,8 +184,8 @@
     </div>
   </main>
 
-  <!-- DETAIL MODAL -->
-  <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-1 sm:p-4">
+  <!-- DETAIL MODAL (Auto-Expands to Widescreen for HTML SOPs) -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-2 sm:p-4">
     <div id="modal-container" class="bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200">
       <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/75 shrink-0">
         <div>
@@ -201,8 +201,7 @@
         </div>
       </div>
       
-      <!-- Modal Content Body -->
-      <div id="modal-body-content" class="flex-1 overflow-y-auto p-2 sm:p-4 custom-scrollbar"></div>
+      <div id="modal-body-content" class="flex-1 overflow-y-auto p-3 sm:p-5 custom-scrollbar"></div>
       
       <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
         <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
@@ -606,20 +605,17 @@
       if (!currentModalSpec) return;
       currentScale = 1;
 
-      const container = document.getElementById('modal-container');
-      const isHtml = currentModalSpec.fileType === 'html';
-
-      // Expand to wide landscape modal for full A4 SOPs
-      if (isHtml) {
-        container.className = "bg-white w-full max-w-[96vw] xl:max-w-7xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
-      } else {
-        container.className = "bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
-      }
-
       document.getElementById('modal-title').innerText = currentModalSpec.title;
       document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
       document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
       document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Standards & Quality Protocol';
+
+      const container = document.getElementById('modal-container');
+      if (currentModalSpec.fileType === 'html') {
+        container.className = "bg-white w-full max-w-[96vw] max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
+      } else {
+        container.className = "bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
+      }
 
       const editBtn = document.getElementById('modal-edit-btn');
       const deleteBtn = document.getElementById('modal-delete-btn');
@@ -649,36 +645,16 @@
       const scaleEl = document.getElementById('modal-scale-controls');
       const body = document.getElementById('modal-body-content');
 
-      // 1. Interactive HTML Card View (Full-Bleed, Auto-Fit)
+      // 1. Interactive HTML Card View
       if (currentModalSpec.fileType === 'html') {
         scaleEl.innerHTML = '';
         body.innerHTML = `
-          <div class="w-full h-[76vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex items-center justify-center p-0">
-            <iframe id="sop-iframe" class="w-full h-full border-0 bg-white"></iframe>
+          <div class="w-full h-[78vh] rounded-xl overflow-hidden border border-brand-border bg-white shadow-xs">
+            <iframe id="sop-iframe" class="w-full h-full border-0"></iframe>
           </div>
         `;
-        
-        // Inject content and ensure left margin is not clipped
         const iframe = document.getElementById('sop-iframe');
-        const customWrapper = `
-          <!DOCTYPE html>
-          <html>
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <style>
-                body { margin: 0; padding: 4px; display: flex; justify-content: center; background-color: #f5f5f4; }
-                .sop-outer-wrapper { width: 100%; max-width: 1140px; margin: 0 auto; }
-              </style>
-            </head>
-            <body>
-              <div class="sop-outer-wrapper">
-                ${currentModalSpec.fileData}
-              </div>
-            </body>
-          </html>
-        `;
-        iframe.srcdoc = currentModalSpec.fileData.includes('<html') ? currentModalSpec.fileData : customWrapper;
+        iframe.srcdoc = currentModalSpec.fileData;
         return;
       }
 
@@ -686,7 +662,7 @@
       if (currentModalSpec.fileType === 'pdf') {
         scaleEl.innerHTML = '';
         body.innerHTML = `
-          <div class="w-full h-[76vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex flex-col">
+          <div class="w-full h-[74vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex flex-col">
             <object data="${currentModalSpec.fileData}" type="application/pdf" class="w-full flex-1">
               <div class="p-6 text-center text-xs text-stone-600">
                 <i class="ph-bold ph-file-pdf text-3xl text-rose-600 mb-2"></i>
@@ -707,7 +683,7 @@
           embedUrl = embedUrl.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview');
         }
         body.innerHTML = `
-          <div class="w-full h-[76vh] rounded-xl overflow-hidden border border-brand-border bg-white flex flex-col">
+          <div class="w-full h-[74vh] rounded-xl overflow-hidden border border-brand-border bg-white flex flex-col">
             <div class="bg-stone-100 px-3 py-1.5 flex items-center justify-between text-xs border-b border-stone-200">
               <span class="font-bold flex items-center gap-1.5 text-stone-700">
                 <i class="ph-bold ph-google-drive-logo text-emerald-600"></i> Google Drive Cloud Resource
@@ -741,7 +717,7 @@
                   return `
                     <li class="py-1.5 flex justify-between">
                       <span class="text-stone-700">${ing.name}</span>
-                      <span class="font-bold text-stone-900 font-mono">${displayAmt} ${ing.unit || ''}</span>
+                      <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
                     </li>
                   `;
                 }).join('')}
