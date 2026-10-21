@@ -171,4 +171,1117 @@
         </div>
         <div class="flex items-center gap-2">
           <button onclick="startCalibrationQuiz('kitchen')" class="bg-white hover:bg-stone-100 text-stone-900 text-xs font-black px-3 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
-            <i class="ph-bold
+            <i class="ph-bold ph-clipboard-text text-sm"></i>
+            <span>Kitchen Quiz</span>
+          </button>
+          <button onclick="startCalibrationQuiz('barista')" class="bg-brand-pink hover:bg-pink-400 text-stone-950 text-xs font-black px-3 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+            <i class="ph-bold ph-coffee text-sm"></i>
+            <span>Barista Quiz</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Training Matrix Table -->
+      <div class="bg-white rounded-xl border border-brand-border overflow-hidden shadow-xs">
+        <div class="px-4 py-3 border-b border-brand-border flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i class="ph-bold ph-seal-check text-rose-600 text-base"></i>
+            <h3 class="text-xs font-bold tracking-tight uppercase">Live Station Sign-Off Matrix (Rule of 3)</h3>
+          </div>
+          <span class="text-[11px] text-stone-500 font-medium">Click attempt pill to sign off (Manager PIN required)</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-stone-50 text-stone-500 font-bold border-b border-brand-border uppercase text-[10px] tracking-wider">
+              <tr>
+                <th class="py-2.5 px-4">Station Spec / Dish</th>
+                <th class="py-2.5 px-3">Type</th>
+                <th class="py-2.5 px-3">Target Time</th>
+                <th class="py-2.5 px-3 text-center">Attempt 1 (Guided)</th>
+                <th class="py-2.5 px-3 text-center">Attempt 2 (Solo)</th>
+                <th class="py-2.5 px-3 text-center">Attempt 3 (Pass Spec)</th>
+                <th class="py-2.5 px-4 text-right">Status</th>
+              </tr>
+            </thead>
+            <tbody id="training-matrix-body" class="divide-y divide-brand-border">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ================= POPUP DETAIL MODAL (RECIPE / SOP / BARISTA) ================= -->
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-5">
+    <div class="bg-white w-full max-w-4xl max-h-[92vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border animate-in fade-in duration-150">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/75">
+        <div class="flex items-center gap-2.5">
+          <span id="modal-category-badge" class="bg-stone-200 text-stone-800 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded">Category</span>
+          <div>
+            <h2 id="modal-title" class="text-base font-black text-stone-900 leading-tight">Dish or Recipe Title</h2>
+            <p id="modal-meta" class="text-[11px] text-stone-500 font-medium">Prep Time • Shelf Life • Allergens</p>
+          </div>
+        </div>
+
+        <!-- Scale / Portion Multiplier Buttons -->
+        <div class="flex items-center gap-2">
+          <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold">
+            <!-- Buttons dynamically populated based on section -->
+          </div>
+          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg transition">
+            <i class="ph-bold ph-x"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Scrollable) -->
+      <div id="modal-body-content" class="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-5">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs text-stone-500">
+        <span id="modal-footer-notes" class="font-medium text-[11px]">HACCP Check: Maintain standard labeling & temperature logs</span>
+        <div class="flex items-center gap-2">
+          <button onclick="window.print()" class="text-stone-700 hover:text-black font-semibold flex items-center gap-1 text-[11px] px-2 py-1 rounded hover:bg-stone-200 transition">
+            <i class="ph-bold ph-printer"></i>
+            <span>Print Sheet</span>
+          </button>
+          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition shadow-xs">
+            Done
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ================= MANAGER PIN PAD MODAL ================= -->
+  <div id="pin-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xs rounded-2xl p-5 shadow-2xl text-center border border-stone-200">
+      <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-2 text-xl">
+        <i class="ph-bold ph-lock-key"></i>
+      </div>
+      <h3 class="text-sm font-black text-stone-900 uppercase tracking-tight">Manager Authorization</h3>
+      <p id="pin-subtext" class="text-xs text-stone-500 mt-0.5 mb-4">Enter 4-digit PIN to sign off this station spec.</p>
+
+      <!-- Pin indicator dots -->
+      <div id="pin-dots" class="flex justify-center gap-2 mb-5">
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+      </div>
+
+      <!-- Number Pad -->
+      <div class="grid grid-cols-3 gap-2 max-w-[200px] mx-auto mb-3">
+        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">1</button>
+        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">2</button>
+        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">3</button>
+        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">4</button>
+        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">5</button>
+        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">6</button>
+        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">7</button>
+        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">8</button>
+        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">9</button>
+        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600 transition">C</button>
+        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 transition active:scale-95">0</button>
+        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600 transition">Cancel</button>
+      </div>
+      <p class="text-[10px] text-stone-400">Default PIN: 1234</p>
+    </div>
+  </div>
+
+  <!-- ================= IMPORT / ADD SPEC MODAL ================= -->
+  <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl border border-stone-200">
+      <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
+        <h3 class="text-sm font-black text-stone-900 uppercase">Add / Import New LULA Spec</h3>
+        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Section</label>
+          <select id="import-section" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
+            <option value="recipes">Prep & Recipes</option>
+            <option value="sops">Kitchen SOPs</option>
+            <option value="barista">Barista & Bar</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Title</label>
+            <input type="text" id="import-title" placeholder="e.g. Vanilla Bean Syrup" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Category</label>
+            <input type="text" id="import-category" placeholder="e.g. House Syrups & Cold Foams" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Paste SOP Generator Raw HTML or Ingredients Text</label>
+          <textarea id="import-content" rows="6" placeholder="Paste clean ingredients or SOP HTML block here..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-stone-100">
+        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100">Cancel</button>
+        <button onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs">Save to Kiosk</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= QUIZ MODAL ================= -->
+  <div id="quiz-modal" class="fixed inset-0 z-50 bg-stone-950/75 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl p-5 shadow-2xl border border-brand-border">
+      <div class="flex items-center justify-between pb-2 border-b border-stone-100 mb-3">
+        <span id="quiz-badge" class="bg-stone-200 text-stone-800 text-[10px] font-black uppercase px-2 py-0.5 rounded">Station Quiz</span>
+        <button onclick="closeQuizModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
+      </div>
+      <div id="quiz-content">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= JAVASCRIPT APP LOGIC ================= -->
+  <script>
+    // --- Master Data Store ---
+    const DEFAULT_SPECS = [
+      // 1. RECIPES (Prep Formulas)
+      {
+        id: "focaccia-prep",
+        title: "Rosemary & Sea Salt Focaccia",
+        section: "recipes",
+        category: "Bread & Doughs",
+        targetTime: "24h Ferment",
+        shelfLife: "2 Days Ambient",
+        allergens: ["Gluten"],
+        haccp: "Prove at 26°C. Bake internal temp minimum 96°C.",
+        color: "bg-amber-500",
+        icon: "ph-bread",
+        ingredients: [
+          { name: "Strong White Bread Flour (W300+)", amount: 1000, unit: "g" },
+          { name: "Water (Lukewarm 22°C)", amount: 800, unit: "g" },
+          { name: "Extra Virgin Olive Oil (Dough)", amount: 50, unit: "g" },
+          { name: "Fine Sea Salt", amount: 22, unit: "g" },
+          { name: "Instant Dried Yeast", amount: 7, unit: "g" },
+          { name: "EVOO for Pan & Dimpling", amount: 60, unit: "g" },
+          { name: "Fresh Rosemary & Maldon Salt", amount: 15, unit: "g" }
+        ],
+        steps: [
+          "Autolyse flour and water in mixer bowl for 30 mins until fully hydrated.",
+          "Add yeast and mix on low for 3 mins, then incorporate salt and EVOO until smooth dough forms (windowpane test).",
+          "Transfer to oiled container. Perform 3 coil folds at 30 min intervals.",
+          "Cold retard overnight in fridge (18-24h).",
+          "Generously oil deep gastronorm, dump dough, prove at ambient until puffed and bubbly (approx 2h).",
+          "Dimple deep with oiled fingers, top with fresh rosemary and Maldon sea salt flakes.",
+          "Bake in Rational combi: 220°C, 30% moisture for 10 mins, finish at 200°C dry heat for 12 mins until golden crust."
+        ]
+      },
+      {
+        id: "brownies-prep",
+        title: "LULA Signature Fudgy Brownies",
+        section: "recipes",
+        category: "Bakes",
+        targetTime: "45 Min Bake",
+        shelfLife: "4 Days Sealed",
+        allergens: ["Gluten", "Dairy", "Eggs"],
+        haccp: "Cool completely on rack before slicing with warm clean knife.",
+        color: "bg-yellow-800",
+        icon: "ph-cake",
+        ingredients: [
+          { name: "70% Dark Callebaut Chocolate", amount: 450, unit: "g" },
+          { name: "Unsalted Butter (Cubed)", amount: 350, unit: "g" },
+          { name: "Whole Eggs", amount: 6, unit: "pcs" },
+          { name: "Caster Sugar", amount: 400, unit: "g" },
+          { name: "Light Soft Brown Sugar", amount: 200, unit: "g" },
+          { name: "Plain Flour (Sifted)", amount: 180, unit: "g" },
+          { name: "Cocoa Powder", amount: 80, unit: "g" },
+          { name: "Flaky Sea Salt", amount: 5, unit: "g" }
+        ],
+        steps: [
+          "Melt dark chocolate and cubed butter gently over bain-marie until glossy and smooth.",
+          "Whisk eggs and both sugars on high speed in planetary mixer for 5-6 mins until pale and tripled in volume.",
+          "Gently fold melted chocolate into whipped eggs using a silicone spatula.",
+          "Sift in flour and cocoa powder; fold softly just until no dry streaks remain.",
+          "Pour into lined baking tin, level surface.",
+          "Bake Rational: 160°C dry heat, fan speed 3, for 32-35 minutes until slight crust forms with soft fudgy centre."
+        ]
+      },
+      {
+        id: "hollandaise-sauce",
+        title: "House Clarified Hollandaise",
+        section: "recipes",
+        category: "Sauces & Dressings",
+        targetTime: "15 Mins",
+        shelfLife: "Single Service Shift",
+        allergens: ["Dairy", "Eggs"],
+        haccp: "Hold in thermos siphon at 54°C to 58°C max. Discard end of shift.",
+        color: "bg-amber-400",
+        icon: "ph-egg",
+        ingredients: [
+          { name: "Egg Yolks (Pasteurised)", amount: 8, unit: "pcs" },
+          { name: "Clarified Warm Butter (55°C)", amount: 400, unit: "g" },
+          { name: "White Wine & Tarragon Reduction", amount: 45, unit: "ml" },
+          { name: "Lemon Juice (Fresh)", amount: 15, unit: "ml" },
+          { name: "Tabasco & Cayenne", amount: 2, unit: "pinch" },
+          { name: "Fine Salt", amount: 4, unit: "g" }
+        ],
+        steps: [
+          "Blend yolks, reduction, lemon juice, and salt on medium in Robot Coupe.",
+          "Slowly stream clarified butter in a pencil-thin stream until thick and emulsified.",
+          "Season with cayenne and adjust acidity.",
+          "Pour into warm ISI siphon, charge with 1 N2O bulb, shake 4 times and place in 55°C water bath."
+        ]
+      },
+
+      // 2. KITCHEN SOPS (Plating & Line Specs)
+      {
+        id: "turkish-eggs-sop",
+        title: "LULA Turkish Eggs",
+        section: "sops",
+        category: "Brunch",
+        targetTime: "4.5 Mins",
+        shelfLife: "Cook to Order",
+        allergens: ["Gluten", "Dairy", "Eggs"],
+        haccp: "Internal temperature of poached eggs runny yolk, hot butter emulsion.",
+        color: "bg-rose-500",
+        icon: "ph-cooking-pot",
+        image: "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80",
+        portions: 1,
+        ingredients: [
+          { name: "Garlic & Herb Greek Yoghurt", amount: 150, unit: "g" },
+          { name: "Free Range Poached Eggs", amount: 2, unit: "pcs" },
+          { name: "Aleppo Chilli Brown Butter", amount: 35, unit: "ml" },
+          { name: "Fresh Dill & Coriander Leaves", amount: 5, unit: "g" },
+          { name: "House Focaccia Slice (Toasted)", amount: 1, unit: "thick slice" },
+          { name: "Dukkah Sprinkle", amount: 3, unit: "g" }
+        ],
+        steps: [
+          "Spoon 150g room-temperature whipped garlic yoghurt onto the base of warm ceramic bowl; create shallow well with back of spoon.",
+          "Drop 2 fresh eggs into gently simmering vinegared water for exactly 3 mins.",
+          "Flash focaccia under salamander with light olive oil until crisp and charred edges.",
+          "Drain poached eggs on paper towel, seat neatly into the yoghurt well.",
+          "Flash sizzle 35ml Aleppo chilli butter in small pan until foaming and red.",
+          "Drizzle hot butter over eggs and yoghurt. Garnish with picked dill fronds and dukkah pinch.",
+          "Wipe rim clean. Serve immediately with warm cut focaccia on the side."
+        ]
+      },
+      {
+        id: "brunch-stack-sop",
+        title: "LULA Loaded Brunch Stack",
+        section: "sops",
+        category: "Brunch",
+        targetTime: "5 Mins",
+        shelfLife: "Cook to Order",
+        allergens: ["Gluten", "Dairy", "Eggs"],
+        haccp: "Bacon & Sausage hot held / flash grilled > 75°C.",
+        color: "bg-orange-600",
+        icon: "ph-hamburger",
+        portions: 1,
+        ingredients: [
+          { name: "Grilled Brioche Bun (Toasted)", amount: 1, unit: "pc" },
+          { name: "Cumberland Sausage Patty", amount: 110, unit: "g" },
+          { name: "Streaky Smoked Bacon", amount: 2, unit: "rashers" },
+          { name: "Fried Clarence Court Egg", amount: 1, unit: "pc" },
+          { name: "LULA House Tomato Relish", amount: 30, unit: "g" },
+          { name: "Mature Cheddar Slice (Melted)", amount: 1, unit: "slice" }
+        ],
+        steps: [
+          "Toast brioche on buttered flat top until golden caramelisation.",
+          "Grill sausage patty 2 mins each side; top with cheddar and cloche with water squirt to melt.",
+          "Crisp 2 rashers of streaky bacon on plancha.",
+          "Fry egg in pan with crispy lace bottom and runny golden yolk.",
+          "Build order: Bottom bun -> 30g relish -> sausage patty with melted cheese -> bacon rashers -> fried egg -> top bun slanted."
+        ]
+      },
+
+      // 3. BARISTA & BAR
+      {
+        id: "strawberry-horchata-matcha",
+        title: "Iced Strawberry Horchata Matcha",
+        section: "barista",
+        category: "Matcha & Specialty",
+        targetTime: "90 Secs",
+        shelfLife: "Make to Order",
+        allergens: ["Nuts (Almond)"],
+        haccp: "Keep strawberry purée and house horchata chilled < 5°C.",
+        color: "bg-emerald-500",
+        icon: "ph-drop",
+        drinkSizes: {
+          "16 oz Iced": {
+            ingredients: [
+              { name: "Ceremonial Grade Matcha Powder", amount: "2 tsp (4g)" },
+              { name: "Hot Water (75°C)", amount: "60 ml (2 oz)" },
+              { name: "House Strawberry Purée", amount: "40 ml (1.5 oz)" },
+              { name: "House Cinnamon Horchata Milk", amount: "180 ml (6 oz)" },
+              { name: "Clean Solid Cube Ice", amount: "Full 16oz cup" }
+            ],
+            steps: [
+              "Whisk matcha powder with 60ml hot water using electric bamboo whisk until frothy with no clumps.",
+              "Pump 40ml strawberry purée directly onto the base of the transparent cup.",
+              "Pack cup to the brim with fresh clean ice cubes.",
+              "Gently pour 180ml horchata milk over the ice to create a distinct white layer.",
+              "Slowly float whisked green matcha over the top for 3 crisp, defined colour layers."
+            ]
+          },
+          "12 oz Hot": {
+            ingredients: [
+              { name: "Ceremonial Grade Matcha Powder", amount: "1.5 tsp (3g)" },
+              { name: "Hot Water (75°C)", amount: "45 ml" },
+              { name: "House Strawberry Syrup", amount: "25 ml" },
+              { name: "Steamed Horchata Milk (60°C)", amount: "200 ml" }
+            ],
+            steps: [
+              "Whisk matcha with hot water and strawberry syrup directly in cup.",
+              "Steam horchata milk to 60°C with silky microfoam.",
+              "Pour into matcha base, completing with latte art rosette."
+            ]
+          }
+        }
+      },
+      {
+        id: "toasted-marshmallow-syrup",
+        title: "House Toasted Marshmallow Syrup",
+        section: "barista",
+        category: "House Syrups & Cold Foams",
+        targetTime: "25 Mins",
+        shelfLife: "2 Weeks Chilled",
+        allergens: ["None"],
+        haccp: "Store in sterile glass squeeze bottles with date labels.",
+        color: "bg-amber-600",
+        icon: "ph-fire",
+        ingredients: [
+          { name: "White Granulated Sugar", amount: 1000, unit: "g" },
+          { name: "Water", amount: 1000, unit: "ml" },
+          { name: "Marshmallows (Blowtorched Dark Char)", amount: 350, unit: "g" },
+          { name: "Vanilla Bean Paste", amount: 15, unit: "g" },
+          { name: "Citric Acid Pinch", amount: 1, unit: "g" }
+        ],
+        steps: [
+          "Spread marshmallows on parchment sheet and torch aggressively with blowtorch until deep amber with black blister points.",
+          "Bring sugar and water to a rolling boil in large pan until sugar fully dissolves.",
+          "Submerge charred marshmallows into hot syrup; simmer on low for 10 mins while whisking to melt.",
+          "Remove heat, add vanilla paste and citric acid.",
+          "Strain through fine superbag/chinois to extract sticky solids.",
+          "Bottle into sanitised syrup pumps once cooled."
+        ]
+      }
+    ];
+
+    // Station Training Registry
+    const DEFAULT_TRAINING = [
+      {
+        specId: "turkish-eggs-sop",
+        title: "Turkish Eggs Plating Spec",
+        station: "Kitchen",
+        time: "4.5 mins",
+        att1: { done: true, manager: "SF", date: "21 Oct" },
+        att2: { done: true, manager: "SF", date: "21 Oct" },
+        att3: { done: false, manager: null, date: null }
+      },
+      {
+        specId: "focaccia-prep",
+        title: "Focaccia Dough & Dimpling",
+        station: "Bakery",
+        time: "24h Retard",
+        att1: { done: true, manager: "SF", date: "20 Oct" },
+        att2: { done: false, manager: null, date: null },
+        att3: { done: false, manager: null, date: null }
+      },
+      {
+        specId: "strawberry-horchata-matcha",
+        title: "Layered Horchata Matcha Build",
+        station: "Barista",
+        time: "90 secs",
+        att1: { done: false, manager: null, date: null },
+        att2: { done: false, manager: null, date: null },
+        att3: { done: false, manager: null, date: null }
+      },
+      {
+        specId: "brownies-prep",
+        title: "Brownie Fold & Combi Bake",
+        station: "Bakery",
+        time: "45 mins",
+        att1: { done: true, manager: "SF", date: "19 Oct" },
+        att2: { done: true, manager: "SF", date: "20 Oct" },
+        att3: { done: true, manager: "SF", date: "21 Oct" }
+      }
+    ];
+
+    // State
+    let specs = JSON.parse(localStorage.getItem('lula_specs')) || DEFAULT_SPECS;
+    let training = JSON.parse(localStorage.getItem('lula_training')) || DEFAULT_TRAINING;
+    let currentSection = 'recipes';
+    let currentCategory = 'all';
+    let searchQuery = '';
+    let isManager = false;
+    let pinBuffer = '';
+    let pinCallback = null;
+    let currentModalSpec = null;
+    let currentScale = 1;
+    let currentDrinkSize = null;
+
+    const MANAGER_PIN = '1234';
+
+    // Categories Map
+    const CATEGORIES_BY_SECTION = {
+      recipes: ["All", "Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
+      sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
+      barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
+    };
+
+    // --- Init App ---
+    function init() {
+      renderCategoryPills();
+      renderCatalog();
+      renderTrainingMatrix();
+    }
+
+    // --- Navigation & Filtering ---
+    function setSection(sectionKey) {
+      currentSection = sectionKey;
+      currentCategory = 'all';
+      
+      // Update Tab Styles
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900';
+      });
+      const activeTab = document.getElementById(`tab-${sectionKey}`);
+      if (activeTab) {
+        activeTab.className = 'nav-tab px-3 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs';
+      }
+
+      const catBar = document.getElementById('category-bar-wrapper');
+      const catalog = document.getElementById('catalog-view');
+      const trainingView = document.getElementById('training-view');
+      const emptyState = document.getElementById('empty-state');
+
+      if (sectionKey === 'training') {
+        catBar.classList.add('hidden');
+        catalog.classList.add('hidden');
+        emptyState.classList.add('hidden');
+        trainingView.classList.remove('hidden');
+        renderTrainingMatrix();
+      } else {
+        catBar.classList.remove('hidden');
+        catalog.classList.remove('hidden');
+        trainingView.classList.add('hidden');
+        renderCategoryPills();
+        renderCatalog();
+      }
+    }
+
+    function setCategory(catName) {
+      currentCategory = catName.toLowerCase();
+      renderCategoryPills();
+      renderCatalog();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val.trim().toLowerCase();
+      if (currentSection !== 'training') {
+        renderCatalog();
+      }
+    }
+
+    function renderCategoryPills() {
+      const pillContainer = document.getElementById('category-pills');
+      const cats = CATEGORIES_BY_SECTION[currentSection] || ["All"];
+      
+      pillContainer.innerHTML = cats.map(cat => {
+        const isActive = currentCategory === cat.toLowerCase();
+        return `
+          <button onclick="setCategory('${cat}')" 
+            class="px-2.5 py-1 rounded-full text-xs font-bold transition flex items-center gap-1 ${
+              isActive 
+                ? 'bg-stone-900 text-white shadow-xs' 
+                : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+            }">
+            <span>${cat}</span>
+          </button>
+        `;
+      }).join('');
+    }
+
+    // --- Render Catalog Grid ---
+    function renderCatalog() {
+      const grid = document.getElementById('catalog-view');
+      const empty = document.getElementById('empty-state');
+      const countEl = document.getElementById('active-count');
+
+      // Filter by current section, category, and search
+      const items = specs.filter(item => {
+        if (item.section !== currentSection) return false;
+        if (currentCategory !== 'all' && item.category.toLowerCase() !== currentCategory) return false;
+        if (searchQuery) {
+          const matchTitle = item.title.toLowerCase().includes(searchQuery);
+          const matchCat = item.category.toLowerCase().includes(searchQuery);
+          const matchAllergens = (item.allergens || []).some(a => a.toLowerCase().includes(searchQuery));
+          return matchTitle || matchCat || matchAllergens;
+        }
+        return true;
+      });
+
+      countEl.innerText = `Showing ${items.length} ${items.length === 1 ? 'spec' : 'specs'}`;
+
+      if (items.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+      grid.innerHTML = items.map(item => {
+        const hasImg = item.image;
+        return `
+          <div onclick="openDetailModal('${item.id}')" 
+            class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col group active:scale-[0.98]">
+            
+            ${hasImg ? `
+              <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
+                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded tracking-wider">
+                  ${item.category}
+                </span>
+              </div>
+            ` : `
+              <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
+                <i class="ph-bold ${item.icon || 'ph-cooking-pot'} text-2xl opacity-90"></i>
+                <span class="absolute top-2 left-2 bg-black/30 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded tracking-wider">
+                  ${item.category}
+                </span>
+              </div>
+            `}
+
+            <div class="p-2.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
+                <div class="flex items-center gap-1.5 mt-1 text-[10px] text-stone-500 font-medium">
+                  <span><i class="ph-bold ph-timer inline"></i> ${item.targetTime || 'Prep'}</span>
+                  <span>•</span>
+                  <span>${item.shelfLife || 'Fresh'}</span>
+                </div>
+              </div>
+
+              ${item.allergens && item.allergens.length ? `
+                <div class="flex flex-wrap gap-1 mt-2">
+                  ${item.allergens.map(a => `<span class="bg-rose-50 text-rose-700 text-[9px] font-bold px-1 rounded border border-rose-100">${a}</span>`).join('')}
+                </div>
+              ` : ''}
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // --- Detail Popup & Dynamic Scaling ---
+    function openDetailModal(specId) {
+      currentModalSpec = specs.find(s => s.id === specId);
+      if (!currentModalSpec) return;
+
+      currentScale = 1;
+      const modal = document.getElementById('detail-modal');
+      document.getElementById('modal-title').innerText = currentModalSpec.title;
+      document.getElementById('modal-category-badge').innerText = currentModalSpec.category;
+      
+      const metaText = [
+        currentModalSpec.targetTime ? `Time: ${currentModalSpec.targetTime}` : null,
+        currentModalSpec.shelfLife ? `Shelf Life: ${currentModalSpec.shelfLife}` : null,
+        currentModalSpec.allergens && currentModalSpec.allergens.length ? `Allergens: ${currentModalSpec.allergens.join(', ')}` : 'No Common Allergens'
+      ].filter(Boolean).join(' • ');
+
+      document.getElementById('modal-meta').innerText = metaText;
+      document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Quality Standard • Adhere to cleanliness and batch labeling.';
+
+      renderModalControls();
+      renderModalBody();
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+      currentModalSpec = null;
+    }
+
+    function renderModalControls() {
+      const controls = document.getElementById('modal-scale-controls');
+      controls.innerHTML = '';
+
+      if (currentModalSpec.section === 'recipes') {
+        const multipliers = [0.5, 1, 2, 4];
+        controls.innerHTML = multipliers.map(m => `
+          <button onclick="setScaleMultiplier(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'}">
+            ${m}x
+          </button>
+        `).join('');
+      } else if (currentModalSpec.section === 'sops') {
+        const portions = [1, 2, 4];
+        controls.innerHTML = portions.map(p => `
+          <button onclick="setScaleMultiplier(${p})" class="px-2 py-1 rounded text-xs transition ${currentScale === p ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600 hover:text-stone-900'}">
+            ${p} Port${p > 1 ? 's' : ''}
+          </button>
+        `).join('');
+      } else if (currentModalSpec.section === 'barista' && currentModalSpec.drinkSizes) {
+        const sizes = Object.keys(currentModalSpec.drinkSizes);
+        if (!currentDrinkSize || !sizes.includes(currentDrinkSize)) {
+          currentDrinkSize = sizes[0];
+        }
+        controls.innerHTML = sizes.map(s => `
+          <button onclick="setDrinkSize('${s}')" class="px-2.5 py-1 rounded text-xs transition ${currentDrinkSize === s ? 'bg-white text-stone-900 shadow-xs font-bold' : 'text-stone-600 hover:text-stone-900 font-semibold'}">
+            ${s}
+          </button>
+        `).join('');
+      }
+    }
+
+    function setScaleMultiplier(mult) {
+      currentScale = mult;
+      renderModalControls();
+      renderModalBody();
+    }
+
+    function setDrinkSize(sizeKey) {
+      currentDrinkSize = sizeKey;
+      renderModalControls();
+      renderModalBody();
+    }
+
+    function renderModalBody() {
+      const body = document.getElementById('modal-body-content');
+      body.innerHTML = '';
+
+      // Barista View with Size Variants
+      if (currentModalSpec.section === 'barista' && currentModalSpec.drinkSizes) {
+        const sizeData = currentModalSpec.drinkSizes[currentDrinkSize];
+        body.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+              <div class="flex items-center justify-between pb-2 border-b border-stone-200 mb-2">
+                <h4 class="text-xs font-black uppercase text-stone-700 tracking-wider">Formula (${currentDrinkSize})</h4>
+                <span class="text-[10px] font-bold text-rose-600 bg-rose-50 px-1.5 py-0.5 rounded">Exact Build</span>
+              </div>
+              <ul class="divide-y divide-stone-200/60 text-xs">
+                ${sizeData.ingredients.map(ing => `
+                  <li class="py-1.5 flex justify-between items-center">
+                    <span class="font-medium text-stone-700">${ing.name}</span>
+                    <span class="font-black text-stone-900 font-mono">${ing.amount}</span>
+                  </li>
+                `).join('')}
+              </ul>
+            </div>
+
+            <div>
+              <h4 class="text-xs font-black uppercase text-stone-700 tracking-wider mb-2">Build Method & Sequence</h4>
+              <ol class="space-y-2 text-xs">
+                ${sizeData.steps.map((st, idx) => `
+                  <li class="flex items-start gap-2.5">
+                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                    <span class="text-stone-700 font-medium leading-relaxed">${st}</span>
+                  </li>
+                `).join('')}
+              </ol>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Kitchen SOP with Photo View
+      if (currentModalSpec.section === 'sops') {
+        body.innerHTML = `
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+              ${currentModalSpec.image ? `
+                <div class="rounded-xl overflow-hidden border border-brand-border shadow-xs mb-3">
+                  <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-48 object-cover">
+                </div>
+              ` : ''}
+              <div class="bg-stone-50 p-3 rounded-xl border border-stone-200">
+                <div class="flex items-center justify-between mb-2">
+                  <h4 class="text-xs font-black uppercase text-stone-700">Portioned Ingredients</h4>
+                  <span class="text-[10px] font-bold bg-stone-200 px-1.5 py-0.5 rounded">${currentScale} Portion${currentScale > 1 ? 's' : ''}</span>
+                </div>
+                <ul class="divide-y divide-stone-200 text-xs">
+                  ${(currentModalSpec.ingredients || []).map(ing => `
+                    <li class="py-1.5 flex justify-between">
+                      <span class="text-stone-700">${ing.name}</span>
+                      <span class="font-bold text-stone-900 font-mono">
+                        ${typeof ing.amount === 'number' ? (ing.amount * currentScale) : ing.amount} ${ing.unit || ''}
+                      </span>
+                    </li>
+                  `).join('')}
+                </ul>
+              </div>
+            </div>
+
+            <div>
+              <h4 class="text-xs font-black uppercase text-stone-700 tracking-wider mb-2">Plating & Ticket Flow</h4>
+              <ol class="space-y-2.5 text-xs">
+                ${(currentModalSpec.steps || []).map((st, idx) => `
+                  <li class="flex items-start gap-2.5">
+                    <span class="w-5 h-5 rounded-full bg-rose-600 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                    <span class="text-stone-700 font-medium leading-relaxed">${st}</span>
+                  </li>
+                `).join('')}
+              </ol>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      // Standard Scalable Prep Recipe View
+      body.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="bg-stone-50 p-4 rounded-xl border border-stone-200">
+            <div class="flex items-center justify-between pb-2 border-b border-stone-200 mb-2">
+              <h4 class="text-xs font-black uppercase text-stone-700 tracking-wider">Batch Weights</h4>
+              <span class="text-[10px] font-black bg-rose-600 text-white px-2 py-0.5 rounded">Multiplier: ${currentScale}x</span>
+            </div>
+            <ul class="divide-y divide-stone-200 text-xs">
+              ${(currentModalSpec.ingredients || []).map(ing => {
+                const scaledAmount = typeof ing.amount === 'number' ? Math.round(ing.amount * currentScale * 10) / 10 : ing.amount;
+                return `
+                  <li class="py-1.5 flex justify-between items-center">
+                    <span class="font-medium text-stone-700">${ing.name}</span>
+                    <span class="font-black text-stone-900 font-mono">${scaledAmount} ${ing.unit || ''}</span>
+                  </li>
+                `;
+              }).join('')}
+            </ul>
+          </div>
+
+          <div>
+            <h4 class="text-xs font-black uppercase text-stone-700 tracking-wider mb-2">Production Method</h4>
+            <ol class="space-y-2 text-xs">
+              ${(currentModalSpec.steps || []).map((st, idx) => `
+                <li class="flex items-start gap-2.5">
+                  <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+                  <span class="text-stone-700 font-medium leading-relaxed">${st}</span>
+                </li>
+              `).join('')}
+            </ol>
+          </div>
+        </div>
+      `;
+    }
+
+    // --- Training Matrix & Manager PIN Logic ---
+    function renderTrainingMatrix() {
+      const tbody = document.getElementById('training-matrix-body');
+      tbody.innerHTML = training.map((row, idx) => {
+        const isFullyQualified = row.att1.done && row.att2.done && row.att3.done;
+        return `
+          <tr class="hover:bg-stone-50 transition">
+            <td class="py-3 px-4 font-black text-stone-900 flex items-center gap-2">
+              <span>${row.title}</span>
+            </td>
+            <td class="py-3 px-3 text-stone-500 font-medium">${row.station}</td>
+            <td class="py-3 px-3 text-stone-500 font-medium">${row.time}</td>
+            
+            <!-- Attempt 1 -->
+            <td class="py-3 px-3 text-center">
+              <button onclick="requestSignOff(${idx}, 1)" class="px-2.5 py-1 rounded-md text-[11px] font-bold transition ${
+                row.att1.done ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-400 hover:bg-stone-200'
+              }">
+                ${row.att1.done ? `✓ ${row.att1.manager}` : 'Pending'}
+              </button>
+            </td>
+
+            <!-- Attempt 2 -->
+            <td class="py-3 px-3 text-center">
+              <button onclick="requestSignOff(${idx}, 2)" class="px-2.5 py-1 rounded-md text-[11px] font-bold transition ${
+                row.att2.done ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-400 hover:bg-stone-200'
+              }">
+                ${row.att2.done ? `✓ ${row.att2.manager}` : 'Pending'}
+              </button>
+            </td>
+
+            <!-- Attempt 3 -->
+            <td class="py-3 px-3 text-center">
+              <button onclick="requestSignOff(${idx}, 3)" class="px-2.5 py-1 rounded-md text-[11px] font-bold transition ${
+                row.att3.done ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-100 text-stone-400 hover:bg-stone-200'
+              }">
+                ${row.att3.done ? `✓ ${row.att3.manager}` : 'Pending'}
+              </button>
+            </td>
+
+            <td class="py-3 px-4 text-right">
+              ${isFullyQualified ? `
+                <span class="inline-flex items-center gap-1 text-[10px] font-black uppercase text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full">
+                  <i class="ph-bold ph-seal-check"></i> Passed Solo
+                </span>
+              ` : `
+                <span class="text-[10px] font-bold text-stone-400 uppercase tracking-wider">In Training</span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function requestSignOff(trainingIdx, attemptNum) {
+      const row = training[trainingIdx];
+      const attemptKey = `att${attemptNum}`;
+      
+      // Open PIN modal
+      openPinModal(`Sign off ${row.title} (Attempt #${attemptNum})`, () => {
+        row[attemptKey] = {
+          done: !row[attemptKey].done,
+          manager: 'SF',
+          date: 'Live'
+        };
+        localStorage.setItem('lula_training', JSON.stringify(training));
+        renderTrainingMatrix();
+      });
+    }
+
+    // --- PIN Modal Engine ---
+    function openPinModal(subtext, callback) {
+      pinBuffer = '';
+      pinCallback = callback;
+      document.getElementById('pin-subtext').innerText = subtext;
+      updatePinDots();
+      document.getElementById('pin-modal').classList.remove('hidden');
+    }
+
+    function closePinModal() {
+      document.getElementById('pin-modal').classList.add('hidden');
+      pinBuffer = '';
+      pinCallback = null;
+    }
+
+    function pressPin(digit) {
+      if (pinBuffer.length < 4) {
+        pinBuffer += digit;
+        updatePinDots();
+        if (pinBuffer.length === 4) {
+          setTimeout(verifyPin, 100);
+        }
+      }
+    }
+
+    function clearPin() {
+      pinBuffer = '';
+      updatePinDots();
+    }
+
+    function updatePinDots() {
+      const dots = document.querySelectorAll('#pin-dots > div');
+      dots.forEach((dot, idx) => {
+        if (idx < pinBuffer.length) {
+          dot.className = 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900 scale-110 transition';
+        } else {
+          dot.className = 'w-3 h-3 rounded-full border border-stone-400 transition';
+        }
+      });
+    }
+
+    function verifyPin() {
+      if (pinBuffer === MANAGER_PIN) {
+        const cb = pinCallback;
+        closePinModal();
+        if (cb) cb();
+      } else {
+        alert('Incorrect Manager PIN');
+        pinBuffer = '';
+        updatePinDots();
+      }
+    }
+
+    // --- Manager Mode Lock / Unlock ---
+    function toggleManagerLock() {
+      if (isManager) {
+        lockManager();
+      } else {
+        openPinModal('Enter Manager PIN to unlock editor mode', () => {
+          isManager = true;
+          document.getElementById('manager-toolbar').classList.remove('hidden');
+          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
+          document.getElementById('manager-label').innerText = 'Manager Active';
+          document.getElementById('manager-btn').className = 'px-2.5 py-1 rounded-lg border border-rose-300 bg-rose-50 text-xs font-bold flex items-center gap-1 text-rose-700 transition';
+        });
+      }
+    }
+
+    function lockManager() {
+      isManager = false;
+      document.getElementById('manager-toolbar').classList.add('hidden');
+      document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
+      document.getElementById('manager-label').innerText = 'Staff Mode';
+      document.getElementById('manager-btn').className = 'px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition';
+    }
+
+    // --- Import Spec Modal ---
+    function openImportModal() {
+      document.getElementById('import-modal').classList.remove('hidden');
+    }
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.add('hidden');
+    }
+    function saveImportedSpec() {
+      const section = document.getElementById('import-section').value;
+      const title = document.getElementById('import-title').value.trim();
+      const category = document.getElementById('import-category').value.trim() || 'General';
+      const rawContent = document.getElementById('import-content').value.trim();
+
+      if (!title) {
+        alert('Please provide a title for the new spec.');
+        return;
+      }
+
+      const newSpec = {
+        id: 'spec-' + Date.now(),
+        title,
+        section,
+        category,
+        targetTime: 'Standard',
+        shelfLife: 'Daily',
+        allergens: [],
+        ingredients: [
+          { name: "Raw Imported Spec / Content", amount: rawContent || "Refer to physical binder", unit: "" }
+        ],
+        steps: [
+          "Follow kitchen guidelines for production and allergen segregation."
+        ]
+      };
+
+      specs.unshift(newSpec);
+      localStorage.setItem('lula_specs', JSON.stringify(specs));
+      
+      // Also register into training matrix
+      training.unshift({
+        specId: newSpec.id,
+        title: newSpec.title,
+        station: section === 'barista' ? 'Barista' : 'Kitchen',
+        time: 'Standard',
+        att1: { done: false, manager: null, date: null },
+        att2: { done: false, manager: null, date: null },
+        att3: { done: false, manager: null, date: null }
+      });
+      localStorage.setItem('lula_training', JSON.stringify(training));
+
+      closeImportModal();
+      renderCatalog();
+      renderTrainingMatrix();
+      alert(`Spec "${title}" added to tablet database.`);
+    }
+
+    // --- Backup & Restore ---
+    function exportDataBackup() {
+      const payload = { specs, training, exportedAt: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `lula_hub_backup_${new Date().toISOString().slice(0,10)}.json`;
+      a.click();
+    }
+
+    function importDataBackup() {
+      const input = document.createElement("input");
+      input.type = "file";
+      input.accept = ".json";
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const data = JSON.parse(event.target.result);
+            if (data.specs && data.training) {
+              specs = data.specs;
+              training = data.training;
+              localStorage.setItem('lula_specs', JSON.stringify(specs));
+              localStorage.setItem('lula_training', JSON.stringify(training));
+              init();
+              alert("LULA Hub restored successfully.");
+            }
+          } catch (err) {
+            alert("Invalid backup file.");
+          }
+        };
+        reader.readAsText(file);
+      };
+      input.click();
+    }
+
+    // --- Station Calibration Quiz ---
+    function startCalibrationQuiz(type) {
+      const modal = document.getElementById('quiz-modal');
+      const badge = document.getElementById('quiz-badge');
+      const content = document.getElementById('quiz-content');
+
+      badge.innerText = `${type.toUpperCase()} STATION CALIBRATION`;
+
+      if (type === 'barista') {
+        content.innerHTML = `
+          <h3 class="text-sm font-bold text-stone-900 mb-2">Question 1 of 2</h3>
+          <p class="text-xs text-stone-600 mb-3">What temperature range must steamed dairy milk never exceed for flat whites and lattes?</p>
+          <div class="space-y-1.5 text-xs">
+            <button onclick="handleQuizAnswer(false)" class="w-full text-left p-2 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200">A) 75°C - 80°C</button>
+            <button onclick="handleQuizAnswer(true)" class="w-full text-left p-2 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200">B) 60°C - 65°C</button>
+            <button onclick="handleQuizAnswer(false)" class="w-full text-left p-2 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200">C) 50°C - 55°C</button>
+          </div>
+        `;
+      } else {
+        content.innerHTML = `
+          <h3 class="text-sm font-bold text-stone-900 mb-2">Question 1 of 2</h3>
+          <p class="text-xs text-stone-600 mb-3">At what maximum temperature must the Hollandaise siphon be held during service?</p>
+          <div class="space-y-1.5 text-xs">
+            <button onclick="handleQuizAnswer(true)" class="w-full text-left p-2 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200">A) 54°C - 58°C</button>
+            <button onclick="handleQuizAnswer(false)" class="w-full text-left p-2 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200">B) 70°C - 75°C</button>
+            <button onclick="handleQuizAnswer(false)" class="w-full text-left p-2 rounded-lg bg-stone-50 hover:bg-stone-100 border border-stone-200">C) Room ambient (20°C)</button>
+          </div>
+        `;
+      }
+
+      modal.classList.remove('hidden');
+    }
+
+    function handleQuizAnswer(isCorrect) {
+      const content = document.getElementById('quiz-content');
+      if (isCorrect) {
+        content.innerHTML = `
+          <div class="text-center py-4">
+            <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2 text-xl">
+              <i class="ph-bold ph-check"></i>
+            </div>
+            <h3 class="text-sm font-black text-stone-900 uppercase">Answer Correct</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-4">Station spec calibration logged. Proceed to practical attempt.</p>
+            <button onclick="closeQuizModal()" class="bg-stone-900 text-white text-xs font-bold px-4 py-2 rounded-lg">Return to Matrix</button>
+          </div>
+        `;
+      } else {
+        content.innerHTML = `
+          <div class="text-center py-4">
+            <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-2 text-xl">
+              <i class="ph-bold ph-x"></i>
+            </div>
+            <h3 class="text-sm font-black text-stone-900 uppercase">Incorrect Answer</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-4">Please review the recipe SOP card before re-testing.</p>
+            <button onclick="closeQuizModal()" class="bg-stone-200 text-stone-800 text-xs font-bold px-4 py-2 rounded-lg">Close</button>
+          </div>
+        `;
+      }
+    }
+
+    function closeQuizModal() {
+      document.getElementById('quiz-modal').classList.add('hidden');
+    }
+
+    // Run on startup
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
