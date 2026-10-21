@@ -257,18 +257,34 @@
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
         <div>
           <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add / Drop In New Spec</h3>
-          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Drop HTML, PDF, Photo, or link a Google Drive folder</p>
+          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Drop HTML, PDF, Photo, or paste raw HTML code</p>
         </div>
         <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
       </div>
 
       <!-- Drag & Drop Zone -->
       <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
-        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-4 text-center cursor-pointer transition mb-4">
+        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-4 text-center cursor-pointer transition mb-3">
         <i id="drop-icon" class="ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block"></i>
         <h4 id="drop-title" class="text-xs font-bold text-stone-800">Drop your file or photo here, or browse</h4>
-        <p id="drop-sub" class="text-[10px] text-stone-500">Photos will automatically attach as the cover & plating guide</p>
+        <p id="drop-sub" class="text-[10px] text-stone-500">Photos automatically attach as the cover & plating guide</p>
         <input type="file" id="file-input" onchange="handleFileSelect(event)" accept=".html,.htm,.pdf,image/*" class="hidden">
+      </div>
+
+      <!-- Raw HTML Code Paste Toggle Box -->
+      <div class="mb-4 bg-stone-50 border border-stone-200 rounded-xl p-3">
+        <div class="flex items-center justify-between mb-1.5 cursor-pointer" onclick="toggleRawHtmlBox()">
+          <span class="text-xs font-bold text-stone-800 flex items-center gap-1.5">
+            <i class="ph-bold ph-code text-rose-600"></i> Or Paste Raw HTML Code Directly
+          </span>
+          <span id="raw-html-toggle-icon" class="text-xs font-bold text-stone-400">Show +</span>
+        </div>
+        <div id="raw-html-container" class="hidden mt-2">
+          <textarea id="import-raw-html" rows="4" placeholder="Paste <!DOCTYPE html> or <div>...</div> code here directly without downloading files..." 
+            oninput="handleRawHtmlInput(this.value)"
+            class="w-full bg-white p-2.5 rounded-lg border border-stone-300 font-mono text-[11px] leading-relaxed"></textarea>
+          <p class="text-[10px] text-stone-500 mt-1">Pasting HTML here will load it as an interactive card in the tablet viewer automatically.</p>
+        </div>
       </div>
 
       <input type="hidden" id="edit-spec-id" value="">
@@ -319,13 +335,13 @@
         </div>
 
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Ingredients (1 per line, e.g. Plain Flour: 500g)</label>
-          <textarea id="import-ingredients" rows="4" placeholder="Unsalted Butter: 250g&#10;Light Brown Sugar: 180g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <label class="block font-bold text-stone-700 mb-1">Ingredients (Optional if HTML pasted or file dropped)</label>
+          <textarea id="import-ingredients" rows="3" placeholder="Unsalted Butter: 250g&#10;Light Brown Sugar: 180g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
 
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Method / SOP Steps (1 per line)</label>
-          <textarea id="import-steps" rows="4" placeholder="Cream butter and sugar until smooth&#10;Fold in flour and chocolate chips" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <label class="block font-bold text-stone-700 mb-1">Method / SOP Steps (Optional if HTML pasted or file dropped)</label>
+          <textarea id="import-steps" rows="3" placeholder="Cream butter and sugar until smooth&#10;Fold in flour and chocolate chips" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
@@ -359,6 +375,34 @@
       sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
+
+    function toggleRawHtmlBox() {
+      const container = document.getElementById('raw-html-container');
+      const toggle = document.getElementById('raw-html-toggle-icon');
+      if (container.classList.contains('hidden')) {
+        container.classList.remove('hidden');
+        toggle.innerText = 'Hide -';
+      } else {
+        container.classList.add('hidden');
+        toggle.innerText = 'Show +';
+      }
+    }
+
+    function handleRawHtmlInput(val) {
+      if (val && val.trim().length > 10) {
+        stagedFileType = 'html';
+        stagedFileData = val.trim();
+        const dropTitle = document.getElementById('drop-title');
+        const dropSub = document.getElementById('drop-sub');
+        const dropIcon = document.getElementById('drop-icon');
+        dropIcon.className = "ph-duotone ph-code text-3xl text-rose-600 mb-1 inline-block";
+        dropTitle.innerText = "Raw HTML Code Detected";
+        dropSub.innerText = "Will render as interactive SOP card in tablet view.";
+      } else if (!stagedFileName) {
+        stagedFileType = null;
+        stagedFileData = null;
+      }
+    }
 
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
@@ -714,6 +758,17 @@
       document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
       document.getElementById('import-drive').value = currentModalSpec.driveUrl || '';
 
+      const rawHtmlBox = document.getElementById('import-raw-html');
+      if (currentModalSpec.fileType === 'html') {
+        rawHtmlBox.value = currentModalSpec.fileData || '';
+        document.getElementById('raw-html-container').classList.remove('hidden');
+        document.getElementById('raw-html-toggle-icon').innerText = 'Hide -';
+      } else {
+        rawHtmlBox.value = '';
+        document.getElementById('raw-html-container').classList.add('hidden');
+        document.getElementById('raw-html-toggle-icon').innerText = 'Show +';
+      }
+
       const ingText = (currentModalSpec.ingredients || []).map(i => `${i.name}: ${i.amount || ''} ${i.unit || ''}`.trim()).join('\n');
       document.getElementById('import-ingredients').value = ingText;
 
@@ -854,7 +909,10 @@
       if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
         stagedFileType = 'html';
         const reader = new FileReader();
-        reader.onload = (e) => { stagedFileData = e.target.result; };
+        reader.onload = (e) => { 
+          stagedFileData = e.target.result;
+          document.getElementById('import-raw-html').value = stagedFileData;
+        };
         reader.readAsText(file);
         dropIcon.className = "ph-duotone ph-code text-3xl text-emerald-600 mb-1 inline-block";
         dropTitle.innerText = `HTML Attached: ${file.name}`;
@@ -868,11 +926,8 @@
         dropTitle.innerText = `PDF Attached: ${file.name}`;
         dropSub.innerText = "PDF document ready to embed.";
       } else if (file.type.startsWith('image/')) {
-        // KEEP AS RECIPE, ATTACH IMAGE AS COVER
         const reader = new FileReader();
-        reader.onload = (e) => { 
-          stagedImage = e.target.result; 
-        };
+        reader.onload = (e) => { stagedImage = e.target.result; };
         reader.readAsDataURL(file);
         dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
         dropTitle.innerText = `Photo Attached: ${file.name}`;
@@ -883,7 +938,7 @@
     function openImportModal() {
       document.getElementById('edit-spec-id').value = '';
       document.getElementById('form-modal-heading').innerText = "Add / Drop In New Spec";
-      document.getElementById('form-modal-subheading').innerText = "Drop HTML, PDF, Photo, or link a Google Drive folder";
+      document.getElementById('form-modal-subheading').innerText = "Drop HTML, PDF, Photo, or paste raw HTML code";
       document.getElementById('import-title').value = '';
       
       const currentSec = window.currentSection === 'training' ? 'recipes' : window.currentSection;
@@ -895,6 +950,11 @@
       document.getElementById('import-drive').value = '';
       document.getElementById('import-ingredients').value = '';
       document.getElementById('import-steps').value = '';
+
+      // Reset Raw HTML box
+      document.getElementById('import-raw-html').value = '';
+      document.getElementById('raw-html-container').classList.add('hidden');
+      document.getElementById('raw-html-toggle-icon').innerText = 'Show +';
 
       stagedFileType = null;
       stagedFileData = null;
@@ -920,6 +980,7 @@
       const driveUrl = document.getElementById('import-drive').value.trim() || '';
       const rawIng = document.getElementById('import-ingredients').value.trim();
       const rawSteps = document.getElementById('import-steps').value.trim();
+      const rawHtml = document.getElementById('import-raw-html').value.trim();
 
       if (!title) {
         alert('Please enter a spec title.');
@@ -938,8 +999,19 @@
 
       const specId = editId || ('spec-' + Date.now());
       
-      // Keep fileType as 'text' if it's a standard recipe with an attached image
-      const finalFileType = stagedFileType ? stagedFileType : (driveUrl ? 'drive' : 'text');
+      // Determine file type priority: Raw HTML pasted > Staged file > Google Drive > Text
+      let finalFileType = 'text';
+      let finalFileData = null;
+
+      if (rawHtml.length > 10) {
+        finalFileType = 'html';
+        finalFileData = rawHtml;
+      } else if (stagedFileType) {
+        finalFileType = stagedFileType;
+        finalFileData = stagedFileData;
+      } else if (driveUrl) {
+        finalFileType = 'drive';
+      }
 
       const payload = {
         title,
@@ -949,7 +1021,7 @@
         shelfLife,
         driveUrl,
         fileType: finalFileType,
-        fileData: stagedFileData || null,
+        fileData: finalFileData,
         image: stagedImage || '',
         color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
         ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec' }],
