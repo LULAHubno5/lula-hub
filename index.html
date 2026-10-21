@@ -7,7 +7,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-  <!-- Firebase Compat Libraries (Rock-solid across all browsers & tablets) -->
+  <!-- Firebase Compat Libraries -->
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 
@@ -121,7 +121,7 @@
       <div class="flex items-center gap-2">
         <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition cursor-pointer">
           <i class="ph-bold ph-plus-circle"></i>
-          <span>+ Add Spec</span>
+          <span>+ Add Spec (File / Drive / Text)</span>
         </button>
         <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition cursor-pointer">
           Change PIN
@@ -150,7 +150,7 @@
         <i class="ph-bold ph-notebook"></i>
       </div>
       <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider">No specs loaded yet</h3>
-      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode and add your first spec.</p>
+      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode and drop in your first HTML, PDF, or Photo.</p>
     </div>
 
     <!-- TRAINING VIEW -->
@@ -167,7 +167,8 @@
           <thead class="bg-stone-50 text-stone-500 font-bold border-b border-brand-border uppercase text-[10px] tracking-wider">
             <tr>
               <th class="py-2.5 px-4">Spec / Dish</th>
-              <th class="py-2.5 px-3">Station</th>
+              <th class="py-2.5 px-3">Type</th>
+              <th class="py-2.5 px-3">Category</th>
               <th class="py-2.5 px-3 text-center">Attempt 1</th>
               <th class="py-2.5 px-3 text-center">Attempt 2</th>
               <th class="py-2.5 px-3 text-center">Attempt 3</th>
@@ -181,9 +182,9 @@
   </main>
 
   <!-- DETAIL MODAL -->
-  <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-3 sm:p-5">
-    <div class="bg-white w-full max-w-3xl max-h-[92vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border">
-      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/75">
+  <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-2 sm:p-5">
+    <div id="modal-container" class="bg-white w-full max-w-4xl max-h-[94vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border">
+      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/75 shrink-0">
         <div>
           <span id="modal-category-badge" class="bg-stone-200 text-stone-800 text-[10px] font-black uppercase px-2 py-0.5 rounded">Category</span>
           <h2 id="modal-title" class="text-base font-black text-stone-900 mt-1">Title</h2>
@@ -196,8 +197,11 @@
           </button>
         </div>
       </div>
-      <div id="modal-body-content" class="flex-1 overflow-y-auto p-5 custom-scrollbar space-y-4"></div>
-      <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs">
+      
+      <!-- Modal Content Body -->
+      <div id="modal-body-content" class="flex-1 overflow-y-auto p-4 sm:p-5 custom-scrollbar"></div>
+      
+      <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
         <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
         <div class="flex items-center gap-2">
           <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition cursor-pointer">
@@ -242,12 +246,24 @@
     </div>
   </div>
 
-  <!-- ADD / IMPORT SPEC MODAL -->
+  <!-- MULTI-FORMAT ADD / IMPORT MODAL -->
   <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl border border-stone-200">
+    <div class="bg-white w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border border-stone-200 custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
-        <h3 class="text-sm font-black text-stone-900 uppercase">+ Add New LULA Spec (Cloud Sync)</h3>
+        <div>
+          <h3 class="text-sm font-black text-stone-900 uppercase">Add / Drop In New Spec</h3>
+          <p class="text-[11px] text-stone-500">Drop HTML, PDF, Photo, or link a Google Drive folder</p>
+        </div>
         <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800 cursor-pointer"><i class="ph-bold ph-x text-base"></i></button>
+      </div>
+
+      <!-- Drag & Drop Zone -->
+      <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
+        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-4 text-center cursor-pointer transition mb-4">
+        <i id="drop-icon" class="ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block"></i>
+        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Drop your file here, or browse</h4>
+        <p id="drop-sub" class="text-[10px] text-stone-500">Supports .HTML (SOP generator), .PDF files, or Photos (.JPG, .PNG)</p>
+        <input type="file" id="file-input" onchange="handleFileSelect(event)" accept=".html,.htm,.pdf,image/*" class="hidden">
       </div>
 
       <div class="space-y-3 text-xs">
@@ -262,40 +278,55 @@
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Category</label>
-            <input type="text" id="import-category" placeholder="e.g. Brunch, Bakes, Syrups" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <input type="text" id="import-category" placeholder="e.g. Brunch, Bakes, Bread" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
+
         <div>
           <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
-          <input type="text" id="import-title" placeholder="e.g. Turkish Eggs" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          <input type="text" id="import-title" placeholder="e.g. Chicken Bacon French Toast" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
         </div>
+
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-stone-700 mb-1">Target Time</label>
-            <input type="text" id="import-time" placeholder="e.g. 4.5 Mins" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <input type="text" id="import-time" placeholder="e.g. 4 Mins / 24h Retard" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Shelf Life</label>
-            <input type="text" id="import-shelf" placeholder="e.g. Order / 3 Days" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <input type="text" id="import-shelf" placeholder="e.g. Cook to order / 3 Days" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
+
+        <!-- Google Drive Folder or Direct Link Input -->
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Photo Image URL (Optional)</label>
-          <input type="text" id="import-image" placeholder="https://..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          <label class="block font-bold text-stone-700 mb-1 flex items-center justify-between">
+            <span>Google Drive Folder or Doc Link (Optional)</span>
+            <span class="text-[10px] text-brand-accent font-semibold">Live Embed</span>
+          </label>
+          <div class="relative">
+            <i class="ph-bold ph-google-drive-logo absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400"></i>
+            <input type="url" id="import-drive" placeholder="https://drive.google.com/drive/folders/..." 
+              class="w-full bg-stone-100 border border-stone-200 rounded-lg pl-8 pr-3 py-1.5 text-xs outline-none">
+          </div>
         </div>
+
+        <!-- Manual Ingredients / Notes -->
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Ingredients (1 per line, e.g: Greek Yoghurt: 150g)</label>
-          <textarea id="import-ingredients" rows="4" placeholder="Garlic Greek Yoghurt: 150g&#10;Poached Eggs: 2 pcs&#10;Chilli Butter: 35ml" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <label class="block font-bold text-stone-700 mb-1">Ingredients (Optional if file dropped)</label>
+          <textarea id="import-ingredients" rows="3" placeholder="Sourdough: 2 slices&#10;Poached Eggs: 2 pcs" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
+
+        <!-- Manual Method / Steps -->
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Method / Build Steps (1 per line)</label>
-          <textarea id="import-steps" rows="4" placeholder="Spoon yoghurt into shallow bowl&#10;Poach eggs 3 mins&#10;Drizzle hot chilli butter over eggs" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <label class="block font-bold text-stone-700 mb-1">Method / SOP Notes (Optional if file dropped)</label>
+          <textarea id="import-steps" rows="3" placeholder="Drop eggs into simmering water 3 mins&#10;Plate and garnish" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
       <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-stone-100">
         <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100 cursor-pointer">Cancel</button>
-        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs cursor-pointer">Save & Broadcast</button>
+        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs cursor-pointer">Save & Broadcast Everywhere</button>
       </div>
     </div>
   </div>
@@ -326,6 +357,11 @@
     let currentModalSpec = null;
     let currentScale = 1;
 
+    // File buffer for drops
+    let stagedFileType = null; // 'html', 'pdf', 'image'
+    let stagedFileData = null;
+    let stagedFileName = '';
+
     const CATEGORIES = {
       recipes: ["All", "Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
       sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
@@ -344,10 +380,11 @@
       renderCatalog();
       if (window.currentSection === 'training') renderTraining();
     }, (error) => {
-      console.error("Firestore listener error:", error);
+      console.error("Firestore error:", error);
     });
 
     function init() {
+      setupDropZone();
       renderCategoryPills();
       renderCatalog();
     }
@@ -389,9 +426,7 @@
       const el = document.getElementById('category-pills');
       const cats = CATEGORIES[window.currentSection] || ["All"];
       el.innerHTML = cats.map(c => `
-        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${
-          currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
-        }">${c}</button>
+        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition cursor-pointer ${ currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200' }">${c}</button>
       `).join('');
     }
 
@@ -416,280 +451,16 @@
 
       empty.classList.add('hidden');
       grid.classList.remove('hidden');
-      grid.innerHTML = items.map(item => `
-        <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
-          ${item.image ? `
-            <div class="h-24 w-full bg-stone-100 overflow-hidden relative">
-              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
-              <span class="absolute top-2 left-2 bg-black/50 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">${item.category}</span>
-            </div>
-          ` : `
-            <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
-              <i class="ph-bold ${item.icon || 'ph-cooking-pot'} text-2xl"></i>
-              <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">${item.category}</span>
-            </div>
-          `}
-          <div class="p-2.5">
-            <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
-            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Prep'} • ${item.shelfLife || 'Fresh'}</div>
-          </div>
-        </div>
-      `).join('');
-    }
+      grid.innerHTML = items.map(item => {
+        const isHtml = item.fileType === 'html';
+        const isPdf = item.fileType === 'pdf';
+        const isDrive = !!item.driveUrl;
 
-    function openDetail(id) {
-      currentModalSpec = (window.specs || []).find(s => s.id === id);
-      if (!currentModalSpec) return;
-      currentScale = 1;
+        let badgeIcon = 'ph-file-text';
+        let badgeText = item.category || 'General';
+        if (isHtml) { badgeIcon = 'ph-code'; }
+        if (isPdf) { badgeIcon = 'ph-file-pdf'; }
+        if (isDrive) { badgeIcon = 'ph-google-drive-logo'; }
 
-      document.getElementById('modal-title').innerText = currentModalSpec.title;
-      document.getElementById('modal-category-badge').innerText = currentModalSpec.category;
-      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
-      document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Quality Standard';
-
-      const deleteBtn = document.getElementById('modal-delete-btn');
-      if (isManager) {
-        deleteBtn.classList.remove('hidden');
-      } else {
-        deleteBtn.classList.add('hidden');
-      }
-
-      renderDetailContent();
-      document.getElementById('detail-modal').classList.remove('hidden');
-    }
-
-    function closeDetailModal() {
-      document.getElementById('detail-modal').classList.add('hidden');
-    }
-
-    function setScale(s) {
-      currentScale = s;
-      renderDetailContent();
-    }
-
-    function renderDetailContent() {
-      const scaleEl = document.getElementById('modal-scale-controls');
-      scaleEl.innerHTML = [0.5, 1, 2].map(m => `
-        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition cursor-pointer ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
-      `).join('');
-
-      const body = document.getElementById('modal-body-content');
-      body.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200">
-            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
-            <ul class="divide-y divide-stone-200 text-xs">
-              ${(currentModalSpec.ingredients || []).map(ing => {
-                const num = parseFloat(ing.amount);
-                const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
-                  ? Math.round(num * currentScale * 10) / 10 
-                  : ing.amount;
-                return `
-                  <li class="py-1.5 flex justify-between">
-                    <span class="text-stone-700">${ing.name}</span>
-                    <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
-                  </li>
-                `;
-              }).join('')}
-            </ul>
-          </div>
-          <div>
-            ${currentModalSpec.image ? `
-              <div class="rounded-xl overflow-hidden border border-brand-border mb-3 max-h-40">
-                <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
-              </div>
-            ` : ''}
-            <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method</h4>
-            <ol class="space-y-2 text-xs">
-              ${(currentModalSpec.steps || []).map((st, i) => `
-                <li class="flex items-start gap-2">
-                  <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
-                  <span class="text-stone-700">${st}</span>
-                </li>
-              `).join('')}
-            </ol>
-          </div>
-        </div>
-      `;
-    }
-
-    // MANAGER PIN & LOCK
-    function toggleManagerLock() {
-      if (isManager) {
-        lockManager();
-      } else {
-        openPinModal('Enter PIN to access manager mode', () => {
-          isManager = true;
-          document.getElementById('manager-toolbar').classList.remove('hidden');
-          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
-          document.getElementById('manager-label').innerText = 'Manager';
-        });
-      }
-    }
-
-    function lockManager() {
-      isManager = false;
-      document.getElementById('manager-toolbar').classList.add('hidden');
-      document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
-      document.getElementById('manager-label').innerText = 'Staff Mode';
-    }
-
-    function promptChangePin() {
-      openPinModal('Enter current PIN first', () => {
-        const newPin = prompt('Enter new 4-digit PIN:');
-        if (newPin && newPin.length === 4 && !isNaN(newPin)) {
-          managerPin = newPin;
-          localStorage.setItem('lula_pin', newPin);
-          alert('Manager PIN updated successfully.');
-        } else {
-          alert('Invalid PIN. Must be exactly 4 digits.');
-        }
-      });
-    }
-
-    function openPinModal(subtext, cb) {
-      pinBuffer = '';
-      pinCallback = cb;
-      document.getElementById('pin-subtext').innerText = subtext;
-      updateDots();
-      document.getElementById('pin-modal').classList.remove('hidden');
-    }
-
-    function closePinModal() {
-      document.getElementById('pin-modal').classList.add('hidden');
-      pinBuffer = '';
-    }
-
-    function pressPin(d) {
-      if (pinBuffer.length < 4) {
-        pinBuffer += d;
-        updateDots();
-        if (pinBuffer.length === 4) {
-          setTimeout(() => {
-            if (pinBuffer === managerPin) {
-              const cb = pinCallback;
-              closePinModal();
-              if (cb) cb();
-            } else {
-              alert('Incorrect PIN');
-              pinBuffer = '';
-              updateDots();
-            }
-          }, 100);
-        }
-      }
-    }
-
-    function clearPin() {
-      pinBuffer = '';
-      updateDots();
-    }
-
-    function updateDots() {
-      const dots = document.querySelectorAll('#pin-dots > div');
-      dots.forEach((dot, idx) => {
-        dot.className = idx < pinBuffer.length 
-          ? 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900' 
-          : 'w-3 h-3 rounded-full border border-stone-400';
-      });
-    }
-
-    // CLOUD FIREBASE SAVE / BROADCAST
-    function openImportModal() {
-      document.getElementById('import-modal').classList.remove('hidden');
-    }
-    function closeImportModal() {
-      document.getElementById('import-modal').classList.add('hidden');
-    }
-
-    async function saveImportedSpec() {
-      const sec = document.getElementById('import-section').value;
-      const cat = document.getElementById('import-category').value.trim() || 'General';
-      const title = document.getElementById('import-title').value.trim();
-      const targetTime = document.getElementById('import-time').value.trim() || 'Prep';
-      const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
-      const image = document.getElementById('import-image').value.trim() || '';
-      const rawIng = document.getElementById('import-ingredients').value.trim();
-      const rawSteps = document.getElementById('import-steps').value.trim();
-
-      if (!title) {
-        alert('Please enter a spec title.');
-        return;
-      }
-
-      const submitBtn = document.getElementById('import-submit-btn');
-      submitBtn.innerText = 'Broadcasting...';
-      submitBtn.disabled = true;
-
-      const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
-        const parts = line.split(':');
-        return { name: parts[0]?.trim(), amount: parts[1]?.trim() || '', unit: '' };
-      });
-
-      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
-
-      const specId = 'spec-' + Date.now();
-      const payload = {
-        title,
-        section: sec,
-        category: cat,
-        targetTime,
-        shelfLife,
-        image,
-        color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
-        icon: 'ph-cooking-pot',
-        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per binder' }],
-        steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.'],
-        timestamp: Date.now()
-      };
-
-      try {
-        await db.collection("lula_specs").doc(specId).set(payload);
-        closeImportModal();
-        document.getElementById('import-title').value = '';
-        document.getElementById('import-category').value = '';
-        document.getElementById('import-image').value = '';
-        document.getElementById('import-ingredients').value = '';
-        document.getElementById('import-steps').value = '';
-      } catch (err) {
-        alert("Failed to save to cloud: " + err.message);
-      } finally {
-        submitBtn.innerText = 'Save & Broadcast';
-        submitBtn.disabled = false;
-      }
-    }
-
-    async function deleteCurrentSpec() {
-      if (!currentModalSpec) return;
-      if (!confirm(`Delete "${currentModalSpec.title}" everywhere?`)) return;
-
-      try {
-        await db.collection("lula_specs").doc(currentModalSpec.id).delete();
-        closeDetailModal();
-      } catch (err) {
-        alert("Failed to delete spec: " + err.message);
-      }
-    }
-
-    function renderTraining() {
-      const tbody = document.getElementById('training-matrix-body');
-      if (!window.specs || window.specs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-stone-400 font-medium">No specs added to training passport yet.</td></tr>`;
-        return;
-      }
-      tbody.innerHTML = window.specs.map(s => `
-        <tr class="hover:bg-stone-50">
-          <td class="py-2.5 px-4 font-bold text-stone-900">${s.title}</td>
-          <td class="py-2.5 px-3 text-stone-500">${s.category}</td>
-          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
-          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
-          <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
-          <td class="py-2.5 px-4 text-right text-[10px] font-bold text-stone-400">IN TRAINING</td>
-        </tr>
-      `).join('');
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
-  </script>
-</body>
-</html>
+        return `
+          <div
