@@ -155,7 +155,7 @@
 
   <!-- MASTER UNIFIED SPEC MODAL -->
   <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-2 sm:p-4">
-    <div id="modal-container" class="bg-white w-full max-w-5xl max-h-[95vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border">
+    <div id="modal-container" class="bg-white w-full max-w-5xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border">
       
       <!-- Modal Header -->
       <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/80 shrink-0">
@@ -172,6 +172,36 @@
           <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-x"></i>
           </button>
+        </div>
+      </div>
+
+      <!-- STICKY EQUIPMENT & PRE-HEAT HUD BAR -->
+      <div id="modal-equipment-hud" class="bg-amber-500/10 border-b border-amber-500/20 px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+            <i class="ph-bold ph-fire"></i>
+          </div>
+          <div>
+            <span class="text-[9px] uppercase font-black tracking-wider text-amber-900 block leading-tight">Pre-Heat & Rational Setup</span>
+            <span id="hud-oven-setting" class="text-xs font-extrabold text-stone-900 leading-tight block">Rational SCC: 160°C Dry Heat | Fan 2</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-4 text-xs font-medium text-stone-600">
+          <div class="flex items-center gap-1.5">
+            <i class="ph-bold ph-clock text-amber-700"></i>
+            <span>Bake / Cook: <strong id="hud-bake-time" class="text-stone-900 font-bold">30–33 Mins</strong></span>
+          </div>
+          <div class="h-3 w-px bg-stone-300"></div>
+          <div class="flex items-center gap-1.5">
+            <i class="ph-bold ph-snowflake text-blue-600"></i>
+            <span>Storage: <strong id="hud-shelf-life" class="text-stone-900 font-bold">3 Mos Frozen</strong></span>
+          </div>
+          <div class="h-3 w-px bg-stone-300 hidden sm:block"></div>
+          <div class="hidden sm:flex items-center gap-1.5 text-emerald-800 font-bold">
+            <i class="ph-bold ph-thermometer-simple"></i>
+            <span id="hud-probe-temp">Core: 88°C Target</span>
+          </div>
         </div>
       </div>
       
@@ -246,7 +276,7 @@
           <span class="text-xs font-black uppercase text-brand-accent flex items-center gap-1.5">
             <i class="ph-bold ph-magic-wand text-base"></i> Smart Auto-Fill (Drop Code or Text Here)
           </span>
-          <span class="text-[10px] text-stone-500 font-semibold">Extracts Title, Times, Ingredients & Method</span>
+          <span class="text-[10px] text-stone-500 font-semibold">Extracts Title, Pre-Heat, Ingredients & Method</span>
         </div>
         <textarea id="smart-paste-box" rows="2" placeholder="Paste full HTML code or structured recipe text here... it will auto-populate every field below instantly!" 
           oninput="handleSmartPaste(this.value)"
@@ -283,22 +313,28 @@
 
         <div>
           <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
-          <input type="text" id="import-title" placeholder="e.g. Master NYC Choc Chip Cookie Dough" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-stone-900">
-        </div>
-
-        <div>
-          <label class="block font-bold text-stone-700 mb-1">Base Yield Unit (1x)</label>
-          <input type="text" id="import-base-unit" placeholder="e.g. 25 Cookies / 1 Masterclass Tin / 1L Bottle" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
+          <input type="text" id="import-title" placeholder="e.g. Master Cookie Dough Base" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-stone-900">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Target Time / Bake</label>
-            <input type="text" id="import-time" placeholder="e.g. Rational 160°C Dry Fan 2, 13-15m" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-stone-700 mb-1">Base Yield Unit (1x)</label>
+            <input type="text" id="import-base-unit" placeholder="e.g. 1 MasterClass Pan (35x24cm)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
           </div>
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Shelf Life / Storage</label>
-            <input type="text" id="import-shelf" placeholder="e.g. 3 Mos Frozen / 72h Chill" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-stone-700 mb-1">Core Probe / Quality Target</label>
+            <input type="text" id="import-probe" placeholder="e.g. Core: 88°C / Set Center" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-emerald-800">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Rational Pre-Heat / Mode</label>
+            <input type="text" id="import-time" placeholder="e.g. Rational SCC: 160°C Dry Heat | Fan 2" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-semibold text-amber-900">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">Shelf Life / Storage Vessel</label>
+            <input type="text" id="import-shelf" placeholder="e.g. Airtight GN Container (FIFO)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
 
@@ -307,12 +343,12 @@
             <span>1x Base Ingredients (Grams / Pcs)</span>
             <span class="text-[10px] text-stone-400 font-normal">Format: Ingredient: 500g</span>
           </label>
-          <textarea id="import-ingredients" rows="5" placeholder="Plain Flour: 900g&#10;Light Brown Sugar: 450g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-ingredients" rows="5" placeholder="Plain Flour (T55): 875g&#10;Unsalted Butter: 450g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
 
         <div>
           <label class="block font-bold text-stone-700 mb-1">Method / Prep Workflow (1 per line)</label>
-          <textarea id="import-steps" rows="5" placeholder="Load dry ingredients and cold diced butter into bowl...&#10;Mix on Speed 1 for 2.5 minutes until sand texture..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-steps" rows="5" placeholder="Line the 35x24x5cm MasterClass pan with parchment...&#10;Cream butter and sugars until fluffy..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
@@ -453,10 +489,12 @@
           updateCategoryDropdown(document.getElementById('import-section').value, cat);
         } else if (line.match(/^Base Unit.*?:/i)) {
           document.getElementById('import-base-unit').value = line.replace(/^Base Unit.*?:/i, '').trim();
-        } else if (line.match(/^Target Time.*?:/i)) {
-          document.getElementById('import-time').value = line.replace(/^Target Time.*?:/i, '').trim();
+        } else if (line.match(/^Target Time.*?:/i) || line.match(/^Pre-?Heat.*?:/i)) {
+          document.getElementById('import-time').value = line.replace(/^(Target Time|Pre-?Heat).*?:/i, '').trim();
         } else if (line.match(/^Shelf Life.*?:/i)) {
           document.getElementById('import-shelf').value = line.replace(/^Shelf Life.*?:/i, '').trim();
+        } else if (line.match(/^(Probe|Core Temp).*?:/i)) {
+          document.getElementById('import-probe').value = line.replace(/^(Probe|Core Temp).*?:/i, '').trim();
         } else if (line.match(/^Ingredients:\s*$/i)) {
           currentField = 'ingredients';
         } else if (line.match(/^(Method|Steps|Workflow):\s*$/i)) {
@@ -652,7 +690,16 @@
 
       document.getElementById('modal-title').innerText = currentModalSpec.title;
       document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
-      document.getElementById('modal-time-badge').innerText = `${currentModalSpec.targetTime || 'Standard'} • ${currentModalSpec.shelfLife || 'Fresh'}`;
+      document.getElementById('modal-time-badge').innerText = currentModalSpec.baseUnit ? `Yield: ${currentModalSpec.baseUnit}` : 'Standard Batch';
+
+      // Populate Sticky Equipment HUD Bar
+      document.getElementById('hud-oven-setting').innerText = currentModalSpec.targetTime || 'Prep / Ambient Execution';
+      
+      // Auto-extract bake timer window or fallback
+      const timeMatch = (currentModalSpec.targetTime || '').match(/\d+[\-–]\d+\s*m(ins)?|\d+\s*m(ins)?/i);
+      document.getElementById('hud-bake-time').innerText = timeMatch ? timeMatch[0] : (currentModalSpec.targetTime?.slice(0, 15) || 'As Specified');
+      document.getElementById('hud-shelf-life').innerText = currentModalSpec.shelfLife || 'Fresh Store';
+      document.getElementById('hud-probe-temp').innerText = currentModalSpec.probeTemp || 'Core: 88°C Standard';
 
       const editBtn = document.getElementById('modal-edit-btn');
       const deleteBtn = document.getElementById('modal-delete-btn');
@@ -692,20 +739,19 @@
       const body = document.getElementById('modal-body-content');
       const baseUnit = currentModalSpec.baseUnit || '1x Batch';
 
-      // Always allow 0.5x, 1x, 2x, 3x, 4x
       scaleEl.innerHTML = [0.5, 1, 2, 3, 4].map(m => `
         <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
       `).join('');
 
       body.innerHTML = `
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           <!-- LEFT: Ingredients with Live Batch Scaler -->
           <div class="lg:col-span-5 bg-stone-50/80 p-4 rounded-2xl border border-stone-200 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-2 pb-2 border-b border-stone-200">
                 <div>
-                  <span class="text-xs font-black uppercase text-stone-800 tracking-wider">Ingredients (${currentScale}x Batch)</span>
+                  <span class="text-xs font-black uppercase text-stone-800 tracking-wider">Ingredients (${currentScale}x)</span>
                   <p class="text-[10px] text-rose-700 font-bold">${baseUnit ? `Base: ${baseUnit}` : ''}</p>
                 </div>
                 <span class="text-[10px] text-stone-500 font-semibold">Tap to cross off</span>
@@ -740,21 +786,18 @@
             ` : ''}
           </div>
 
-          <!-- RIGHT: Visual Plate/Bake Standard & Method Steps -->
-          <div class="lg:col-span-7 flex flex-col gap-4">
-            ${currentModalSpec.image ? `
-              <div class="rounded-2xl overflow-hidden border border-brand-border shadow-xs bg-stone-100 max-h-60 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
-                <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
-              </div>
-            ` : ''}
-            
+          <!-- RIGHT: Method & Prep Execution Starting at Top (No Scrolling) -->
+          <div class="lg:col-span-7 flex flex-col gap-3">
             <div>
-              <h4 class="text-xs font-black uppercase text-stone-800 tracking-wider mb-2.5">Method & Prep Execution</h4>
-              <ol class="space-y-2.5 text-xs">
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-black uppercase text-stone-800 tracking-wider">Method & Prep Execution</h4>
+                <span class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Step-by-Step</span>
+              </div>
+              <ol class="space-y-2 text-xs">
                 ${(currentModalSpec.steps || []).map((st, i) => `
-                  <li class="flex items-start gap-2.5 p-2 rounded-xl bg-stone-50 border border-stone-100">
-                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${i + 1}</span>
-                    <span class="text-stone-700 leading-relaxed font-medium">${st}</span>
+                  <li class="flex items-start gap-3 p-3 rounded-xl bg-stone-50 border border-stone-200/80 hover:border-stone-300 transition">
+                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${i + 1}</span>
+                    <span class="text-stone-800 leading-relaxed font-medium">${st}</span>
                   </li>
                 `).join('')}
               </ol>
@@ -771,7 +814,7 @@
       closeDetailModal();
 
       document.getElementById('form-modal-heading').innerText = "Edit Spec";
-      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or tweak ingredients";
+      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or tweak pre-heat";
       document.getElementById('edit-spec-id').value = currentModalSpec.id;
 
       const sec = currentModalSpec.section || 'recipes';
@@ -780,6 +823,7 @@
 
       document.getElementById('import-title').value = currentModalSpec.title || '';
       document.getElementById('import-base-unit').value = currentModalSpec.baseUnit || '';
+      document.getElementById('import-probe').value = currentModalSpec.probeTemp || '';
       document.getElementById('import-time').value = currentModalSpec.targetTime || '';
       document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
 
@@ -931,6 +975,7 @@
       updateCategoryDropdown(currentSec);
 
       document.getElementById('import-base-unit').value = '1x Base';
+      document.getElementById('import-probe').value = '';
       document.getElementById('import-time').value = '';
       document.getElementById('import-shelf').value = '';
       document.getElementById('import-ingredients').value = '';
@@ -953,6 +998,7 @@
       const cat = getSelectedCategoryFromModal();
       const title = document.getElementById('import-title').value.trim();
       const baseUnit = document.getElementById('import-base-unit').value.trim() || '1x Base';
+      const probeTemp = document.getElementById('import-probe').value.trim() || 'Core: 88°C';
       const targetTime = document.getElementById('import-time').value.trim() || 'Standard';
       const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
       const rawIng = document.getElementById('import-ingredients').value.trim();
@@ -980,6 +1026,7 @@
         section: sec,
         category: cat,
         baseUnit,
+        probeTemp,
         targetTime,
         shelfLife,
         image: stagedImage || '',
