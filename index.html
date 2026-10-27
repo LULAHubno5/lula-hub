@@ -167,7 +167,7 @@
           <h2 id="modal-title" class="text-lg sm:text-xl font-black text-stone-900 tracking-tight mt-0.5">Title</h2>
         </div>
         <div class="flex items-center gap-2">
-          <!-- Live Scaler Buttons with Unit Labels -->
+          <!-- Multipliers: 0.5x, 1x, 2x, 3x, 4x -->
           <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold"></div>
           <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-x"></i>
@@ -286,25 +286,14 @@
           <input type="text" id="import-title" placeholder="e.g. Master NYC Choc Chip Cookie Dough" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-stone-900">
         </div>
 
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold text-stone-700 mb-1">Base Yield Unit (1x)</label>
-            <input type="text" id="import-base-unit" placeholder="e.g. 25 Cookies / 1 Tin / 1L" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
-          </div>
-          <div>
-            <label class="block font-bold text-stone-700 mb-1">Max Mixer Batch</label>
-            <select id="import-max-batch" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-stone-800">
-              <option value="4">4x (30L Mixer Ceiling - 100 Cookies)</option>
-              <option value="3">3x Batch Ceiling</option>
-              <option value="2">2x Batch Ceiling</option>
-              <option value="1">1x Only (Do Not Double)</option>
-            </select>
-          </div>
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">Base Yield Unit (1x)</label>
+          <input type="text" id="import-base-unit" placeholder="e.g. 25 Cookies / 1 Masterclass Tin / 1L Bottle" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Target Time / Combi Bake</label>
+            <label class="block font-bold text-stone-700 mb-1">Target Time / Bake</label>
             <input type="text" id="import-time" placeholder="e.g. Rational 160°C Dry Fan 2, 13-15m" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
           <div>
@@ -388,15 +377,12 @@
         document.getElementById('import-section').value = sec;
         updateCategoryDropdown(sec, cat);
 
-        // Check if this is a 100-cookie 30L spec
         let divisor = 1;
         if (pageText.includes('100') && (pageText.includes('12.87kg') || pageText.includes('30l'))) {
-          divisor = 4; // Scale 100-cookie max batch down to 1x base (25 cookies)
+          divisor = 4;
           document.getElementById('import-base-unit').value = '25 Cookies (~3.2kg)';
-          document.getElementById('import-max-batch').value = '4';
         } else {
           document.getElementById('import-base-unit').value = '1x Base';
-          document.getElementById('import-max-batch').value = '3';
         }
 
         const metaCards = doc.querySelectorAll('.grid > div, .metadata-card, [class*="rounded"]');
@@ -412,7 +398,7 @@
           }
         });
 
-        // Extract and calibrate ingredients to 1x base
+        // Extract ingredients
         const rows = doc.querySelectorAll('table tbody tr');
         const ingLines = [];
         rows.forEach(tr => {
@@ -704,19 +690,12 @@
     function renderDetailContent() {
       const scaleEl = document.getElementById('modal-scale-controls');
       const body = document.getElementById('modal-body-content');
-
-      const maxBatch = parseInt(currentModalSpec.maxBatch || '4');
       const baseUnit = currentModalSpec.baseUnit || '1x Batch';
 
-      const multipliers = [0.5, 1, 2, 3, 4].filter(m => m <= maxBatch);
-
-      scaleEl.innerHTML = multipliers.map(m => {
-        let label = `${m}x`;
-        if (m === maxBatch && maxBatch >= 3) label = `${m}x MAX`;
-        return `
-          <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${label}</button>
-        `;
-      }).join('');
+      // Always allow 0.5x, 1x, 2x, 3x, 4x
+      scaleEl.innerHTML = [0.5, 1, 2, 3, 4].map(m => `
+        <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
+      `).join('');
 
       body.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -731,14 +710,6 @@
                 </div>
                 <span class="text-[10px] text-stone-500 font-semibold">Tap to cross off</span>
               </div>
-
-              <!-- Mixer Capacity Directive Warning (Triggered at 4x Max) -->
-              ${(currentScale >= 4 || (currentScale === maxBatch && maxBatch >= 3)) ? `
-                <div class="mb-3 p-2 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-900 text-[11px] font-bold flex items-center gap-2">
-                  <i class="ph-bold ph-warning text-base text-amber-600 shrink-0"></i>
-                  <span>⚠️ 30L Planetary Mixer Limit reached. Run Speed 1 only to prevent motor trip.</span>
-                </div>
-              ` : ''}
 
               <ul class="divide-y divide-stone-200 text-xs">
                 ${(currentModalSpec.ingredients || []).map((ing, idx) => {
@@ -800,7 +771,7 @@
       closeDetailModal();
 
       document.getElementById('form-modal-heading').innerText = "Edit Spec";
-      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or tweak batch limits";
+      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or tweak ingredients";
       document.getElementById('edit-spec-id').value = currentModalSpec.id;
 
       const sec = currentModalSpec.section || 'recipes';
@@ -809,7 +780,6 @@
 
       document.getElementById('import-title').value = currentModalSpec.title || '';
       document.getElementById('import-base-unit').value = currentModalSpec.baseUnit || '';
-      document.getElementById('import-max-batch').value = currentModalSpec.maxBatch || '4';
       document.getElementById('import-time').value = currentModalSpec.targetTime || '';
       document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
 
@@ -961,7 +931,6 @@
       updateCategoryDropdown(currentSec);
 
       document.getElementById('import-base-unit').value = '1x Base';
-      document.getElementById('import-max-batch').value = '4';
       document.getElementById('import-time').value = '';
       document.getElementById('import-shelf').value = '';
       document.getElementById('import-ingredients').value = '';
@@ -984,7 +953,6 @@
       const cat = getSelectedCategoryFromModal();
       const title = document.getElementById('import-title').value.trim();
       const baseUnit = document.getElementById('import-base-unit').value.trim() || '1x Base';
-      const maxBatch = document.getElementById('import-max-batch').value;
       const targetTime = document.getElementById('import-time').value.trim() || 'Standard';
       const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
       const rawIng = document.getElementById('import-ingredients').value.trim();
@@ -1012,7 +980,6 @@
         section: sec,
         category: cat,
         baseUnit,
-        maxBatch,
         targetTime,
         shelfLife,
         image: stagedImage || '',
