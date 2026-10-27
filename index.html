@@ -259,28 +259,41 @@
     </div>
   </div>
 
-  <!-- ADD / EDIT SPEC MODAL -->
+  <!-- ADD / EDIT SPEC MODAL (With Smart Paste Auto-Fill) -->
   <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border border-stone-200 custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
         <div>
-          <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add New Spec</h3>
-          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Drop a plating photo, enter ingredients & method</p>
+          <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add / Edit Spec</h3>
+          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Paste raw text or HTML below to auto-fill all fields instantly</p>
         </div>
         <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
       </div>
 
+      <!-- ONE-BOX SMART PASTE / DROP ZONE -->
+      <div class="mb-4 bg-rose-50/50 border-2 border-dashed border-brand-accent/40 rounded-xl p-3">
+        <div class="flex items-center justify-between mb-1">
+          <span class="text-xs font-black uppercase text-brand-accent flex items-center gap-1.5">
+            <i class="ph-bold ph-magic-wand text-base"></i> Smart Auto-Fill (Drop Code or Text Here)
+          </span>
+          <span class="text-[10px] text-stone-500 font-semibold">Extracts Title, Times, Ingredients & Method</span>
+        </div>
+        <textarea id="smart-paste-box" rows="2" placeholder="Paste full HTML code or structured recipe text here... it will auto-populate every field below instantly!" 
+          oninput="handleSmartPaste(this.value)"
+          class="w-full bg-white p-2 rounded-lg border border-brand-border font-mono text-[11px] outline-none focus:border-brand-accent"></textarea>
+      </div>
+
       <!-- Photo Drop Zone -->
       <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
-        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-3 text-center cursor-pointer transition mb-3">
-        <i id="drop-icon" class="ph-duotone ph-camera text-2xl text-stone-400 mb-0.5 inline-block"></i>
-        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Tap to upload / snap dish photo</h4>
-        <p id="drop-sub" class="text-[10px] text-stone-500">Attaches as the plating card visual standard</p>
+        class="border border-stone-200 bg-stone-50 hover:bg-stone-100 rounded-xl p-2.5 text-center cursor-pointer transition mb-3 flex items-center justify-center gap-2">
+        <i id="drop-icon" class="ph-duotone ph-camera text-xl text-stone-400"></i>
+        <span id="drop-title" class="text-xs font-bold text-stone-700">Optional: Tap to attach plating photo</span>
         <input type="file" id="file-input" onchange="handleFileSelect(event)" accept="image/*" class="hidden">
       </div>
 
       <input type="hidden" id="edit-spec-id" value="">
 
+      <!-- Individual Editable Fields -->
       <div class="space-y-3 text-xs">
         <div class="grid grid-cols-2 gap-2">
           <div>
@@ -300,31 +313,31 @@
 
         <div>
           <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
-          <input type="text" id="import-title" placeholder="e.g. Garlic Flatbreads" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          <input type="text" id="import-title" placeholder="e.g. Master NYC Choc Chip Cookie Dough" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-stone-900">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Target Time / Bake</label>
-            <input type="text" id="import-time" placeholder="e.g. Rational 220°C 10m / 4 Mins Order" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-stone-700 mb-1">Target Time / Combi Bake</label>
+            <input type="text" id="import-time" placeholder="e.g. Rational 160°C Dry Fan 2, 13-15m" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Shelf Life / Storage</label>
-            <input type="text" id="import-shelf" placeholder="e.g. 2 Days Sealed / Fresh" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <input type="text" id="import-shelf" placeholder="e.g. 3 Mos Frozen / 72h Chill" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
 
         <div>
           <label class="block font-bold text-stone-700 mb-1 flex items-center justify-between">
-            <span>Ingredients (1 per line with amount)</span>
+            <span>Ingredients (Auto-Scalable)</span>
             <span class="text-[10px] text-stone-400 font-normal">Format: Ingredient: 500g</span>
           </label>
-          <textarea id="import-ingredients" rows="4" placeholder="Bread Flour: 500g&#10;Lukewarm Water: 320g&#10;Instant Yeast: 7g&#10;Fine Salt: 10g&#10;EVOO: 30g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-ingredients" rows="5" placeholder="Plain Flour: 3600g&#10;Light Brown Sugar: 1800g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
 
         <div>
           <label class="block font-bold text-stone-700 mb-1">Method / Prep Workflow (1 per line)</label>
-          <textarea id="import-steps" rows="4" placeholder="Combine dry ingredients in 30L mixer&#10;Add water and oil on Speed 1 for 4 mins&#10;Portion into 120g dough balls and bench rest" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-steps" rows="5" placeholder="Load dry ingredients and cold diced butter into bowl...&#10;Mix on Speed 1 for 2.5 minutes until sand texture..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
@@ -348,7 +361,6 @@
     let currentModalSpec = null;
     let currentScale = 1;
     let checkedIngredients = new Set();
-
     let stagedImage = null;
 
     const CATEGORIES = {
@@ -356,6 +368,135 @@
       sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
+
+    // SMART AUTO-FILL PARSER (Supports Raw HTML or Structured Text)
+    function handleSmartPaste(raw) {
+      if (!raw || raw.trim().length < 15) return;
+      const text = raw.trim();
+
+      // CASE 1: Full HTML Document Dropped
+      if (text.includes('<html') || text.includes('<!DOCTYPE') || text.includes('<table')) {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(text, 'text/html');
+
+        // Extract Title
+        const h1 = doc.querySelector('h1');
+        const titleEl = doc.querySelector('title');
+        let title = '';
+        if (h1 && h1.innerText.trim()) {
+          title = h1.innerText.trim();
+        } else if (titleEl) {
+          title = titleEl.innerText.replace(/^LULA.*?—\s*/, '').replace(/\(30L Spec\)/, '').trim();
+        }
+        if (title) document.getElementById('import-title').value = title;
+
+        // Auto-detect Section & Category
+        let cat = 'Bakes';
+        let sec = 'recipes';
+        const pageText = doc.body.innerText.toLowerCase();
+        if (pageText.includes('espresso') || pageText.includes('matcha') || pageText.includes('syrup')) {
+          sec = 'barista'; cat = 'House Syrups & Cold Foams';
+        } else if (pageText.includes('brunch') || pageText.includes('breakfast') || pageText.includes('poached egg')) {
+          sec = 'sops'; cat = 'Brunch';
+        } else if (pageText.includes('dough') || pageText.includes('bread') || pageText.includes('focaccia')) {
+          sec = 'recipes'; cat = 'Bread & Doughs';
+        }
+        document.getElementById('import-section').value = sec;
+        updateCategoryDropdown(sec, cat);
+
+        // Extract Oven & Shelf Life from Metadata cards
+        const metaCards = doc.querySelectorAll('.grid > div, .metadata-card, [class*="rounded"]');
+        metaCards.forEach(c => {
+          const t = c.innerText;
+          if (t.includes('Equipment') || t.includes('Combi') || t.includes('Settings')) {
+            const lines = t.split('\n').filter(Boolean);
+            if (lines[1]) document.getElementById('import-time').value = lines[1].trim();
+          }
+          if (t.includes('Shelf Life') || t.includes('Storage')) {
+            const lines = t.split('\n').filter(Boolean);
+            if (lines[1]) document.getElementById('import-shelf').value = lines[1].trim();
+          }
+        });
+
+        // Extract Ingredients from Table
+        const rows = doc.querySelectorAll('table tbody tr');
+        const ingLines = [];
+        rows.forEach(tr => {
+          const tds = tr.querySelectorAll('td');
+          if (tds.length >= 2) {
+            const name = tds[0].innerText.replace(/Phase.*?:/gi, '').trim();
+            const val = tds[1].innerText.trim();
+            if (name && val && !val.toLowerCase().includes('scaled')) {
+              ingLines.push(`${name}: ${val}`);
+            }
+          }
+        });
+        if (ingLines.length) document.getElementById('import-ingredients').value = ingLines.join('\n');
+
+        // Extract Workflow Steps
+        const steps = [];
+        const stepEls = doc.querySelectorAll('ol li, .space-y-1 > div, .space-y-2 > div');
+        stepEls.forEach(el => {
+          let s = el.innerText.replace(/^\d+[\.\)]?\s*/, '').trim();
+          // Remove step badge numbers if parsed
+          s = s.replace(/^[0-9]\s*/, '').trim();
+          if (s.length > 5 && !steps.includes(s)) steps.push(s);
+        });
+        if (steps.length) document.getElementById('import-steps').value = steps.join('\n');
+
+        // Flash green
+        const pasteBox = document.getElementById('smart-paste-box');
+        pasteBox.classList.add('border-emerald-500', 'bg-emerald-50');
+        setTimeout(() => pasteBox.classList.remove('border-emerald-500', 'bg-emerald-50'), 1200);
+        return;
+      }
+
+      // CASE 2: Key-Value Structured Text
+      const lines = text.split('\n');
+      let currentField = null;
+      let ingLines = [];
+      let stepLines = [];
+
+      lines.forEach(rawLine => {
+        const line = rawLine.trim();
+        if (!line) return;
+
+        if (line.match(/^Title:\s*/i)) {
+          document.getElementById('import-title').value = line.replace(/^Title:\s*/i, '').trim();
+          currentField = null;
+        } else if (line.match(/^Section:\s*/i)) {
+          const sec = line.replace(/^Section:\s*/i, '').trim().toLowerCase();
+          document.getElementById('import-section').value = sec;
+          updateCategoryDropdown(sec);
+          currentField = null;
+        } else if (line.match(/^Category:\s*/i)) {
+          const cat = line.replace(/^Category:\s*/i, '').trim();
+          updateCategoryDropdown(document.getElementById('import-section').value, cat);
+          currentField = null;
+        } else if (line.match(/^Target Time.*?:/i)) {
+          document.getElementById('import-time').value = line.replace(/^Target Time.*?:/i, '').trim();
+          currentField = null;
+        } else if (line.match(/^Shelf Life.*?:/i)) {
+          document.getElementById('import-shelf').value = line.replace(/^Shelf Life.*?:/i, '').trim();
+          currentField = null;
+        } else if (line.match(/^Ingredients:\s*$/i)) {
+          currentField = 'ingredients';
+        } else if (line.match(/^(Method|Steps|Workflow):\s*$/i)) {
+          currentField = 'method';
+        } else if (currentField === 'ingredients') {
+          ingLines.push(line);
+        } else if (currentField === 'method') {
+          stepLines.push(line.replace(/^\d+[\.\)]?\s*/, ''));
+        }
+      });
+
+      if (ingLines.length) document.getElementById('import-ingredients').value = ingLines.join('\n');
+      if (stepLines.length) document.getElementById('import-steps').value = stepLines.join('\n');
+
+      const pasteBox = document.getElementById('smart-paste-box');
+      pasteBox.classList.add('border-emerald-500', 'bg-emerald-50');
+      setTimeout(() => pasteBox.classList.remove('border-emerald-500', 'bg-emerald-50'), 1200);
+    }
 
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
@@ -521,7 +662,7 @@
           ${item.image ? `
             <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
               <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
-              <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+              <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">
                 ${item.category || 'Spec'}
               </span>
             </div>
@@ -600,7 +741,7 @@
             <div>
               <div class="flex items-center justify-between mb-2 pb-2 border-b border-stone-200">
                 <span class="text-xs font-black uppercase text-stone-800 tracking-wider">Ingredients (${currentScale}x Batch)</span>
-                <span class="text-[10px] text-stone-500 font-semibold">Tap item to cross off</span>
+                <span class="text-[10px] text-stone-500 font-semibold">Tap to cross off</span>
               </div>
               <ul class="divide-y divide-stone-200 text-xs">
                 ${(currentModalSpec.ingredients || []).map((ing, idx) => {
@@ -662,7 +803,7 @@
       closeDetailModal();
 
       document.getElementById('form-modal-heading').innerText = "Edit Spec";
-      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or re-categorize";
+      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or tweak ingredients";
       document.getElementById('edit-spec-id').value = currentModalSpec.id;
 
       const sec = currentModalSpec.section || 'recipes';
@@ -680,15 +821,17 @@
       document.getElementById('import-steps').value = stepsText;
 
       stagedImage = currentModalSpec.image || null;
+      document.getElementById('smart-paste-box').value = '';
 
       const dropTitle = document.getElementById('drop-title');
-      const dropSub = document.getElementById('drop-sub');
       const dropIcon = document.getElementById('drop-icon');
 
       if (stagedImage) {
-        dropIcon.className = "ph-duotone ph-image text-2xl text-emerald-600 mb-0.5 inline-block";
-        dropTitle.innerText = "Cover photo attached";
-        dropSub.innerText = "Drop a new photo to replace, or keep as is.";
+        dropIcon.className = "ph-duotone ph-image text-xl text-emerald-600";
+        dropTitle.innerText = "Cover photo attached (click to replace)";
+      } else {
+        dropIcon.className = "ph-duotone ph-camera text-xl text-stone-400";
+        dropTitle.innerText = "Optional: Tap to attach plating photo";
       }
 
       document.getElementById('import-modal').classList.remove('hidden');
@@ -801,9 +944,8 @@
         const reader = new FileReader();
         reader.onload = (e) => { 
           stagedImage = e.target.result; 
-          document.getElementById('drop-icon').className = "ph-duotone ph-image text-2xl text-emerald-600 mb-0.5 inline-block";
+          document.getElementById('drop-icon').className = "ph-duotone ph-image text-xl text-emerald-600";
           document.getElementById('drop-title').innerText = `Attached: ${file.name}`;
-          document.getElementById('drop-sub').innerText = "Cover photo set!";
         };
         reader.readAsDataURL(file);
       }
@@ -812,7 +954,7 @@
     function openImportModal() {
       document.getElementById('edit-spec-id').value = '';
       document.getElementById('form-modal-heading').innerText = "Add New Spec";
-      document.getElementById('form-modal-subheading').innerText = "Drop a plating photo, enter ingredients & method";
+      document.getElementById('form-modal-subheading').innerText = "Paste raw text or HTML below to auto-fill all fields instantly";
       document.getElementById('import-title').value = '';
       
       const currentSec = window.currentSection === 'training' ? 'recipes' : window.currentSection;
@@ -823,11 +965,11 @@
       document.getElementById('import-shelf').value = '';
       document.getElementById('import-ingredients').value = '';
       document.getElementById('import-steps').value = '';
+      document.getElementById('smart-paste-box').value = '';
 
       stagedImage = null;
-      document.getElementById('drop-icon').className = "ph-duotone ph-camera text-2xl text-stone-400 mb-0.5 inline-block";
-      document.getElementById('drop-title').innerText = "Tap to upload / snap dish photo";
-      document.getElementById('drop-sub').innerText = "Attaches as the plating card visual standard";
+      document.getElementById('drop-icon').className = "ph-duotone ph-camera text-xl text-stone-400";
+      document.getElementById('drop-title').innerText = "Optional: Tap to attach plating photo";
       document.getElementById('import-modal').classList.remove('hidden');
     }
 
