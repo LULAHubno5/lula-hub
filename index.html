@@ -170,7 +170,7 @@
           <thead class="bg-stone-50 text-stone-500 font-bold border-b border-brand-border uppercase text-[10px] tracking-wider">
             <tr>
               <th class="py-2.5 px-4">Spec / Dish</th>
-              <th class="py-2.5 px-3">Type</th>
+              <th class="py-2.5 px-3">Section</th>
               <th class="py-2.5 px-3">Category</th>
               <th class="py-2.5 px-3 text-center">Attempt 1</th>
               <th class="py-2.5 px-3 text-center">Attempt 2</th>
@@ -184,14 +184,18 @@
     </div>
   </main>
 
-  <!-- DETAIL MODAL (Auto-Expands to Widescreen for HTML SOPs) -->
+  <!-- MASTER UNIFIED SPEC MODAL -->
   <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-2 sm:p-4">
-    <div id="modal-container" class="bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200">
-      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/75 shrink-0">
+    <div id="modal-container" class="bg-white w-full max-w-5xl max-h-[95vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border">
+      
+      <!-- Modal Header -->
+      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/80 shrink-0">
         <div>
-          <span id="modal-category-badge" class="bg-stone-200 text-stone-800 text-[10px] font-black uppercase px-2 py-0.5 rounded">Category</span>
-          <h2 id="modal-title" class="text-base font-black text-stone-900 mt-1">Title</h2>
-          <p id="modal-meta" class="text-[11px] text-stone-500 font-medium"></p>
+          <div class="flex items-center gap-2">
+            <span id="modal-category-badge" class="bg-stone-900 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wide">Category</span>
+            <span id="modal-time-badge" class="text-[11px] font-bold text-stone-500"></span>
+          </div>
+          <h2 id="modal-title" class="text-lg sm:text-xl font-black text-stone-900 tracking-tight mt-0.5">Title</h2>
         </div>
         <div class="flex items-center gap-2">
           <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold"></div>
@@ -201,10 +205,14 @@
         </div>
       </div>
       
-      <div id="modal-body-content" class="flex-1 overflow-y-auto p-3 sm:p-5 custom-scrollbar"></div>
+      <!-- Unified Body -->
+      <div id="modal-body-content" class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar"></div>
       
+      <!-- Modal Footer -->
       <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
-        <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium"></span>
+        <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium flex items-center gap-1.5">
+          <i class="ph-bold ph-shield-check text-emerald-600"></i> LULA Kitchen Standards & FIFO Certified
+        </span>
         <div class="flex items-center gap-2">
           <button id="modal-edit-btn" onclick="openEditModalForCurrentSpec()" class="hidden bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
             <i class="ph-bold ph-pencil-simple"></i> Edit Spec
@@ -212,7 +220,7 @@
           <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition">
             Delete Spec
           </button>
-          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg">Done</button>
+          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-4 py-1.5 rounded-lg">Done</button>
         </div>
       </div>
     </div>
@@ -251,40 +259,24 @@
     </div>
   </div>
 
-  <!-- MULTI-FORMAT ADD / EDIT SPEC MODAL -->
+  <!-- ADD / EDIT SPEC MODAL -->
   <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
     <div class="bg-white w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border border-stone-200 custom-scrollbar">
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
         <div>
-          <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add / Drop In New Spec</h3>
-          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Drop HTML, PDF, Photo, or paste raw HTML code</p>
+          <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add New Spec</h3>
+          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Drop a plating photo, enter ingredients & method</p>
         </div>
         <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
       </div>
 
-      <!-- Drag & Drop Zone -->
+      <!-- Photo Drop Zone -->
       <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
-        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-4 text-center cursor-pointer transition mb-3">
-        <i id="drop-icon" class="ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block"></i>
-        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Drop your file or photo here, or browse</h4>
-        <p id="drop-sub" class="text-[10px] text-stone-500">Photos automatically attach as the cover & plating guide</p>
-        <input type="file" id="file-input" onchange="handleFileSelect(event)" accept=".html,.htm,.pdf,image/*" class="hidden">
-      </div>
-
-      <!-- Raw HTML Code Paste Toggle Box -->
-      <div class="mb-4 bg-stone-50 border border-stone-200 rounded-xl p-3">
-        <div class="flex items-center justify-between mb-1.5 cursor-pointer" onclick="toggleRawHtmlBox()">
-          <span class="text-xs font-bold text-stone-800 flex items-center gap-1.5">
-            <i class="ph-bold ph-code text-rose-600"></i> Or Paste Raw HTML Code Directly
-          </span>
-          <span id="raw-html-toggle-icon" class="text-xs font-bold text-stone-400">Show +</span>
-        </div>
-        <div id="raw-html-container" class="hidden mt-2">
-          <textarea id="import-raw-html" rows="4" placeholder="Paste <!DOCTYPE html> or <div>...</div> code here directly without downloading files..." 
-            oninput="handleRawHtmlInput(this.value)"
-            class="w-full bg-white p-2.5 rounded-lg border border-stone-300 font-mono text-[11px] leading-relaxed"></textarea>
-          <p class="text-[10px] text-stone-500 mt-1">Pasting HTML here will load it as an interactive card in the tablet viewer automatically.</p>
-        </div>
+        class="border-2 border-dashed border-stone-300 hover:border-brand-accent hover:bg-rose-50/30 rounded-xl p-3 text-center cursor-pointer transition mb-3">
+        <i id="drop-icon" class="ph-duotone ph-camera text-2xl text-stone-400 mb-0.5 inline-block"></i>
+        <h4 id="drop-title" class="text-xs font-bold text-stone-800">Tap to upload / snap dish photo</h4>
+        <p id="drop-sub" class="text-[10px] text-stone-500">Attaches as the plating card visual standard</p>
+        <input type="file" id="file-input" onchange="handleFileSelect(event)" accept="image/*" class="hidden">
       </div>
 
       <input type="hidden" id="edit-spec-id" value="">
@@ -308,40 +300,31 @@
 
         <div>
           <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
-          <input type="text" id="import-title" placeholder="e.g. Master Cookie Dough" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+          <input type="text" id="import-title" placeholder="e.g. Garlic Flatbreads" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Target Time</label>
-            <input type="text" id="import-time" placeholder="e.g. 15 Mins Prep / 24h Chill" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-stone-700 mb-1">Target Time / Bake</label>
+            <input type="text" id="import-time" placeholder="e.g. Rational 220°C 10m / 4 Mins Order" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Shelf Life</label>
-            <input type="text" id="import-shelf" placeholder="e.g. 5 Days Chilled / 3 Mos Frozen" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-stone-700 mb-1">Shelf Life / Storage</label>
+            <input type="text" id="import-shelf" placeholder="e.g. 2 Days Sealed / Fresh" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
 
         <div>
           <label class="block font-bold text-stone-700 mb-1 flex items-center justify-between">
-            <span>Google Drive Folder or Link (Optional)</span>
-            <span class="text-[10px] text-brand-accent font-semibold">Live Embed</span>
+            <span>Ingredients (1 per line with amount)</span>
+            <span class="text-[10px] text-stone-400 font-normal">Format: Ingredient: 500g</span>
           </label>
-          <div class="relative">
-            <i class="ph-bold ph-google-drive-logo absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400"></i>
-            <input type="url" id="import-drive" placeholder="https://drive.google.com/drive/folders/..." 
-              class="w-full bg-stone-100 border border-stone-200 rounded-lg pl-8 pr-3 py-1.5 text-xs outline-none">
-          </div>
+          <textarea id="import-ingredients" rows="4" placeholder="Bread Flour: 500g&#10;Lukewarm Water: 320g&#10;Instant Yeast: 7g&#10;Fine Salt: 10g&#10;EVOO: 30g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
 
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Ingredients (Optional if HTML pasted or file dropped)</label>
-          <textarea id="import-ingredients" rows="3" placeholder="Unsalted Butter: 250g&#10;Light Brown Sugar: 180g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
-        </div>
-
-        <div>
-          <label class="block font-bold text-stone-700 mb-1">Method / SOP Steps (Optional if HTML pasted or file dropped)</label>
-          <textarea id="import-steps" rows="3" placeholder="Cream butter and sugar until smooth&#10;Fold in flour and chocolate chips" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <label class="block font-bold text-stone-700 mb-1">Method / Prep Workflow (1 per line)</label>
+          <textarea id="import-steps" rows="4" placeholder="Combine dry ingredients in 30L mixer&#10;Add water and oil on Speed 1 for 4 mins&#10;Portion into 120g dough balls and bench rest" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
@@ -364,45 +347,15 @@
     let pinCallback = null;
     let currentModalSpec = null;
     let currentScale = 1;
+    let checkedIngredients = new Set();
 
-    let stagedFileType = null;
-    let stagedFileData = null;
     let stagedImage = null;
-    let stagedFileName = '';
 
     const CATEGORIES = {
       recipes: ["All", "Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
       sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
-
-    function toggleRawHtmlBox() {
-      const container = document.getElementById('raw-html-container');
-      const toggle = document.getElementById('raw-html-toggle-icon');
-      if (container.classList.contains('hidden')) {
-        container.classList.remove('hidden');
-        toggle.innerText = 'Hide -';
-      } else {
-        container.classList.add('hidden');
-        toggle.innerText = 'Show +';
-      }
-    }
-
-    function handleRawHtmlInput(val) {
-      if (val && val.trim().length > 10) {
-        stagedFileType = 'html';
-        stagedFileData = val.trim();
-        const dropTitle = document.getElementById('drop-title');
-        const dropSub = document.getElementById('drop-sub');
-        const dropIcon = document.getElementById('drop-icon');
-        dropIcon.className = "ph-duotone ph-code text-3xl text-rose-600 mb-1 inline-block";
-        dropTitle.innerText = "Raw HTML Code Detected";
-        dropSub.innerText = "Will render as interactive SOP card in tablet view.";
-      } else if (!stagedFileName) {
-        stagedFileType = null;
-        stagedFileData = null;
-      }
-    }
 
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
@@ -563,59 +516,40 @@
 
       empty.classList.add('hidden');
       grid.classList.remove('hidden');
-      grid.innerHTML = items.map(item => {
-        const isHtml = item.fileType === 'html';
-        const isPdf = item.fileType === 'pdf';
-        const isDrive = !!item.driveUrl;
-
-        let badgeIcon = 'ph-file-text';
-        let badgeText = item.category || 'General';
-        if (isHtml) { badgeIcon = 'ph-code'; }
-        if (isPdf) { badgeIcon = 'ph-file-pdf'; }
-        if (isDrive) { badgeIcon = 'ph-google-drive-logo'; }
-
-        return `
-          <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
-            ${item.image ? `
-              <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
-                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
-                <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
-                  <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
-                </span>
-              </div>
-            ` : `
-              <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
-                <i class="ph-bold ${isHtml ? 'ph-file-code' : (isPdf ? 'ph-file-pdf' : (isDrive ? 'ph-google-drive-logo' : 'ph-cooking-pot'))} text-2xl"></i>
-                <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
-                  <i class="ph-bold ${badgeIcon}"></i> ${badgeText}
-                </span>
-              </div>
-            `}
-            <div class="p-2.5">
-              <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
-              <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Standard'} • ${item.shelfLife || 'Fresh'}</div>
+      grid.innerHTML = items.map(item => `
+        <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
+          ${item.image ? `
+            <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
+              <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded flex items-center gap-1">
+                ${item.category || 'Spec'}
+              </span>
             </div>
+          ` : `
+            <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
+              <i class="ph-bold ph-cooking-pot text-2xl"></i>
+              <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">
+                ${item.category || 'Spec'}
+              </span>
+            </div>
+          `}
+          <div class="p-2.5">
+            <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
+            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Standard'} • ${item.shelfLife || 'Fresh'}</div>
           </div>
-        `;
-      }).join('');
+        </div>
+      `).join('');
     }
 
     function openDetail(id) {
       currentModalSpec = (window.specs || []).find(s => s.id === id);
       if (!currentModalSpec) return;
       currentScale = 1;
+      checkedIngredients.clear();
 
       document.getElementById('modal-title').innerText = currentModalSpec.title;
       document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
-      document.getElementById('modal-meta').innerText = `${currentModalSpec.targetTime || ''} • ${currentModalSpec.shelfLife || ''}`;
-      document.getElementById('modal-footer-notes').innerText = currentModalSpec.haccp || 'LULA Standards & Quality Protocol';
-
-      const container = document.getElementById('modal-container');
-      if (currentModalSpec.fileType === 'html') {
-        container.className = "bg-white w-full max-w-[96vw] max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
-      } else {
-        container.className = "bg-white w-full max-w-4xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border transition-all duration-200";
-      }
+      document.getElementById('modal-time-badge').innerText = `${currentModalSpec.targetTime || 'Standard'} • ${currentModalSpec.shelfLife || 'Fresh'}`;
 
       const editBtn = document.getElementById('modal-edit-btn');
       const deleteBtn = document.getElementById('modal-delete-btn');
@@ -633,7 +567,7 @@
 
     function closeDetailModal() {
       document.getElementById('detail-modal').classList.add('hidden');
-      document.getElementById('modal-body-content').innerHTML = '';
+      checkedIngredients.clear();
     }
 
     function setScale(s) {
@@ -641,108 +575,83 @@
       renderDetailContent();
     }
 
+    function toggleIngredientCheck(idx) {
+      if (checkedIngredients.has(idx)) {
+        checkedIngredients.delete(idx);
+      } else {
+        checkedIngredients.add(idx);
+      }
+      renderDetailContent();
+    }
+
     function renderDetailContent() {
       const scaleEl = document.getElementById('modal-scale-controls');
       const body = document.getElementById('modal-body-content');
 
-      // 1. Interactive HTML Card View
-      if (currentModalSpec.fileType === 'html') {
-        scaleEl.innerHTML = '';
-        body.innerHTML = `
-          <div class="w-full h-[78vh] rounded-xl overflow-hidden border border-brand-border bg-white shadow-xs">
-            <iframe id="sop-iframe" class="w-full h-full border-0"></iframe>
-          </div>
-        `;
-        const iframe = document.getElementById('sop-iframe');
-        iframe.srcdoc = currentModalSpec.fileData;
-        return;
-      }
-
-      // 2. PDF Document Viewer
-      if (currentModalSpec.fileType === 'pdf') {
-        scaleEl.innerHTML = '';
-        body.innerHTML = `
-          <div class="w-full h-[74vh] rounded-xl overflow-hidden border border-brand-border bg-stone-100 flex flex-col">
-            <object data="${currentModalSpec.fileData}" type="application/pdf" class="w-full flex-1">
-              <div class="p-6 text-center text-xs text-stone-600">
-                <i class="ph-bold ph-file-pdf text-3xl text-rose-600 mb-2"></i>
-                <p>PDF loaded.</p>
-                <a href="${currentModalSpec.fileData}" download="${currentModalSpec.title}.pdf" class="mt-2 inline-block bg-stone-900 text-white font-bold px-3 py-1.5 rounded-lg">Download PDF</a>
-              </div>
-            </object>
-          </div>
-        `;
-        return;
-      }
-
-      // 3. Google Drive Live Embed View
-      if (currentModalSpec.driveUrl) {
-        scaleEl.innerHTML = '';
-        let embedUrl = currentModalSpec.driveUrl;
-        if (embedUrl.includes('/view') || embedUrl.includes('/edit')) {
-          embedUrl = embedUrl.replace(/\/view.*$/, '/preview').replace(/\/edit.*$/, '/preview');
-        }
-        body.innerHTML = `
-          <div class="w-full h-[74vh] rounded-xl overflow-hidden border border-brand-border bg-white flex flex-col">
-            <div class="bg-stone-100 px-3 py-1.5 flex items-center justify-between text-xs border-b border-stone-200">
-              <span class="font-bold flex items-center gap-1.5 text-stone-700">
-                <i class="ph-bold ph-google-drive-logo text-emerald-600"></i> Google Drive Cloud Resource
-              </span>
-              <a href="${currentModalSpec.driveUrl}" target="_blank" class="text-brand-accent hover:underline font-bold flex items-center gap-1">
-                <span>Open in Drive</span> <i class="ph-bold ph-arrow-square-out"></i>
-              </a>
-            </div>
-            <iframe src="${embedUrl}" class="w-full flex-1 border-0"></iframe>
-          </div>
-        `;
-        return;
-      }
-
-      // 4. Default Scalable Recipe + Attached Photo Plating Standard View
-      scaleEl.innerHTML = [0.5, 1, 2].map(m => `
-        <button onclick="setScale(${m})" class="px-2 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
+      scaleEl.innerHTML = [0.5, 1, 2, 3].map(m => `
+        <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
       `).join('');
 
       body.innerHTML = `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="bg-stone-50 p-3.5 rounded-xl border border-stone-200 flex flex-col justify-between">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- LEFT: Ingredients with Check-Off Protocol -->
+          <div class="lg:col-span-5 bg-stone-50/80 p-4 rounded-2xl border border-stone-200 flex flex-col justify-between">
             <div>
-              <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Ingredients (${currentScale}x)</h4>
+              <div class="flex items-center justify-between mb-2 pb-2 border-b border-stone-200">
+                <span class="text-xs font-black uppercase text-stone-800 tracking-wider">Ingredients (${currentScale}x Batch)</span>
+                <span class="text-[10px] text-stone-500 font-semibold">Tap item to cross off</span>
+              </div>
               <ul class="divide-y divide-stone-200 text-xs">
-                ${(currentModalSpec.ingredients || []).map(ing => {
+                ${(currentModalSpec.ingredients || []).map((ing, idx) => {
                   const num = parseFloat(ing.amount);
                   const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
                     ? Math.round(num * currentScale * 10) / 10 
                     : ing.amount;
+                  const isChecked = checkedIngredients.has(idx);
+
                   return `
-                    <li class="py-1.5 flex justify-between">
-                      <span class="text-stone-700">${ing.name}</span>
-                      <span class="font-bold text-stone-900 font-mono">${displayAmt}${ing.unit || ''}</span>
+                    <li onclick="toggleIngredientCheck(${idx})" class="py-2.5 px-2 flex items-center justify-between cursor-pointer rounded-lg hover:bg-stone-100/70 transition ${isChecked ? 'bg-emerald-50 text-stone-400' : ''}">
+                      <div class="flex items-center gap-2.5">
+                        <div class="w-4 h-4 rounded border flex items-center justify-center transition ${isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-stone-300 bg-white'}">
+                          ${isChecked ? '<i class="ph-bold ph-check text-[10px]"></i>' : ''}
+                        </div>
+                        <span class="font-medium ${isChecked ? 'line-through text-stone-400' : 'text-stone-800'}">${ing.name}</span>
+                      </div>
+                      <span class="font-bold font-mono text-xs ${isChecked ? 'line-through text-stone-400' : 'text-stone-900'}">${displayAmt} ${ing.unit || ''}</span>
                     </li>
                   `;
                 }).join('')}
               </ul>
             </div>
+            ${checkedIngredients.size > 0 ? `
+              <div class="mt-3 pt-2 border-t border-stone-200 text-right">
+                <button onclick="checkedIngredients.clear(); renderDetailContent();" class="text-[10px] font-bold text-stone-500 hover:text-stone-800 underline">Reset checklist</button>
+              </div>
+            ` : ''}
           </div>
 
-          <div class="flex flex-col gap-3">
+          <!-- RIGHT: Visual Plate/Bake Standard & Method Steps -->
+          <div class="lg:col-span-7 flex flex-col gap-4">
             ${currentModalSpec.image ? `
-              <div class="rounded-xl overflow-hidden border border-brand-border shadow-xs bg-stone-100 max-h-56 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
+              <div class="rounded-2xl overflow-hidden border border-brand-border shadow-xs bg-stone-100 max-h-60 cursor-pointer" onclick="window.open('${currentModalSpec.image}', '_blank')">
                 <img src="${currentModalSpec.image}" alt="${currentModalSpec.title}" class="w-full h-full object-cover">
               </div>
             ` : ''}
+            
             <div>
-              <h4 class="text-xs font-black uppercase text-stone-700 mb-2">Method / Build Steps</h4>
-              <ol class="space-y-2 text-xs">
+              <h4 class="text-xs font-black uppercase text-stone-800 tracking-wider mb-2.5">Method & Prep Execution</h4>
+              <ol class="space-y-2.5 text-xs">
                 ${(currentModalSpec.steps || []).map((st, i) => `
-                  <li class="flex items-start gap-2">
-                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0">${i + 1}</span>
-                    <span class="text-stone-700">${st}</span>
+                  <li class="flex items-start gap-2.5 p-2 rounded-xl bg-stone-50 border border-stone-100">
+                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-bold text-[10px] flex items-center justify-center shrink-0 mt-0.5">${i + 1}</span>
+                    <span class="text-stone-700 leading-relaxed font-medium">${st}</span>
                   </li>
                 `).join('')}
               </ol>
             </div>
           </div>
+
         </div>
       `;
     }
@@ -763,18 +672,6 @@
       document.getElementById('import-title').value = currentModalSpec.title || '';
       document.getElementById('import-time').value = currentModalSpec.targetTime || '';
       document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
-      document.getElementById('import-drive').value = currentModalSpec.driveUrl || '';
-
-      const rawHtmlBox = document.getElementById('import-raw-html');
-      if (currentModalSpec.fileType === 'html') {
-        rawHtmlBox.value = currentModalSpec.fileData || '';
-        document.getElementById('raw-html-container').classList.remove('hidden');
-        document.getElementById('raw-html-toggle-icon').innerText = 'Hide -';
-      } else {
-        rawHtmlBox.value = '';
-        document.getElementById('raw-html-container').classList.add('hidden');
-        document.getElementById('raw-html-toggle-icon').innerText = 'Show +';
-      }
 
       const ingText = (currentModalSpec.ingredients || []).map(i => `${i.name}: ${i.amount || ''} ${i.unit || ''}`.trim()).join('\n');
       document.getElementById('import-ingredients').value = ingText;
@@ -782,8 +679,6 @@
       const stepsText = (currentModalSpec.steps || []).join('\n');
       document.getElementById('import-steps').value = stepsText;
 
-      stagedFileType = currentModalSpec.fileType || null;
-      stagedFileData = currentModalSpec.fileData || null;
       stagedImage = currentModalSpec.image || null;
 
       const dropTitle = document.getElementById('drop-title');
@@ -791,8 +686,8 @@
       const dropIcon = document.getElementById('drop-icon');
 
       if (stagedImage) {
-        dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
-        dropTitle.innerText = "Cover photo currently attached";
+        dropIcon.className = "ph-duotone ph-image text-2xl text-emerald-600 mb-0.5 inline-block";
+        dropTitle.innerText = "Cover photo attached";
         dropSub.innerText = "Drop a new photo to replace, or keep as is.";
       }
 
@@ -880,7 +775,7 @@
       });
     }
 
-    // DRAG AND DROP SETUP
+    // DROP ZONE
     function setupDropZone() {
       const dropZone = document.getElementById('drop-zone');
       if (!dropZone) return;
@@ -902,50 +797,22 @@
     }
 
     function processFile(file) {
-      stagedFileName = file.name;
-      const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/_/g, " ").replace(/-/g, " ");
-      const titleInput = document.getElementById('import-title');
-      if (!titleInput.value) {
-        titleInput.value = cleanTitle;
-      }
-
-      const dropTitle = document.getElementById('drop-title');
-      const dropSub = document.getElementById('drop-sub');
-      const dropIcon = document.getElementById('drop-icon');
-
-      if (file.name.endsWith('.html') || file.name.endsWith('.htm')) {
-        stagedFileType = 'html';
+      if (file.type.startsWith('image/')) {
         const reader = new FileReader();
         reader.onload = (e) => { 
-          stagedFileData = e.target.result;
-          document.getElementById('import-raw-html').value = stagedFileData;
+          stagedImage = e.target.result; 
+          document.getElementById('drop-icon').className = "ph-duotone ph-image text-2xl text-emerald-600 mb-0.5 inline-block";
+          document.getElementById('drop-title').innerText = `Attached: ${file.name}`;
+          document.getElementById('drop-sub').innerText = "Cover photo set!";
         };
-        reader.readAsText(file);
-        dropIcon.className = "ph-duotone ph-code text-3xl text-emerald-600 mb-1 inline-block";
-        dropTitle.innerText = `HTML Attached: ${file.name}`;
-        dropSub.innerText = "Interactive SOP card loaded and ready to broadcast.";
-      } else if (file.name.endsWith('.pdf')) {
-        stagedFileType = 'pdf';
-        const reader = new FileReader();
-        reader.onload = (e) => { stagedFileData = e.target.result; };
         reader.readAsDataURL(file);
-        dropIcon.className = "ph-duotone ph-file-pdf text-3xl text-rose-600 mb-1 inline-block";
-        dropTitle.innerText = `PDF Attached: ${file.name}`;
-        dropSub.innerText = "PDF document ready to embed.";
-      } else if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => { stagedImage = e.target.result; };
-        reader.readAsDataURL(file);
-        dropIcon.className = "ph-duotone ph-image text-3xl text-emerald-600 mb-1 inline-block";
-        dropTitle.innerText = `Photo Attached: ${file.name}`;
-        dropSub.innerText = "Cover photo set. Ingredients and method below will be preserved!";
       }
     }
 
     function openImportModal() {
       document.getElementById('edit-spec-id').value = '';
-      document.getElementById('form-modal-heading').innerText = "Add / Drop In New Spec";
-      document.getElementById('form-modal-subheading').innerText = "Drop HTML, PDF, Photo, or paste raw HTML code";
+      document.getElementById('form-modal-heading').innerText = "Add New Spec";
+      document.getElementById('form-modal-subheading').innerText = "Drop a plating photo, enter ingredients & method";
       document.getElementById('import-title').value = '';
       
       const currentSec = window.currentSection === 'training' ? 'recipes' : window.currentSection;
@@ -954,21 +821,13 @@
 
       document.getElementById('import-time').value = '';
       document.getElementById('import-shelf').value = '';
-      document.getElementById('import-drive').value = '';
       document.getElementById('import-ingredients').value = '';
       document.getElementById('import-steps').value = '';
 
-      document.getElementById('import-raw-html').value = '';
-      document.getElementById('raw-html-container').classList.add('hidden');
-      document.getElementById('raw-html-toggle-icon').innerText = 'Show +';
-
-      stagedFileType = null;
-      stagedFileData = null;
       stagedImage = null;
-      stagedFileName = '';
-      document.getElementById('drop-icon').className = "ph-duotone ph-cloud-arrow-up text-3xl text-stone-400 mb-1 inline-block";
-      document.getElementById('drop-title').innerText = "Drop your file or photo here, or browse";
-      document.getElementById('drop-sub').innerText = "Photos will automatically attach as the cover & plating guide";
+      document.getElementById('drop-icon').className = "ph-duotone ph-camera text-2xl text-stone-400 mb-0.5 inline-block";
+      document.getElementById('drop-title').innerText = "Tap to upload / snap dish photo";
+      document.getElementById('drop-sub').innerText = "Attaches as the plating card visual standard";
       document.getElementById('import-modal').classList.remove('hidden');
     }
 
@@ -983,10 +842,8 @@
       const title = document.getElementById('import-title').value.trim();
       const targetTime = document.getElementById('import-time').value.trim() || 'Standard';
       const shelfLife = document.getElementById('import-shelf').value.trim() || 'Fresh';
-      const driveUrl = document.getElementById('import-drive').value.trim() || '';
       const rawIng = document.getElementById('import-ingredients').value.trim();
       const rawSteps = document.getElementById('import-steps').value.trim();
-      const rawHtml = document.getElementById('import-raw-html').value.trim();
 
       if (!title) {
         alert('Please enter a spec title.');
@@ -994,7 +851,7 @@
       }
 
       const submitBtn = document.getElementById('import-submit-btn');
-      submitBtn.innerText = 'Broadcasting to Tablets...';
+      submitBtn.innerText = 'Broadcasting...';
       submitBtn.disabled = true;
 
       const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
@@ -1004,19 +861,6 @@
       const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
 
       const specId = editId || ('spec-' + Date.now());
-      
-      let finalFileType = 'text';
-      let finalFileData = null;
-
-      if (rawHtml.length > 10) {
-        finalFileType = 'html';
-        finalFileData = rawHtml;
-      } else if (stagedFileType) {
-        finalFileType = stagedFileType;
-        finalFileData = stagedFileData;
-      } else if (driveUrl) {
-        finalFileType = 'drive';
-      }
 
       const payload = {
         title,
@@ -1024,9 +868,6 @@
         category: cat,
         targetTime,
         shelfLife,
-        driveUrl,
-        fileType: finalFileType,
-        fileData: finalFileData,
         image: stagedImage || '',
         color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
         ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec' }],
@@ -1082,7 +923,7 @@
       tbody.innerHTML = window.specs.map(s => `
         <tr class="hover:bg-stone-50">
           <td class="py-2.5 px-4 font-bold text-stone-900">${s.title}</td>
-          <td class="py-2.5 px-3 uppercase text-[10px] font-bold text-stone-500">${s.fileType || 'Doc'}</td>
+          <td class="py-2.5 px-3 uppercase text-[10px] font-bold text-stone-500">${s.section}</td>
           <td class="py-2.5 px-3 text-stone-500">${s.category}</td>
           <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
           <td class="py-2.5 px-3 text-center"><button class="px-2 py-0.5 rounded bg-stone-100 text-[11px] font-bold">Pending</button></td>
