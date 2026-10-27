@@ -168,7 +168,7 @@
         </div>
         <div class="flex items-center gap-2">
           <!-- Multipliers: 0.5x, 1x, 2x, 3x, 4x -->
-          <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold"></div>
+          <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold gap-0.5"></div>
           <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
             <i class="ph-bold ph-x"></i>
           </button>
@@ -379,6 +379,20 @@
       sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
       barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
+
+    // Helper: parses ingredient string with attached units into numeric & unit parts
+    function parseIngValue(rawVal) {
+      if (!rawVal) return { num: null, unit: '', isNumber: false };
+      const str = rawVal.toString().trim();
+      const match = str.match(/^([\d\.]+)\s*(.*)$/);
+      if (match) {
+        const val = parseFloat(match[1]);
+        if (!isNaN(val)) {
+          return { num: val, unit: match[2] || '', isNumber: true };
+        }
+      }
+      return { num: null, unit: str, isNumber: false };
+    }
 
     // SMART AUTO-FILL PARSER
     function handleSmartPaste(raw) {
@@ -692,10 +706,9 @@
       document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
       document.getElementById('modal-time-badge').innerText = currentModalSpec.baseUnit ? `Yield: ${currentModalSpec.baseUnit}` : 'Standard Batch';
 
-      // Populate Sticky Equipment HUD Bar
+      // Sticky HUD Elements
       document.getElementById('hud-oven-setting').innerText = currentModalSpec.targetTime || 'Prep / Ambient Execution';
       
-      // Auto-extract bake timer window or fallback
       const timeMatch = (currentModalSpec.targetTime || '').match(/\d+[\-–]\d+\s*m(ins)?|\d+\s*m(ins)?/i);
       document.getElementById('hud-bake-time').innerText = timeMatch ? timeMatch[0] : (currentModalSpec.targetTime?.slice(0, 15) || 'As Specified');
       document.getElementById('hud-shelf-life').innerText = currentModalSpec.shelfLife || 'Fresh Store';
@@ -739,8 +752,9 @@
       const body = document.getElementById('modal-body-content');
       const baseUnit = currentModalSpec.baseUnit || '1x Batch';
 
+      // Multiplier buttons with clean active highlight state
       scaleEl.innerHTML = [0.5, 1, 2, 3, 4].map(m => `
-        <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs transition ${currentScale === m ? 'bg-white text-stone-900 shadow-xs' : 'text-stone-600'}">${m}x</button>
+        <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs font-bold transition ${currentScale === m ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600 hover:text-stone-900'}">${m}x</button>
       `).join('');
 
       body.innerHTML = `
@@ -759,10 +773,14 @@
 
               <ul class="divide-y divide-stone-200 text-xs">
                 ${(currentModalSpec.ingredients || []).map((ing, idx) => {
-                  const num = parseFloat(ing.amount);
-                  const displayAmt = !isNaN(num) && ing.amount.toString().trim() === num.toString() 
-                    ? Math.round(num * currentScale * 10) / 10 
-                    : ing.amount;
+                  const parsed = parseIngValue(ing.amount);
+                  let displayAmt = ing.amount;
+
+                  if (parsed.isNumber) {
+                    const scaledNum = Math.round(parsed.num * currentScale * 10) / 10;
+                    displayAmt = `${scaledNum}${parsed.unit ? parsed.unit : (ing.unit || '')}`;
+                  }
+
                   const isChecked = checkedIngredients.has(idx);
 
                   return `
@@ -773,7 +791,7 @@
                         </div>
                         <span class="font-medium ${isChecked ? 'line-through text-stone-400' : 'text-stone-800'}">${ing.name}</span>
                       </div>
-                      <span class="font-bold font-mono text-xs ${isChecked ? 'line-through text-stone-400' : 'text-stone-900'}">${displayAmt} ${ing.unit || ''}</span>
+                      <span class="font-bold font-mono text-xs ${isChecked ? 'line-through text-stone-400' : 'text-stone-900'}">${displayAmt}</span>
                     </li>
                   `;
                 }).join('')}
