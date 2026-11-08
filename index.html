@@ -132,7 +132,7 @@
     </div>
   </div>
 
-  <!-- CATEGORY PILLS -->
+  <!-- CATEGORY PILLS (NOW FULLY DYNAMIC) -->
   <div id="category-bar-wrapper" class="bg-white border-b border-brand-border px-4 py-2 sticky top-[49px] z-30 shadow-xs">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
       <div id="category-pills" class="flex items-center gap-1.5 flex-nowrap min-w-max"></div>
@@ -265,7 +265,7 @@
       <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
         <div>
           <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add / Edit Spec</h3>
-          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Paste raw text or HTML below to auto-fill all fields instantly</p>
+          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Paste text below to auto-fill all fields instantly</p>
         </div>
         <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
       </div>
@@ -274,20 +274,39 @@
       <div class="mb-4 bg-rose-50/50 border-2 border-dashed border-brand-accent/40 rounded-xl p-3">
         <div class="flex items-center justify-between mb-1">
           <span class="text-xs font-black uppercase text-brand-accent flex items-center gap-1.5">
-            <i class="ph-bold ph-magic-wand text-base"></i> Smart Auto-Fill (Drop Code or Text Here)
+            <i class="ph-bold ph-magic-wand text-base"></i> Smart Auto-Fill (Paste Recipe Text Here)
           </span>
           <span class="text-[10px] text-stone-500 font-semibold">Extracts Title, Pre-Heat, Ingredients & Method</span>
         </div>
-        <textarea id="smart-paste-box" rows="2" placeholder="Paste full HTML code or structured recipe text here... it will auto-populate every field below instantly!" 
+        <textarea id="smart-paste-box" rows="3" placeholder="Paste whole recipe block here... it will auto-populate every field below instantly!" 
           oninput="handleSmartPaste(this.value)"
           class="w-full bg-white p-2 rounded-lg border border-brand-border font-mono text-[11px] outline-none focus:border-brand-accent"></textarea>
       </div>
 
-      <!-- Photo Drop Zone -->
-      <div id="drop-zone" onclick="document.getElementById('file-input').click()" 
-        class="border border-stone-200 bg-stone-50 hover:bg-stone-100 rounded-xl p-2.5 text-center cursor-pointer transition mb-3 flex items-center justify-center gap-2">
-        <i id="drop-icon" class="ph-duotone ph-camera text-xl text-stone-400"></i>
-        <span id="drop-title" class="text-xs font-bold text-stone-700">Optional: Tap to attach plating photo</span>
+      <!-- Plating Photo Attachment & Camera Controls -->
+      <div class="mb-3 p-3 bg-stone-50 border border-stone-200 rounded-xl">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-stone-800 flex items-center gap-1.5">
+            <i class="ph-bold ph-camera text-rose-600"></i> Plating Standard Photo
+          </span>
+          <span id="photo-status" class="text-[10px] font-semibold text-stone-400">No photo set</span>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <!-- Button 1: Live Camera Snapshot -->
+          <button type="button" onclick="document.getElementById('camera-input').click()" 
+            class="py-2 px-3 rounded-lg bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-2xs">
+            <i class="ph-bold ph-camera-plus text-stone-900 text-sm"></i>
+            <span>Take Live Photo</span>
+          </button>
+          <!-- Button 2: Upload Existing Photo from Gallery -->
+          <button type="button" onclick="document.getElementById('file-input').click()" 
+            class="py-2 px-3 rounded-lg bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-2xs">
+            <i class="ph-bold ph-image text-stone-900 text-sm"></i>
+            <span>Upload Photo</span>
+          </button>
+        </div>
+        <!-- Hidden file inputs -->
+        <input type="file" id="camera-input" onchange="handleFileSelect(event)" accept="image/*" capture="environment" class="hidden">
         <input type="file" id="file-input" onchange="handleFileSelect(event)" accept="image/*" class="hidden">
       </div>
 
@@ -307,7 +326,7 @@
           <div>
             <label class="block font-bold text-stone-700 mb-1">Category (Sub-Section)</label>
             <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium"></select>
-            <input type="text" id="import-category-custom" placeholder="Type custom category..." class="hidden mt-1.5 w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <input type="text" id="import-category-custom" placeholder="Type custom category (e.g. Specials)..." class="hidden mt-1.5 w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
 
@@ -319,22 +338,22 @@
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-stone-700 mb-1">Base Yield Unit (1x)</label>
-            <input type="text" id="import-base-unit" placeholder="e.g. 1 MasterClass Pan (35x24cm)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
+            <input type="text" id="import-base-unit" placeholder="e.g. 10 Cookies / 1 Tin / 1L Bottle" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Core Probe / Quality Target</label>
-            <input type="text" id="import-probe" placeholder="e.g. Core: 88°C / Set Center" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-emerald-800">
+            <input type="text" id="import-probe" placeholder="e.g. Core: 86°C - 88°C" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-emerald-800">
           </div>
         </div>
 
         <div class="grid grid-cols-2 gap-2">
           <div>
             <label class="block font-bold text-stone-700 mb-1">Rational Pre-Heat / Mode</label>
-            <input type="text" id="import-time" placeholder="e.g. Rational SCC: 160°C Dry Heat | Fan 2" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-semibold text-amber-900">
+            <input type="text" id="import-time" placeholder="e.g. Rational SCC: 160°C Dry Heat, 14 Mins" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-semibold text-amber-900">
           </div>
           <div>
             <label class="block font-bold text-stone-700 mb-1">Shelf Life / Storage Vessel</label>
-            <input type="text" id="import-shelf" placeholder="e.g. Airtight GN Container (FIFO)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <input type="text" id="import-shelf" placeholder="e.g. Airtight Display Container (FIFO) - 3 Days" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
           </div>
         </div>
 
@@ -348,7 +367,7 @@
 
         <div>
           <label class="block font-bold text-stone-700 mb-1">Method / Prep Workflow (1 per line)</label>
-          <textarea id="import-steps" rows="5" placeholder="Line the 35x24x5cm MasterClass pan with parchment...&#10;Cream butter and sugars until fluffy..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <textarea id="import-steps" rows="5" placeholder="In a mixing bowl, combine melted butter and sugars...&#10;Fold in chocolate chunks..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
         </div>
       </div>
 
@@ -374,10 +393,10 @@
     let checkedIngredients = new Set();
     let stagedImage = null;
 
-    const CATEGORIES = {
-      recipes: ["All", "Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
-      sops: ["All", "Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
-      barista: ["All", "Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
+    const DEFAULT_CATEGORIES = {
+      recipes: ["Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
+      sops: ["Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
+      barista: ["Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
     };
 
     // Helper: parses ingredient string with attached units into numeric & unit parts
@@ -394,12 +413,24 @@
       return { num: null, unit: str, isNumber: false };
     }
 
-    // SMART AUTO-FILL PARSER
+    // Dynamic Category Gatherer (Collects defaults + any custom category added)
+    function getAllCategoriesForSection(sec) {
+      const set = new Set(DEFAULT_CATEGORIES[sec] || []);
+      (window.specs || []).forEach(s => {
+        if (s.section === sec && s.category && s.category.trim()) {
+          set.add(s.category.trim());
+        }
+      });
+      return Array.from(set);
+    }
+
+    // SMART AUTO-FILL PARSER (Matches flexible labels, removes weird unicode whitespace/bullets)
     function handleSmartPaste(raw) {
       if (!raw || raw.trim().length < 15) return;
-      const text = raw.trim();
+      // Clean hidden zero-width spaces or BOM characters
+      const text = raw.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
 
-      // CASE 1: Full HTML Document Dropped
+      // CASE 1: HTML Document
       if (text.includes('<html') || text.includes('<!DOCTYPE') || text.includes('<table')) {
         const parser = new DOMParser();
         const doc = parser.parseFromString(text, 'text/html');
@@ -448,7 +479,6 @@
           }
         });
 
-        // Extract ingredients
         const rows = doc.querySelectorAll('table tbody tr');
         const ingLines = [];
         rows.forEach(tr => {
@@ -476,13 +506,11 @@
         });
         if (steps.length) document.getElementById('import-steps').value = steps.join('\n');
 
-        const pasteBox = document.getElementById('smart-paste-box');
-        pasteBox.classList.add('border-emerald-500', 'bg-emerald-50');
-        setTimeout(() => pasteBox.classList.remove('border-emerald-500', 'bg-emerald-50'), 1200);
+        flashGreenPasteBox();
         return;
       }
 
-      // CASE 2: Text paste
+      // CASE 2: Text paste (Handles ANY standard key prefix)
       const lines = text.split('\n');
       let currentField = null;
       let ingLines = [];
@@ -492,29 +520,35 @@
         const line = rawLine.trim();
         if (!line) return;
 
-        if (line.match(/^Title:\s*/i)) {
-          document.getElementById('import-title').value = line.replace(/^Title:\s*/i, '').trim();
-        } else if (line.match(/^Section:\s*/i)) {
-          const sec = line.replace(/^Section:\s*/i, '').trim().toLowerCase();
+        if (line.match(/^(Dish\s*\/\s*Spec\s*Title|Title)\s*:\s*/i)) {
+          document.getElementById('import-title').value = line.replace(/^(Dish\s*\/\s*Spec\s*Title|Title)\s*:\s*/i, '').trim();
+        } else if (line.match(/^Section\s*:\s*/i)) {
+          let sec = line.replace(/^Section\s*:\s*/i, '').trim().toLowerCase();
+          if (sec.includes('prep') || sec.includes('recipe')) sec = 'recipes';
+          else if (sec.includes('sop') || sec.includes('kitchen')) sec = 'sops';
+          else if (sec.includes('bar') || sec.includes('drink') || sec.includes('barista')) sec = 'barista';
           document.getElementById('import-section').value = sec;
           updateCategoryDropdown(sec);
-        } else if (line.match(/^Category:\s*/i)) {
-          const cat = line.replace(/^Category:\s*/i, '').trim();
+        } else if (line.match(/^Category\s*:\s*/i)) {
+          const cat = line.replace(/^Category\s*:\s*/i, '').trim();
           updateCategoryDropdown(document.getElementById('import-section').value, cat);
-        } else if (line.match(/^Base Unit.*?:/i)) {
-          document.getElementById('import-base-unit').value = line.replace(/^Base Unit.*?:/i, '').trim();
-        } else if (line.match(/^Target Time.*?:/i) || line.match(/^Pre-?Heat.*?:/i)) {
-          document.getElementById('import-time').value = line.replace(/^(Target Time|Pre-?Heat).*?:/i, '').trim();
-        } else if (line.match(/^Shelf Life.*?:/i)) {
-          document.getElementById('import-shelf').value = line.replace(/^Shelf Life.*?:/i, '').trim();
-        } else if (line.match(/^(Probe|Core Temp).*?:/i)) {
-          document.getElementById('import-probe').value = line.replace(/^(Probe|Core Temp).*?:/i, '').trim();
-        } else if (line.match(/^Ingredients:\s*$/i)) {
+        } else if (line.match(/^Base Yield Unit.*?:/i) || line.match(/^Yield.*?:/i)) {
+          document.getElementById('import-base-unit').value = line.replace(/^(Base Yield Unit.*?|Yield.*?):\s*/i, '').trim();
+        } else if (line.match(/^(Rational Pre-?Heat|Pre-?Heat|Target Time).*?:/i)) {
+          document.getElementById('import-time').value = line.replace(/^(Rational Pre-?Heat.*?|Pre-?Heat.*?|Target Time.*?):\s*/i, '').trim();
+        } else if (line.match(/^(Shelf Life|Storage Vessel).*?:/i)) {
+          document.getElementById('import-shelf').value = line.replace(/^(Shelf Life.*?|Storage Vessel.*?):\s*/i, '').trim();
+        } else if (line.match(/^(Core Probe|Quality Target|Probe|Internal Temp).*?:/i)) {
+          document.getElementById('import-probe').value = line.replace(/^(Core Probe.*?|Quality Target.*?|Probe.*?|Internal Temp.*?):\s*/i, '').trim();
+        } else if (line.match(/^(1x\s*Base\s*Ingredients|Ingredients).*?:/i)) {
           currentField = 'ingredients';
-        } else if (line.match(/^(Method|Steps|Workflow):\s*$/i)) {
+        } else if (line.match(/^(Method\s*\/\s*Prep\s*Workflow|Method|Steps|Workflow).*?:/i)) {
           currentField = 'method';
         } else if (currentField === 'ingredients') {
-          ingLines.push(line);
+          // If hit a sub-heading or colon pair
+          if (line.includes(':')) {
+            ingLines.push(line);
+          }
         } else if (currentField === 'method') {
           stepLines.push(line.replace(/^\d+[\.\)]?\s*/, ''));
         }
@@ -523,6 +557,10 @@
       if (ingLines.length) document.getElementById('import-ingredients').value = ingLines.join('\n');
       if (stepLines.length) document.getElementById('import-steps').value = stepLines.join('\n');
 
+      flashGreenPasteBox();
+    }
+
+    function flashGreenPasteBox() {
       const pasteBox = document.getElementById('smart-paste-box');
       pasteBox.classList.add('border-emerald-500', 'bg-emerald-50');
       setTimeout(() => pasteBox.classList.remove('border-emerald-500', 'bg-emerald-50'), 1200);
@@ -531,7 +569,7 @@
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
-      const subCats = (CATEGORIES[sectionVal] || []).filter(c => c !== "All");
+      const subCats = getAllCategoriesForSection(sectionVal);
 
       select.innerHTML = subCats.map(c => `<option value="${c}">${c}</option>`).join('') + `<option value="__custom__">Custom...</option>`;
 
@@ -599,6 +637,7 @@
           items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
           window.specs = items;
           localStorage.setItem('lula_local_specs', JSON.stringify(items));
+          renderCategoryPills();
           renderCatalog();
         }, (err) => {
           console.warn("Cloud offline / sync error:", err);
@@ -609,7 +648,6 @@
     }
 
     function init() {
-      setupDropZone();
       renderCategoryPills();
       renderCatalog();
     }
@@ -640,9 +678,10 @@
       renderCatalog();
     }
 
+    // Category pills now include ANY custom category ever entered
     function renderCategoryPills() {
       const el = document.getElementById('category-pills');
-      const cats = CATEGORIES[window.currentSection] || ["All"];
+      const cats = ["All", ...getAllCategoriesForSection(window.currentSection)];
       el.innerHTML = cats.map(c => `
         <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
           currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
@@ -752,7 +791,7 @@
       const body = document.getElementById('modal-body-content');
       const baseUnit = currentModalSpec.baseUnit || '1x Batch';
 
-      // Multiplier buttons with clean active highlight state
+      // Multipliers with visible active highlight state
       scaleEl.innerHTML = [0.5, 1, 2, 3, 4].map(m => `
         <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs font-bold transition ${currentScale === m ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600 hover:text-stone-900'}">${m}x</button>
       `).join('');
@@ -854,15 +893,13 @@
       stagedImage = currentModalSpec.image || null;
       document.getElementById('smart-paste-box').value = '';
 
-      const dropTitle = document.getElementById('drop-title');
-      const dropIcon = document.getElementById('drop-icon');
-
+      const photoStatus = document.getElementById('photo-status');
       if (stagedImage) {
-        dropIcon.className = "ph-duotone ph-image text-xl text-emerald-600";
-        dropTitle.innerText = "Cover photo attached (click to replace)";
+        photoStatus.innerText = "Cover photo attached";
+        photoStatus.className = "text-[10px] font-bold text-emerald-600";
       } else {
-        dropIcon.className = "ph-duotone ph-camera text-xl text-stone-400";
-        dropTitle.innerText = "Optional: Tap to attach plating photo";
+        photoStatus.innerText = "No photo set";
+        photoStatus.className = "text-[10px] font-semibold text-stone-400";
       }
 
       document.getElementById('import-modal').classList.remove('hidden');
@@ -949,22 +986,6 @@
       });
     }
 
-    // DROP ZONE
-    function setupDropZone() {
-      const dropZone = document.getElementById('drop-zone');
-      if (!dropZone) return;
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
-      });
-      dropZone.addEventListener('dragover', () => dropZone.classList.add('border-brand-accent', 'bg-rose-50/50'));
-      dropZone.addEventListener('dragleave', () => dropZone.classList.remove('border-brand-accent', 'bg-rose-50/50'));
-      dropZone.addEventListener('drop', (e) => {
-        dropZone.classList.remove('border-brand-accent', 'bg-rose-50/50');
-        const dt = e.dataTransfer;
-        if (dt.files.length) processFile(dt.files[0]);
-      });
-    }
-
     function handleFileSelect(e) {
       const files = e.target.files;
       if (files.length) processFile(files[0]);
@@ -975,8 +996,9 @@
         const reader = new FileReader();
         reader.onload = (e) => { 
           stagedImage = e.target.result; 
-          document.getElementById('drop-icon').className = "ph-duotone ph-image text-xl text-emerald-600";
-          document.getElementById('drop-title').innerText = `Attached: ${file.name}`;
+          const photoStatus = document.getElementById('photo-status');
+          photoStatus.innerText = `Photo set: ${file.name || 'Captured'}`;
+          photoStatus.className = "text-[10px] font-bold text-emerald-600";
         };
         reader.readAsDataURL(file);
       }
@@ -985,7 +1007,7 @@
     function openImportModal() {
       document.getElementById('edit-spec-id').value = '';
       document.getElementById('form-modal-heading').innerText = "Add New Spec";
-      document.getElementById('form-modal-subheading').innerText = "Paste raw text or HTML below to auto-fill all fields instantly";
+      document.getElementById('form-modal-subheading').innerText = "Paste raw text below to auto-fill all fields instantly";
       document.getElementById('import-title').value = '';
       
       const currentSec = window.currentSection;
@@ -1001,8 +1023,10 @@
       document.getElementById('smart-paste-box').value = '';
 
       stagedImage = null;
-      document.getElementById('drop-icon').className = "ph-duotone ph-camera text-xl text-stone-400";
-      document.getElementById('drop-title').innerText = "Optional: Tap to attach plating photo";
+      const photoStatus = document.getElementById('photo-status');
+      photoStatus.innerText = "No photo set";
+      photoStatus.className = "text-[10px] font-semibold text-stone-400";
+
       document.getElementById('import-modal').classList.remove('hidden');
     }
 
@@ -1062,12 +1086,14 @@
           window.specs = window.specs.filter(s => s.id !== specId);
           window.specs.unshift({ id: specId, ...payload });
           localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+          renderCategoryPills();
           renderCatalog();
         }
       } else {
         window.specs = window.specs.filter(s => s.id !== specId);
         window.specs.unshift({ id: specId, ...payload });
         localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+        renderCategoryPills();
         renderCatalog();
       }
 
@@ -1090,6 +1116,7 @@
       window.specs = window.specs.filter(s => s.id !== currentModalSpec.id);
       localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
       closeDetailModal();
+      renderCategoryPills();
       renderCatalog();
     }
 
