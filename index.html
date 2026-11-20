@@ -1293,7 +1293,7 @@
       },
       {
         id: 'sample-fried-chicken',
-        title: 'LULA Fried Chicken (Marinade > Steam > GF Panko > Fry)',
+        title: 'LULA Fried Chicken',
         section: 'recipes',
         category: 'Main Recipes',
         baseUnit: '5kg Chicken Batch (~6.29kg Marinade + GF Panko)',
@@ -2122,8 +2122,11 @@
             if (!snapshot.empty) {
               const items = [];
               snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+              const existingIds = new Set(items.map(s => s.id));
               const existingTitles = new Set(items.map(s => (s.title || '').trim().toLowerCase()));
-              const missingSamples = SAMPLE_SPECS.filter(s => !existingTitles.has((s.title || '').trim().toLowerCase()));
+              const missingSamples = SAMPLE_SPECS.filter(
+                s => !existingIds.has(s.id) && !existingTitles.has((s.title || '').trim().toLowerCase())
+              );
               if (missingSamples.length > 0) {
                 missingSamples.forEach(ms => {
                   items.push(ms);
@@ -2148,15 +2151,6 @@
       const byId = new Map(current.map(s => [s.id, s]));
       const existingTitles = new Set(current.map(s => (s.title || '').trim().toLowerCase()));
       let changed = false;
-
-      // Upgrade default Fried Chicken spec if user still has the older un-edited version
-      const updatedChicken = SAMPLE_SPECS.find(s => s.id === 'sample-fried-chicken');
-      const existingChicken = byId.get('sample-fried-chicken');
-      if (updatedChicken && existingChicken && (existingChicken.timestamp || 0) < updatedChicken.timestamp) {
-        byId.set('sample-fried-chicken', structuredClone(updatedChicken));
-        if (db) db.collection("lula_specs").doc('sample-fried-chicken').set(updatedChicken, { merge: true }).catch(() => {});
-        changed = true;
-      }
 
       const mergedList = Array.from(byId.values());
       SAMPLE_SPECS.forEach(sample => {
