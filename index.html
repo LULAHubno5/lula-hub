@@ -1293,31 +1293,37 @@
       },
       {
         id: 'sample-fried-chicken',
-        title: 'Fried Chicken Marinade & Base (5kg Modular)',
+        title: 'LULA Fried Chicken (Marinade > Steam > GF Panko > Fry)',
         section: 'recipes',
         category: 'Main Recipes',
-        baseUnit: '1x 10L Tub (~6.29kg)',
-        probeTemp: 'Fry 175°C → Core 75°C',
-        targetTime: '12–24h Cure in Fridges (<5°C)',
-        shelfLife: '24h Raw Cured / 4L Tubs Freezers',
+        baseUnit: '5kg Chicken Batch (~6.29kg Marinade + GF Panko)',
+        probeTemp: 'Steam Core 65°C → Fry 175–180°C (≥75°C Core)',
+        targetTime: 'Combi 100°C (65°C) | Fry 175–180°C',
+        shelfLife: '12–24h Cure | 3d Chilled | 14d Frozen',
         ingredients: [
-          { name: 'Chicken Strips (Cleaned)', amount: '5000g', unit: '' },
-          { name: 'Buttermilk', amount: '909g', unit: '' },
-          { name: 'Dijon Mustard', amount: '200g', unit: '' },
+          { name: 'Chicken Strips (Cleaned - Two 2.5kg bags or one 5kg pack)', amount: '5000g', unit: '' },
+          { name: 'Buttermilk (Marinade - ~900ml)', amount: '909g', unit: '' },
+          { name: 'Dijon Mustard (Binds marinade)', amount: '200g', unit: '' },
           { name: 'Fine Sea Salt', amount: '40g', unit: '' },
           { name: 'Onion Powder', amount: '40g', unit: '' },
           { name: 'Garlic Powder', amount: '40g', unit: '' },
-          { name: 'Five-Spice Powder', amount: '24g', unit: '' },
-          { name: 'Caster Sugar', amount: '16g', unit: '' },
-          { name: 'MSG', amount: '16g', unit: '' }
+          { name: 'Five-Spice Powder (Watch crust sugar)', amount: '24g', unit: '' },
+          { name: 'Caster Sugar (Balances salt & spice)', amount: '16g', unit: '' },
+          { name: 'MSG', amount: '16g', unit: '' },
+          { name: 'Buttermilk (Slurry Binder - Egg-free 5:1 slurry base)', amount: '500ml', unit: '' },
+          { name: 'Cornflour (Slurry Thickener - glues panko to cooked meat)', amount: '100g', unit: '' },
+          { name: 'GF Panko Breadcrumbs (100% GF)', amount: '750g', unit: '' },
+          { name: 'Fine Sea Salt (Panko Seasoning)', amount: '6g', unit: '' },
+          { name: 'Smoked Paprika (Panko Seasoning)', amount: '5g', unit: '' }
         ],
         steps: [
-          'Dry Blend: Whisk salt, onion powder, garlic powder, five-spice, caster sugar, and MSG.',
-          'Liquid Emulsion: Whisk buttermilk, Dijon mustard, and dry spice blend in a clean 10L tub until smooth.',
-          'Protein Integration: Massage 5kg cleaned chicken strips into marinade until every piece is coated.',
-          'Cure & Trigger Check: Label FIFO and cure 12-24h below 5°C. Check frozen 4L tub levels every Sunday.'
+          'Marinade & Cure (12–24h @ <5°C): Whisk dry spices, then whisk into 909g buttermilk and 200g Dijon in a 10L tub. Massage into 5kg chicken strips, lid airtight, label FIFO, and cure 12–24h below 5°C.',
+          'Solid GN Combi Steam-Par: Lay strips flat in a single layer in solid 1/1 GN pans (not perforated) with 100–150ml marinade. Rational Steam Mode @ 100°C, Fan 4 to 65°C core (6–9m). Cool <5°C within 90m.',
+          'Chill, Freeze & 24h Fridge Thaw: Hold naked strips chilled (≤4°C) up to 3 days, or flat-pack freeze (-18°C) up to 14 days. Thaw in standard kitchen fridge 24h before use; drain thaw weep and pat lightly.',
+          '5:1 Slurry + GF Panko (To Order / Busy Box): Whisk 500ml buttermilk + 100g cornflour (egg-free glue). Dip cold drained strips, shake off excess, press firmly into seasoned GF panko (750g panko, 6g fine salt, 5g smoked paprika), and chill uncovered 15–20m on parchment trays to lock.',
+          'Service Flash-Fry & Pass: Drop pankoed strips into 100% GF fryer at 175°C–180°C for 90–120s until golden and ≥75°C core. Drain on wire rack and plate immediately (15m max under pass heat lamp).'
         ],
-        timestamp: 1732100003000
+        timestamp: 1732100040000
       },
       {
         id: 'sample-flatbreads',
@@ -2059,6 +2065,7 @@
     let checkedIngredients = new Set();
     let toastTimer = null;
     let db = null;
+    let isSavingSpec = false;
 
     function saveStockState() {
       saveToStorage(STORAGE_KEYS.stockState, stockState);
@@ -2111,6 +2118,7 @@
           });
 
           db.collection("lula_specs").onSnapshot((snapshot) => {
+            if (isSavingSpec) return;
             if (!snapshot.empty) {
               const items = [];
               snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
@@ -2137,20 +2145,33 @@
 
     function mergeMissingSampleSpecsLocally() {
       const current = Array.isArray(window.specs) ? [...window.specs] : [];
+      const byId = new Map(current.map(s => [s.id, s]));
       const existingTitles = new Set(current.map(s => (s.title || '').trim().toLowerCase()));
-      let addedCount = 0;
+      let changed = false;
+
+      // Upgrade default Fried Chicken spec if user still has the older un-edited version
+      const updatedChicken = SAMPLE_SPECS.find(s => s.id === 'sample-fried-chicken');
+      const existingChicken = byId.get('sample-fried-chicken');
+      if (updatedChicken && existingChicken && (existingChicken.timestamp || 0) < updatedChicken.timestamp) {
+        byId.set('sample-fried-chicken', structuredClone(updatedChicken));
+        if (db) db.collection("lula_specs").doc('sample-fried-chicken').set(updatedChicken, { merge: true }).catch(() => {});
+        changed = true;
+      }
+
+      const mergedList = Array.from(byId.values());
       SAMPLE_SPECS.forEach(sample => {
         const key = (sample.title || '').trim().toLowerCase();
-        if (!existingTitles.has(key)) {
-          current.push(structuredClone(sample));
+        if (!byId.has(sample.id) && !existingTitles.has(key)) {
+          mergedList.push(structuredClone(sample));
           existingTitles.add(key);
-          addedCount += 1;
+          changed = true;
         }
       });
-      if (addedCount > 0) {
-        current.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-        window.specs = current;
-        saveToStorage(STORAGE_KEYS.specs, current);
+
+      if (changed) {
+        mergedList.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        window.specs = mergedList;
+        saveToStorage(STORAGE_KEYS.specs, mergedList);
       }
     }
 
@@ -2175,6 +2196,7 @@
 
     function handleSmartPaste(raw) {
       if (!raw || raw.trim().length < 15) return;
+      const isEditingExisting = Boolean(document.getElementById('edit-spec-id').value);
       const text = raw.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
       const lines = text.split('\n');
       let currentField = null;
@@ -2187,6 +2209,7 @@
         if (line.match(/^(Dish\s*\/\s*Spec\s*Title|Title)\s*:\s*/i)) {
           document.getElementById('import-title').value = line.replace(/^(Dish\s*\/\s*Spec\s*Title|Title)\s*:\s*/i, '').trim();
         } else if (line.match(/^Section\s*:\s*/i)) {
+          if (isEditingExisting) return;
           let sec = line.replace(/^Section\s*:\s*/i, '').trim().toLowerCase();
           if (sec.includes('prep') || sec.includes('recipe')) sec = 'recipes';
           else if (sec.includes('sop') || sec.includes('kitchen')) sec = 'sops';
@@ -2195,11 +2218,13 @@
           updateCategoryDropdown(sec);
           updateSubCategoryDropdown(sec);
         } else if (line.match(/^Category\s*:\s*/i)) {
+          if (isEditingExisting) return;
           const cat = line.replace(/^Category\s*:\s*/i, '').trim();
           const sec = document.getElementById('import-section').value;
           updateCategoryDropdown(sec, cat);
           updateSubCategoryDropdown(sec, cat);
         } else if (line.match(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i)) {
+          if (isEditingExisting) return;
           const subVal = line.replace(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i, '').trim();
           const sec = document.getElementById('import-section').value;
           const cat = getSelectedCategoryFromModal();
@@ -2218,7 +2243,17 @@
           currentField = 'method';
         } else if (currentField === 'ingredients') {
           const cleanBullet = line.replace(/^[-•*]\s*/, '').trim();
-          if (cleanBullet.includes(':')) ingLines.push(cleanBullet);
+          const colonIdx = cleanBullet.indexOf(':');
+          if (colonIdx > 0) {
+            const ingName = cleanBullet.slice(0, colonIdx).trim();
+            const rest = cleanBullet.slice(colonIdx + 1).trim();
+            const qtyMatch = rest.match(/^([\d\.]+\s*(?:kg|g|ml|l|pcs?|eggs?|yolks?|tbsp|tsp)?)\s*(?:\((.+)\))?$/i);
+            if (qtyMatch && qtyMatch[2]) {
+              ingLines.push(`${ingName} (${qtyMatch[2].trim()}): ${qtyMatch[1].trim()}`);
+            } else {
+              ingLines.push(`${ingName}: ${rest}`);
+            }
+          }
         } else if (currentField === 'method') {
           stepLines.push(line.replace(/^\d+[\.\)]?\s*/, '').trim());
         }
@@ -3632,8 +3667,15 @@
 
       const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
         const clean = line.replace(/^[-•*]\s*/, '').trim();
-        const parts = clean.split(':');
-        return { name: parts[0]?.trim() || 'Ingredient', amount: parts[1]?.trim() || '', unit: '' };
+        const colonIdx = clean.indexOf(':');
+        if (colonIdx > 0) {
+          return {
+            name: clean.slice(0, colonIdx).trim() || 'Ingredient',
+            amount: clean.slice(colonIdx + 1).trim() || '',
+            unit: ''
+          };
+        }
+        return { name: clean || 'Ingredient', amount: '', unit: '' };
       });
       const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.replace(/^\d+[\.\)]?\s*/, '').trim());
 
@@ -3653,6 +3695,7 @@
         timestamp: Date.now()
       };
 
+      isSavingSpec = true;
       window.specs = (window.specs || []).filter(s => s.id !== specId);
       window.specs.unshift(payload);
       saveToStorage(STORAGE_KEYS.specs, window.specs);
@@ -3664,6 +3707,7 @@
           console.warn("Firestore save fallback used:", err);
         }
       }
+      isSavingSpec = false;
 
       closeImportModal();
       setSection(sec);
