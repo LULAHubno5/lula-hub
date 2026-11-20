@@ -74,20 +74,12 @@
   <header class="sticky top-0 z-40 bg-brand-forest text-brand-cream border-b border-brand-rust px-4 py-2.5 shadow-sm">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
 
-      <!-- Custom LULA Brand Logo Graphic (Clickable back to Home) -->
+      <!-- Clean LULA Brand Wordmark (Clickable back to Home) -->
       <button type="button" onclick="setSection('home')" title="Back to LULA Home" class="flex items-center gap-3 text-left group shrink-0 focus:outline-none">
-        <svg viewBox="0 0 284 88" class="h-10 sm:h-11 w-auto block group-hover:opacity-90 transition" role="img" aria-label="LULA — A Place For Every Moment">
-          <!-- L -->
-          <path fill="#e9e0cd" d="M10 8h22c2.2 0 4 1.8 4 4v26c0 1.7 1.3 3 3 3h11c2.2 0 4 1.8 4 4v23c0 2.2-1.8 4-4 4H26C14.9 72 6 63.1 6 52V12c0-2.2 1.8-4 4-4z"/>
-          <!-- U -->
-          <path fill="#e9e0cd" d="M68 8h22c2.2 0 4 1.8 4 4v28c0 4.4 2.6 7 6 7s6-2.6 6-7V12c0-2.2 1.8-4 4-4h22c2.2 0 4 1.8 4 4v32c0 17.5-12.5 29-36 29s-36-11.5-36-29V12c0-2.2 1.8-4 4-4z"/>
-          <!-- L -->
-          <path fill="#e9e0cd" d="M150 8h22c2.2 0 4 1.8 4 4v26c0 1.7 1.3 3 3 3h11c2.2 0 4 1.8 4 4v23c0 2.2-1.8 4-4 4h-24c-11.1 0-20-8.9-20-20V12c0-2.2 1.8-4 4-4z"/>
-          <!-- A -->
-          <path fill="#e9e0cd" fill-rule="evenodd" d="M225 8h24c2 0 3.7 1.4 4 3.4l11 56.6c.4 2.2-1.3 4-3.5 4h-18c-1.9 0-3.5-1.3-3.9-3.1l-2.3-11.9c-.4-1.8-2-3-3.8-3h-11c-1.8 0-3.4 1.2-3.8 3l-2.3 11.9c-.4 1.8-2 3.1-3.9 3.1h-17c-2.2 0-3.9-1.8-3.5-4l11-56.6c.3-2 2-3.4 4-3.4zm12 19.5c-.9 0-1.7.7-1.9 1.6l-2.8 14.4c-.2 1.2.7 2.3 1.9 2.3h5.6c1.2 0 2.1-1.1 1.9-2.3l-2.8-14.4c-.2-.9-1-1.6-1.9-1.6z"/>
-          <!-- A PLACE FOR EVERY MOMENT -->
-          <text x="142" y="84" text-anchor="middle" fill="#e9e0cd" font-family="'Courier New', Courier, monospace" font-weight="700" font-size="11.2" letter-spacing="2.6">A PLACE FOR EVERY MOMENT</text>
-        </svg>
+        <div class="flex flex-col justify-center group-hover:opacity-90 transition">
+          <span class="lula-wordmark text-2xl sm:text-3xl font-bold tracking-[0.22em] text-brand-cream leading-none">LULA</span>
+          <span class="lula-tagline text-[8px] sm:text-[9px] font-bold uppercase tracking-[0.24em] text-brand-cream/80 mt-0.5 leading-none">A PLACE FOR EVERY MOMENT</span>
+        </div>
         <div class="hidden md:block border-l border-brand-cream/25 pl-3">
           <div id="live-date-header" class="text-[11px] font-semibold text-brand-cream/90 leading-tight tabular-nums">A Place For Every Moment • Greetland</div>
           <div class="text-[10px] text-brand-cream/65 leading-tight">Kitchen &amp; Bar Hub</div>
@@ -128,18 +120,18 @@
         <span class="inline-block w-2 h-2 rounded-full bg-brand-terracotta animate-pulse"></span>
         <span class="font-bold uppercase tracking-wider text-[11px] text-brand-cream">Manager Unlocked</span>
         <span class="text-brand-cream/40">|</span>
-        <span class="text-brand-cream/80 text-[10px]">Weekday/Weekend Pars &amp; Specs editable</span>
+        <span id="manager-toolbar-hint" class="text-brand-cream/80 text-[10px]">Specs &amp; categories editable</span>
       </div>
       <div class="flex flex-wrap items-center gap-2">
         <button type="button" onclick="openImportModal()" class="bg-brand-terracotta hover:bg-brand-rust text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-xs transition">
           <i class="ph-bold ph-plus-circle"></i>
           <span>+ Add Spec</span>
         </button>
-        <button type="button" onclick="openNewStockModal()" class="bg-brand-rust hover:bg-brand-terracotta text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-xs transition">
+        <button type="button" id="toolbar-stock-line-btn" onclick="openNewStockModal()" class="hidden bg-brand-rust hover:bg-brand-terracotta text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-xs transition">
           <i class="ph-bold ph-plus"></i>
           <span>+ Stock Line</span>
         </button>
-        <button type="button" onclick="openSheetSyncModal()" class="bg-brand-forest hover:bg-brand-rust text-brand-cream font-semibold px-2.5 py-1 rounded-md border border-brand-cream/25 flex items-center gap-1 transition">
+        <button type="button" id="toolbar-sync-sheet-btn" onclick="openSheetSyncModal()" class="hidden bg-brand-forest hover:bg-brand-rust text-brand-cream font-semibold px-2.5 py-1 rounded-md border border-brand-cream/25 flex items-center gap-1 transition">
           <i class="ph-bold ph-table"></i>
           <span>Sync Master Sheet</span>
         </button>
@@ -243,7 +235,7 @@
               </span>
             </div>
             <p class="text-xs text-brand-forest/70">
-              Count active stock to auto-generate supplier orders. Unlock Manager Mode (<span class="font-mono font-bold">1234</span>) to edit Weekday/Weekend Pars.
+              Count active stock to auto-generate supplier orders. Unlock Manager Mode (<span class="font-mono font-bold">1404</span>) to edit Weekday/Weekend Pars.
             </p>
           </div>
         </div>
@@ -394,7 +386,7 @@
       <div class="flex items-center justify-between gap-2 flex-wrap">
         <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1" id="zoneFilterPills"></div>
         <div id="managerParHint" class="text-[11px] font-semibold text-brand-rust">
-          Unlock Manager Mode (1234) to edit Weekday &amp; Weekend Pars
+          Unlock Manager Mode (1404) to edit Weekday &amp; Weekend Pars
         </div>
       </div>
 
@@ -429,7 +421,7 @@
       </div>
       <h3 class="text-sm font-bold text-brand-forest uppercase tracking-wider">No matching specs found</h3>
       <p class="text-xs text-brand-forest/70 mt-1 max-w-sm mx-auto">
-        Clear your search/filter or tap "Staff Mode" at the top right (PIN: 1234) to add a new spec.
+        Clear your search/filter or tap "Staff Mode" at the top right (PIN: 1404) to add a new spec.
       </p>
     </div>
   </main>
@@ -669,7 +661,7 @@
         <i class="ph-bold ph-lock-key"></i>
       </div>
       <h3 class="text-sm font-black text-brand-forest uppercase">Manager PIN</h3>
-      <p id="pin-subtext" class="text-xs text-brand-forest/70 mt-0.5 mb-4">Enter PIN to authorize (Default: 1234)</p>
+      <p id="pin-subtext" class="text-xs text-brand-forest/70 mt-0.5 mb-4">Enter PIN to authorize (Default: 1404)</p>
 
       <div id="pin-dots" class="flex justify-center gap-2 mb-5">
         <div class="w-3 h-3 rounded-full border border-brand-forest"></div>
@@ -738,38 +730,23 @@
       </div>
 
       <input type="hidden" id="edit-spec-id" value="" />
+      <input type="hidden" id="import-section" value="recipes" />
 
       <div class="space-y-3 text-xs">
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-brand-forest mb-1">Section</label>
-            <select id="import-section" onchange="handleSectionChangeInModal(this.value)" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-medium">
-              <option value="recipes">Recipes</option>
-              <option value="sops">SOPs</option>
-              <option value="barista">Barista &amp; Bar</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-bold text-brand-forest mb-1">Category (Sub-Section)</label>
+            <label class="block font-bold text-brand-forest mb-1">Category</label>
             <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-medium"></select>
             <input type="text" id="import-category-custom" placeholder="Type custom category (e.g. Specials)..." class="hidden mt-1.5 w-full bg-brand-cream p-2 rounded-lg border border-brand-border" />
           </div>
-        </div>
 
-        <div>
-          <label class="block font-bold text-brand-forest mb-1 flex items-center justify-between">
-            <span>Sub-Heading / Group <span class="font-normal text-brand-forest/60">(Optional — e.g. Brownies, Cookies, No-Bake)</span></span>
-          </label>
-          <input type="text" id="import-sub-category" list="sub-category-suggestions" placeholder="e.g. Brownies, Cookies, No-Bake..." class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-semibold text-brand-rust" />
-          <datalist id="sub-category-suggestions">
-            <option value="Brownies"></option>
-            <option value="Cookies"></option>
-            <option value="No-Bake"></option>
-            <option value="Loaf Cakes & Sponges"></option>
-            <option value="Puddings"></option>
-            <option value="Dressings & Emulsions"></option>
-            <option value="Glazes & Oils"></option>
-          </datalist>
+          <div>
+            <label class="block font-bold text-brand-forest mb-1 flex items-center justify-between">
+              <span>Sub-Heading / Group <span class="font-normal text-brand-forest/60">(Optional)</span></span>
+            </label>
+            <select id="import-sub-category-select" onchange="handleSubCategorySelectChange(this.value)" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-semibold text-brand-rust"></select>
+            <input type="text" id="import-sub-category-custom" placeholder="Type custom sub-heading..." class="hidden mt-1.5 w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-semibold text-brand-rust" />
+          </div>
         </div>
 
         <div>
@@ -821,6 +798,17 @@
   </div>
 
   <script>
+    function formatGBP(val) {
+      const n = Number(val) || 0;
+      return '£' + n.toFixed(2);
+    }
+
+    function formatSignedGBP(val) {
+      const n = Number(val) || 0;
+      if (Math.abs(n) < 0.005) return '£0.00';
+      return (n > 0 ? '+£' : '-£') + Math.abs(n).toFixed(2);
+    }
+
     const STORAGE_KEYS = {
       specs: 'lula_hub_specs_v1',
       stockState: 'lula_hub_stock_state_v1',
@@ -1534,6 +1522,432 @@
         timestamp: 1732099993000
       },
       {
+        id: 'sample-spiced-mayo',
+        title: 'Spiced Mayo',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        subCategory: '',
+        baseUnit: '~955g (1.0L Batch)',
+        probeTemp: 'Cold Holding <4°C',
+        targetTime: 'Cold Whisk Spice Bloom + High-Shear Blend',
+        shelfLife: '14 Days Chilled (<4°C)',
+        ingredients: [
+          { name: 'Commercial Heavy-Duty Plain Mayonnaise', amount: '900g', unit: '' },
+          { name: 'Premium Smoked Paprika (Pimentón)', amount: '15g', unit: '' },
+          { name: 'Garlic Powder (Dehydrated Fine)', amount: '8g', unit: '' },
+          { name: 'Cayenne Pepper (Ground Spice)', amount: '4g', unit: '' },
+          { name: 'Ground Cumin Seed', amount: '3g', unit: '' },
+          { name: 'Fresh Lime Juice (Strained, No Pulp)', amount: '20g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '5g', unit: '' }
+        ],
+        steps: [
+          'Whisk smoked paprika, garlic powder, cayenne, cumin, and sea salt directly into strained fresh lime juice to bloom hydrophobic spices and dissolve salt.',
+          'Fold into heavy-duty catering mayonnaise and blend until uniform pastel-coral hue.',
+          'Funnel into 1L FIFO squeeze bottle and hold below 4°C for up to 14 days.'
+        ],
+        timestamp: 1732100020000
+      },
+      {
+        id: 'sample-40mm-french-toast',
+        title: '40mm French Toast (Prep & Set)',
+        section: 'recipes',
+        category: 'Bread & Doughs',
+        subCategory: '',
+        baseUnit: '4 Loaves',
+        probeTemp: 'Core: 74°C Exact',
+        targetTime: 'Rational Combi 130°C | 50% Steam | Fan 3',
+        shelfLife: '48h Chilled / 4w Frozen',
+        ingredients: [
+          { name: 'Whole Eggs', amount: '1000g', unit: '' },
+          { name: 'Liquid Egg Yolk', amount: '400g', unit: '' },
+          { name: 'Whole Milk', amount: '2000g', unit: '' },
+          { name: 'Double Cream', amount: '1000g', unit: '' },
+          { name: 'Caster Sugar', amount: '500g', unit: '' },
+          { name: 'Maple Syrup', amount: '400g', unit: '' },
+          { name: 'Unsalted Butter (Melted <50°C)', amount: '400g', unit: '' },
+          { name: 'Vanilla Bean Paste', amount: '60g', unit: '' },
+          { name: 'Ground Cinnamon', amount: '30g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '10g', unit: '' },
+          { name: 'Rogers XL Pullman Loaves (40mm Slabs)', amount: '4pc', unit: '' }
+        ],
+        steps: [
+          'Whisk whole eggs, yolks, sugar, and spices in 30L mixer (Speed 2) for 3–4 mins until smooth, then stream in milk and cream on Speed 1.',
+          'Melt butter on induction (max 50°C) and stream into mixer on Speed 3, then pass custard through chinois into 1/1 GN pans.',
+          'Lay 40mm Rogers XL Pullman slabs flat in deep GN pan, pour custard over, top with parchment cartouche, nest second GN pan with 2kg weight, soak 10 mins, flip slabs, and soak 10 mins more.',
+          'Bake in Rational Combi at 130°C (50% humidity, Fan 3) with core probe in middle slab until core hits 74°C.',
+          'Pull and blast-chill immediately (<4°C), flash freeze solid, wrap in stacks of 5, and defrost 24h in fridge before service.'
+        ],
+        timestamp: 1732100021000
+      },
+      {
+        id: 'sample-lula-focaccia',
+        title: 'LULA Focaccia (3-Tray Batch)',
+        section: 'recipes',
+        category: 'Bread & Doughs',
+        subCategory: '',
+        baseUnit: '3x 1/1 GN Trays',
+        probeTemp: 'Internal >94°C / Golden Crust',
+        targetTime: 'Rational Combi 220°C 30% Steam 10m → 200°C Dry 12m',
+        shelfLife: '2 Days Ambient (FIFO)',
+        ingredients: [
+          { name: 'Strong Bread Flour', amount: '3000g', unit: '' },
+          { name: 'Filtered Water', amount: '2400g', unit: '' },
+          { name: 'Extra Virgin Olive Oil (Dough + Tray/Finish)', amount: '240g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '66g', unit: '' },
+          { name: 'Instant Dry Yeast', amount: '21g', unit: '' },
+          { name: 'Fresh Rosemary & Maldon Sea Salt Flakes', amount: '30g', unit: '' }
+        ],
+        steps: [
+          'Autolyse flour and water for 30 mins, then add yeast and sea salt and mix on Speed 2 until smooth and elastic.',
+          'Incorporate olive oil in stages and rest covered until doubled.',
+          'Divide across 3 generously oiled 1/1 GN trays, cold retard 24h (<5°C), temper to room temp, dimple deeply with oiled fingers, top with rosemary, EVOO, and Maldon salt, and bake in Rational at 220°C (30% steam) for 10 mins followed by 200°C dry heat for 12–14 mins.'
+        ],
+        timestamp: 1732100022000
+      },
+      {
+        id: 'sample-biscoff-millionaires',
+        title: "Lotus Biscoff Millionaire's Shortbread",
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: '',
+        baseUnit: '1x MasterClass Deep Tin (16 Slabs / 24 Fingers)',
+        probeTemp: 'Set Solid Before Hot-Knife Cut',
+        targetTime: 'No-Bake / Induction Caramel 3–4m + 2h Chill',
+        shelfLife: '4 Days Ambient / 7 Days Chilled (FIFO)',
+        ingredients: [
+          { name: 'Lotus Biscoff Biscuits (Crumb)', amount: '500g', unit: '' },
+          { name: 'Unsalted Butter (Base)', amount: '180g', unit: '' },
+          { name: 'Flaky Sea Salt (Base)', amount: '2g', unit: '' },
+          { name: 'Carnation Caramel (Dulce de Leche)', amount: '794g', unit: '' },
+          { name: 'Unsalted Butter (Caramel)', amount: '60g', unit: '' },
+          { name: 'Fine Sea Salt (Caramel)', amount: '3g', unit: '' },
+          { name: 'White Chocolate (Couverture/Chips)', amount: '350g', unit: '' },
+          { name: 'Lotus Biscoff Smooth Spread', amount: '150g', unit: '' },
+          { name: 'Whole Lotus Biscuits (Garnish)', amount: '8pc', unit: '' }
+        ],
+        steps: [
+          'Double-line 39x27cm MasterClass tin with parchment, blitz 500g Biscoff biscuits in Robot-Coupe, stir in 180g melted butter and 2g flaky salt, press firmly into base and chill 15–20 mins.',
+          'Whisk 794g Carnation caramel, 60g diced butter, and 3g fine salt over medium-low induction for 3–4 mins until glossy and emulsified (DO NOT BOIL), pour over base and chill 30–45 mins until tacky.',
+          'Melt 350g white chocolate gently, spread over caramel, drizzle horizontal lines of warmed Biscoff spread, feather vertically with a skewer, press halved biscuits along cut lines, chill 2h+ until solid, and slice 4x4 (16 slabs) or 4x6 (24 fingers) using a boiling-water-dipped bone-dry knife.'
+        ],
+        timestamp: 1732100023000
+      },
+      {
+        id: 'sample-miso-cornflake-tart',
+        title: 'Miso Cornflake Tart (Thick Cut 1.5x)',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: '',
+        baseUnit: '2 Tins (24 Slabs / 32 Fingers)',
+        probeTemp: 'Caramel Boil 112°C–114°C',
+        targetTime: 'Rational 165°C Dry 22–25m → 155°C Set 8–10m',
+        shelfLife: '4–5 Days Ambient (Do Not Refrigerate)',
+        ingredients: [
+          { name: 'Unsalted Butter (Base Browned)', amount: '675g', unit: '' },
+          { name: 'Plain Flour (All-Purpose)', amount: '900g', unit: '' },
+          { name: 'Cornflour', amount: '120g', unit: '' },
+          { name: 'Icing Sugar', amount: '285g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '9g', unit: '' },
+          { name: 'Unsalted Butter (Topping Browned)', amount: '495g', unit: '' },
+          { name: 'Light Brown Soft Sugar', amount: '570g', unit: '' },
+          { name: 'Golden Syrup', amount: '570g', unit: '' },
+          { name: 'Double Cream (Room Temp)', amount: '285ml', unit: '' },
+          { name: 'White (Shiro) Miso Paste', amount: '165g', unit: '' },
+          { name: 'Pure Vanilla Paste', amount: '18g', unit: '' },
+          { name: "Kellogg's Cornflakes", amount: '750g', unit: '' },
+          { name: 'Maldon Sea Salt Flakes', amount: '15g', unit: '' },
+          { name: 'Roasted White Sesame Seeds (Optional)', amount: '15g', unit: '' }
+        ],
+        steps: [
+          'Double-line 2 large MasterClass tins (39x27cm) and preheat Rational to 165°C dry heat (0% moisture, Fan 3); brown 675g base butter and 495g topping butter until hazelnut amber, cool base butter to lukewarm, work in sifted flour, cornflour, icing sugar, and salt (~995g dough/tin), press into 12mm slabs, dock, and par-bake 22–25 mins until pale golden and dry.',
+          'Boil 495g brown butter, 570g brown sugar, and 570g golden syrup in deep stockpot to 112°C–114°C, pull off heat and whisk in 285ml cream, 165g miso paste, and 18g vanilla.',
+          'Fold through 750g cornflakes, divide across both bases, press level, bake at 155°C (0% moisture, Fan 3) for 8–10 mins until bubbling, scatter Maldon salt, cool 1h ambient + 45–50m chill to set fats, slice with hot dry serrated knife, and store strictly ambient.'
+        ],
+        timestamp: 1732100024000
+      },
+      {
+        id: 'sample-giant-cinnamon-rolls',
+        title: 'Bakery-Style Giant Cinnamon Rolls (Tangzhong)',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: '',
+        baseUnit: '40 Rolls (5 Tins of 35x25cm)',
+        probeTemp: 'Core: 88°C–90°C',
+        targetTime: 'Rational Hot Air 165°C | 10% Steam | Fan 3 | 23–26 Mins',
+        shelfLife: '48h Counter Display (12–15s Micro Warm)',
+        ingredients: [
+          { name: 'Heygates Pizza Flour (Tangzhong)', amount: '165g', unit: '' },
+          { name: 'Whole Milk (Tangzhong)', amount: '665g', unit: '' },
+          { name: 'Heygates Pizza Flour (Main Dough)', amount: '2500g', unit: '' },
+          { name: 'Instant Dry Yeast', amount: '45g', unit: '' },
+          { name: 'Caster Sugar', amount: '330g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '35g', unit: '' },
+          { name: 'Whole Milk (Lukewarm)', amount: '600g', unit: '' },
+          { name: 'Large Eggs (7 pcs)', amount: '385g', unit: '' },
+          { name: 'Unsalted Butter (Dough)', amount: '400g', unit: '' },
+          { name: 'Unsalted Butter (Smear)', amount: '600g', unit: '' },
+          { name: 'Dark Brown Soft Sugar (Smear)', amount: '730g', unit: '' },
+          { name: 'Ground Cassia Cinnamon', amount: '85g', unit: '' },
+          { name: 'Cornflour (Smear)', amount: '35g', unit: '' },
+          { name: 'Fine Sea Salt (Smear)', amount: '7g', unit: '' },
+          { name: 'Double Cream (Overnight Soak)', amount: '600ml', unit: '' },
+          { name: 'Philadelphia Cream Cheese', amount: '415g', unit: '' },
+          { name: 'Unsalted Butter (Glaze)', amount: '200g', unit: '' },
+          { name: 'Icing Sugar (Glaze)', amount: '750g', unit: '' },
+          { name: 'Vanilla Bean Paste', amount: '15g', unit: '' },
+          { name: 'Double Cream (Glaze)', amount: '50ml', unit: '' }
+        ],
+        steps: [
+          'Cook 165g flour and 665g milk into glossy Tangzhong roux and cool 15 mins; mix main dough ingredients in 30L mixer (Speed 1 3–4m, Speed 2 6–7m), knead in 400g softened butter 5–6m to windowpane, divide into two 2.4kg bricks and chill 60–90m.',
+          'Roll each brick to 40x70cm, spread cassia sugar smear edge-to-edge, roll tightly into 70cm log, cut 20 slices (~3.5cm), arrange 8 per lined 35x25cm tin, wrap airtight and freeze raw; on closing shift, unwrap 1 frozen tin, pour 120ml double cream over rolls, tent and retard overnight in fridge (12–15h).',
+          'Bake morning shift at 165°C (10% moisture, Fan 3) for 23–26 mins to 88°C–90°C core, spread half glaze (~140g) hot, rest 5 mins, and apply remaining glaze crown.'
+        ],
+        timestamp: 1732100025000
+      },
+      {
+        id: 'sample-fudgy-blondies',
+        title: 'Fudgy Counter Blondies',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: '',
+        baseUnit: '15–16 Square Slabs (~920g/Tin)',
+        probeTemp: 'Glossy Mirror Crust / Fudgy Core',
+        targetTime: 'Rational 165°C Dry Heat | 0% Hum | Fan 2–3 | 28–30 Mins',
+        shelfLife: '7 Days Counter Rotation (FIFO)',
+        ingredients: [
+          { name: 'Unsalted Butter (Browned)', amount: '200g', unit: '' },
+          { name: 'White Granulated Sugar', amount: '125g', unit: '' },
+          { name: 'Light Soft Brown Sugar', amount: '125g', unit: '' },
+          { name: 'Large Free-Range Eggs', amount: '3pc', unit: '' },
+          { name: 'Pure Vanilla Extract', amount: '5g', unit: '' },
+          { name: 'Plain Flour (Sieved)', amount: '275g', unit: '' },
+          { name: 'Cornflour (Sieved)', amount: '10g', unit: '' }
+        ],
+        steps: [
+          'Brown unsalted butter in pan on induction over medium-low for 3–4 mins until toasted golden-brown and cool slightly; mix warm brown butter with granulated and light soft brown sugars on Medium speed for 2 mins.',
+          'Add eggs and vanilla and whip on Medium-High for 3 full minutes; sift plain flour and cornflour together and mix on Low speed for 30–45 seconds MAX until flour just vanishes.',
+          'Pour 850g–875g batter per parchment-lined square tin, bake in Rational at 165°C dry heat (0% humidity, Fan 2–3) for 28–30 mins, cool completely on rack, chill overnight, and slice with hot bone-dry knife.'
+        ],
+        timestamp: 1732100026000
+      },
+      {
+        id: 'sample-old-school-sponge',
+        title: 'Old School Sponge',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: '',
+        baseUnit: '1x Standard Tin Base (~1.6kg)',
+        probeTemp: 'Springy Light/Medium Gold',
+        targetTime: 'Rational Sponge Setting | 30–35 Mins',
+        shelfLife: '4 Days Ambient Display (FIFO)',
+        ingredients: [
+          { name: 'Whole Eggs (Weighed in Shell)', amount: '400g', unit: '' },
+          { name: 'Vegan Butter', amount: '400g', unit: '' },
+          { name: 'Caster Sugar', amount: '400g', unit: '' },
+          { name: 'Self-Raising Flour', amount: '400g', unit: '' },
+          { name: 'Vanilla Essence', amount: '30ml', unit: '' }
+        ],
+        steps: [
+          'Beat vegan butter and caster sugar until light, pale, and fluffy.',
+          'Add eggs, self-raising flour, and vanilla essence; mix on low only until just incorporated (do not overmix).',
+          'Transfer to lined tin and bake on Sponge Cake setting for 30–35 mins until light/medium golden and center springs back gently; cool on wire racks before icing and portioning.'
+        ],
+        timestamp: 1732100027000
+      },
+      {
+        id: 'sample-mars-bar-crispy-slab',
+        title: 'Mars Bar Crispy Slab',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: '',
+        baseUnit: '1x Deep Tray Slab (16 Portions)',
+        probeTemp: 'Set Solid Before Hot-Knife Cut',
+        targetTime: 'No-Bake / Induction Melt + 2h Chill',
+        shelfLife: '5 Days Ambient / 7 Days Chilled',
+        ingredients: [
+          { name: 'Mars Bars (Chopped)', amount: '450g', unit: '' },
+          { name: 'Unsalted Butter', amount: '150g', unit: '' },
+          { name: 'Golden Syrup', amount: '90g', unit: '' },
+          { name: 'Rice Krispies', amount: '220g', unit: '' },
+          { name: 'Milk Chocolate (Topping)', amount: '300g', unit: '' },
+          { name: 'Double Cream or Butter (Topping)', amount: '30g', unit: '' }
+        ],
+        steps: [
+          'Gently melt chopped Mars bars, unsalted butter, and golden syrup over low heat stirring constantly until smooth.',
+          'Fold through Rice Krispies until 100% coated and press firmly into lined MasterClass tin.',
+          'Melt milk chocolate with butter/cream until glossy, spread evenly over slab, chill 2 hours until set, and slice with hot dry knife.'
+        ],
+        timestamp: 1732100028000
+      },
+      {
+        id: 'sample-brownie-batter-syrup',
+        title: 'Brownie Batter Iced Latte & Syrup Base',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '~480ml (~15 Servings @ 30ml)',
+        probeTemp: 'Simmer 85°C Flour Cook-Out',
+        targetTime: 'Induction Simmer 85°C (60–90s) | <25s Drink Build',
+        shelfLife: '5 Days Max Chilled (<=4°C FIFO)',
+        ingredients: [
+          { name: 'House Brownie Batter (Unbaked)', amount: '300g', unit: '' },
+          { name: 'Whole Milk (Primary Hydration)', amount: '150ml', unit: '' },
+          { name: 'Warm Milk or Water (Slack Liquid)', amount: '35ml', unit: '' },
+          { name: 'Pure Vanilla Extract', amount: '6ml', unit: '' },
+          { name: 'Fine Flaky Sea Salt', amount: '1g', unit: '' }
+        ],
+        steps: [
+          'Whisk 300g brownie batter and 150ml milk off-heat in heavy saucepan until smooth; heat medium-low whisking constantly to a gentle simmer (~85°C) for 60–90s to cook out raw flour.',
+          'Off heat whisk in 6ml vanilla, 1g flaky salt, and 30–40ml warm slack liquid until slightly looser than warm fudge; cool, funnel into FIFO squeeze bottle, and chill <=4°C (warm bottle in 600ml hot water pitcher 2 mins before service).',
+          'To serve 12oz cold cup, ribbon sidewalls, dispense 30ml syrup, pull double espresso and swirl 3s, pack with ice, and float ~180ml cold milk.'
+        ],
+        timestamp: 1732100029000
+      },
+      {
+        id: 'sample-vanilla-bean-syrup',
+        title: 'Vanilla Bean Syrup',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '2000ml (2.0L Yield)',
+        probeTemp: 'Pull Immediately When Clear',
+        targetTime: 'Induction Dissolve (Do Not Boil)',
+        shelfLife: '14 Days Ambient / 30 Days Fridged',
+        ingredients: [
+          { name: 'Caster Sugar', amount: '1000g', unit: '' },
+          { name: 'Filtered Boiling Water', amount: '1000ml', unit: '' },
+          { name: 'Vanilla Bean Paste', amount: '30g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '2g', unit: '' }
+        ],
+        steps: [
+          'Draw 1000ml boiling water from boiler into 4L pot with 1000g caster sugar over induction; whisk constantly on medium-high and pull off heat the exact second solution turns clear (DO NOT BOIL).',
+          'Whisk in 30g vanilla bean paste and 2g fine sea salt until fully emulsified.',
+          'Cool in shallow GN pan and funnel into pump bottles (1 pump = 15ml).'
+        ],
+        timestamp: 1732100030000
+      },
+      {
+        id: 'sample-strawberry-fruit-mix',
+        title: 'Strawberry "Fruit Mix" Syrup (GF / Vegan)',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '~1.8kg (~60 Portions @ 30ml)',
+        probeTemp: 'Immediate Ice Bath Shock',
+        targetTime: 'Rational Combi 100°C | 50% Steam | Fan 3 | 15 Mins',
+        shelfLife: '14 Days Chilled (<5°C) / 3 Mos Frozen',
+        ingredients: [
+          { name: 'Frozen Strawberries (Slightly Thawed)', amount: '1000g', unit: '' },
+          { name: 'Caster Sugar', amount: '800g', unit: '' },
+          { name: 'Filtered Water', amount: '150ml', unit: '' },
+          { name: 'Fresh Lemon Juice', amount: '50g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '2g', unit: '' }
+        ],
+        steps: [
+          'Puree slightly thawed frozen strawberries in Robot-Coupe S-blade until smooth; combine puree, 800g caster sugar, 150ml water, and 2g salt in solid 1/2 GN pan.',
+          'Cook uncovered in Rational Combi at 100°C (50% steam, Fan 3) for 15 mins; whisk in 50g lemon juice and stick-blend 30s until glossy.',
+          'Plunge immediately into ice bath to lock vibrant red color, then decant into FIFO squeeze bottles (<5°C).'
+        ],
+        timestamp: 1732100031000
+      },
+      {
+        id: 'sample-blueberry-fruit-mix',
+        title: 'Blueberry "Fruit Mix" Syrup',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '~1.8kg (~60 Portions @ 30ml)',
+        probeTemp: 'Immediate Ice Bath Shock',
+        targetTime: 'Rational Combi 100°C | 50% Steam | Fan 3 | 15–20 Mins',
+        shelfLife: '14 Days Chilled (<5°C) / 3 Mos Frozen',
+        ingredients: [
+          { name: 'Frozen Blueberries (Slightly Thawed)', amount: '1000g', unit: '' },
+          { name: 'Caster Sugar', amount: '800g', unit: '' },
+          { name: 'Filtered Water', amount: '200ml', unit: '' },
+          { name: 'Fresh Lemon Juice', amount: '40g', unit: '' },
+          { name: 'Vanilla Bean Paste', amount: '10g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '2g', unit: '' }
+        ],
+        steps: [
+          'Puree slightly thawed blueberries in Robot-Coupe S-blade retaining fine artisanal pulp; combine with caster sugar, water, and sea salt in solid 1/2 GN pan.',
+          'Cook in Rational Combi at 100°C (50% steam, Fan 3) for 15–20 mins; remove, whisk in lemon juice and vanilla bean paste, stick-blend 30s.',
+          'Plunge straight into ice bath to lock deep purple color, and bottle <5°C.'
+        ],
+        timestamp: 1732100032000
+      },
+      {
+        id: 'sample-cloudy-lemonade-syrup',
+        title: 'Cloudy Lemonade Syrup Base',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '~3.5 Litres',
+        probeTemp: 'Ice Bath <5°C Before Sealing',
+        targetTime: 'Induction Gentle Simmer 3–5m + 1h Steep',
+        shelfLife: '14 Days Chilled (<5°C)',
+        ingredients: [
+          { name: 'Fresh Unwaxed Lemons (Pith-Free Zest)', amount: '1000g', unit: '' },
+          { name: 'Fresh Lemon Juice (Strained)', amount: '1500ml', unit: '' },
+          { name: 'White Caster Sugar', amount: '1500g', unit: '' },
+          { name: 'Filtered Water', amount: '1500ml', unit: '' },
+          { name: 'Citric Acid Powder', amount: '15g', unit: '' }
+        ],
+        steps: [
+          'Peel wide pith-free lemon zest strips and pulse with 1500g caster sugar in Robot-Coupe 10–12 times to create aromatic oleo-saccharum; simmer gently with 1500ml water on induction for 3–5 mins until dissolved (do not boil vigorously).',
+          'Turn off heat, stir in 1500ml strained lemon juice and 15g citric acid, cover and steep 1 hour.',
+          'Pass through fine chinois, ice-bath chill below 5°C, and bottle (Service: shake 50ml syrup + 200ml sparkling water + ice).'
+        ],
+        timestamp: 1732100033000
+      },
+      {
+        id: 'sample-house-cherry-syrup',
+        title: 'House Cherry Syrup Base',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '~1.0L Base Syrup',
+        probeTemp: 'Reduce Volume by 25%',
+        targetTime: 'Range Simmer Uncovered 15–18 Mins',
+        shelfLife: '14 Days Cold (<4°C)',
+        ingredients: [
+          { name: 'Sysco Pitted Cherries in Light Syrup', amount: '840g', unit: '' },
+          { name: 'Caster Sugar', amount: '150g', unit: '' },
+          { name: 'Fresh Lemon Juice (Fine Strain)', amount: '150g', unit: '' },
+          { name: 'Pure Vanilla Extract', amount: '15ml', unit: '' }
+        ],
+        steps: [
+          'Pulse entire 840g tin of pitted cherries and liquid in Robot-Coupe 4–5 times (coarsely chopped, not pureed); combine with 150g caster sugar and 150g strained lemon juice in saucepan, bring to boil then simmer uncovered 15–18 mins until reduced by one-quarter into dark-red glaze.',
+          'Pass through fine chinois pressing pulp firmly with ladle.',
+          'Whisk 15ml vanilla extract into warm strained syrup, cool completely, and bottle <4°C.'
+        ],
+        timestamp: 1732100034000
+      },
+      {
+        id: 'sample-raspberry-lemonade-concentrate',
+        title: 'Raspberry Lemonade Concentrate',
+        section: 'barista',
+        category: 'House Syrups & Cold Foams',
+        subCategory: '',
+        baseUnit: '~3.2L Concentrate (60–64 Servings)',
+        probeTemp: 'Blast Chill / Ice Bath <5°C',
+        targetTime: 'Rational 100°C Steam 12 Mins + 15m Steep',
+        shelfLife: '7 Days Chilled (<5°C FIFO)',
+        ingredients: [
+          { name: 'Raspberries (Fresh / IQF)', amount: '1500g', unit: '' },
+          { name: 'Caster Sugar', amount: '1200g', unit: '' },
+          { name: 'Filtered Water', amount: '1200ml', unit: '' },
+          { name: 'Lemon Juice (Fine Strain)', amount: '1000ml', unit: '' },
+          { name: 'Lemon Zest (Wide Strips, Zero Pith)', amount: '40g', unit: '' },
+          { name: 'Citric Acid', amount: '15g', unit: '' }
+        ],
+        steps: [
+          'Bake 1200ml water, 1200g sugar, and 40g wide pith-free lemon zest in solid 1/2 GN pan at 100°C Steam for 12 mins, steep 15 mins, and strain.',
+          'Gently pulse 1500g raspberries and 1000ml lemon juice in Robot-Coupe without grinding seeds.',
+          'Pass through fine chinois into warm syrup, whisk in 15g citric acid, ice-bath chill <5°C, and decant into 1L squeeze bottles.'
+        ],
+        timestamp: 1732100035000
+      },
+      {
         id: 'sample-sop-pass',
         title: 'Pass Check & Zero-Sog Sandwich Assembly',
         section: 'sops',
@@ -1700,6 +2114,14 @@
             if (!snapshot.empty) {
               const items = [];
               snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+              const existingTitles = new Set(items.map(s => (s.title || '').trim().toLowerCase()));
+              const missingSamples = SAMPLE_SPECS.filter(s => !existingTitles.has((s.title || '').trim().toLowerCase()));
+              if (missingSamples.length > 0) {
+                missingSamples.forEach(ms => {
+                  items.push(ms);
+                  db.collection("lula_specs").doc(ms.id).set(ms, { merge: true }).catch(() => {});
+                });
+              }
               items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
               window.specs = items;
               saveToStorage(STORAGE_KEYS.specs, items);
@@ -1710,6 +2132,25 @@
         }
       } catch (err) {
         console.warn("Firebase sync fallback active:", err);
+      }
+    }
+
+    function mergeMissingSampleSpecsLocally() {
+      const current = Array.isArray(window.specs) ? [...window.specs] : [];
+      const existingTitles = new Set(current.map(s => (s.title || '').trim().toLowerCase()));
+      let addedCount = 0;
+      SAMPLE_SPECS.forEach(sample => {
+        const key = (sample.title || '').trim().toLowerCase();
+        if (!existingTitles.has(key)) {
+          current.push(structuredClone(sample));
+          existingTitles.add(key);
+          addedCount += 1;
+        }
+      });
+      if (addedCount > 0) {
+        current.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+        window.specs = current;
+        saveToStorage(STORAGE_KEYS.specs, current);
       }
     }
 
@@ -1752,11 +2193,17 @@
           else if (sec.includes('bar') || sec.includes('drink') || sec.includes('barista')) sec = 'barista';
           document.getElementById('import-section').value = sec;
           updateCategoryDropdown(sec);
+          updateSubCategoryDropdown(sec);
         } else if (line.match(/^Category\s*:\s*/i)) {
           const cat = line.replace(/^Category\s*:\s*/i, '').trim();
-          updateCategoryDropdown(document.getElementById('import-section').value, cat);
+          const sec = document.getElementById('import-section').value;
+          updateCategoryDropdown(sec, cat);
+          updateSubCategoryDropdown(sec, cat);
         } else if (line.match(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i)) {
-          document.getElementById('import-sub-category').value = line.replace(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i, '').trim();
+          const subVal = line.replace(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i, '').trim();
+          const sec = document.getElementById('import-section').value;
+          const cat = getSelectedCategoryFromModal();
+          updateSubCategoryDropdown(sec, cat, subVal);
         } else if (line.match(/^Base Yield Unit.*?:/i) || line.match(/^(Batch Yield|Yield).*?:/i)) {
           document.getElementById('import-base-unit').value = line.replace(/^(Base Yield Unit.*?|Batch Yield.*?|Yield.*?):\s*/i, '').trim();
         } else if (line.match(/^(Rational Pre-?Heat|Pre-?Heat|Target Time).*?:/i)) {
@@ -1802,7 +2249,49 @@
       }
     }
 
-    function handleSectionChangeInModal(sec) { updateCategoryDropdown(sec); }
+    function getExistingSubCategories(sectionVal, categoryVal) {
+      const set = new Set();
+      (window.specs || []).forEach(s => {
+        if (s.section === sectionVal && (!categoryVal || (s.category || '').toLowerCase() === categoryVal.toLowerCase())) {
+          const sc = (s.subCategory || '').trim();
+          if (sc) set.add(sc);
+        }
+      });
+      return Array.from(set);
+    }
+
+    function updateSubCategoryDropdown(sectionVal, categoryVal, selectedSubCategory) {
+      const select = document.getElementById('import-sub-category-select');
+      const customInput = document.getElementById('import-sub-category-custom');
+      const existingSubs = getExistingSubCategories(sectionVal, categoryVal);
+
+      select.innerHTML = [
+        `<option value="">None (No sub-heading)</option>`,
+        ...existingSubs.map(sc => `<option value="${sc}">${sc}</option>`),
+        `<option value="__custom__">+ Custom sub-heading...</option>`
+      ].join('');
+
+      const trimmed = (selectedSubCategory || '').trim();
+      if (!trimmed) {
+        select.value = '';
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      } else if (existingSubs.includes(trimmed)) {
+        select.value = trimmed;
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      } else {
+        select.value = '__custom__';
+        customInput.classList.remove('hidden');
+        customInput.value = trimmed;
+      }
+    }
+
+    function handleSectionChangeInModal(sec) {
+      updateCategoryDropdown(sec);
+      updateSubCategoryDropdown(sec, getSelectedCategoryFromModal());
+    }
+
     function handleCategorySelectChange(val) {
       const customInput = document.getElementById('import-category-custom');
       if (val === '__custom__') {
@@ -1812,16 +2301,51 @@
         customInput.classList.add('hidden');
         customInput.value = '';
       }
+      updateSubCategoryDropdown(document.getElementById('import-section').value, getSelectedCategoryFromModal());
     }
+
+    function handleSubCategorySelectChange(val) {
+      const customInput = document.getElementById('import-sub-category-custom');
+      if (val === '__custom__') {
+        customInput.classList.remove('hidden');
+        customInput.focus();
+      } else {
+        customInput.classList.add('hidden');
+        customInput.value = '';
+      }
+    }
+
     function getSelectedCategoryFromModal() {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
       return select.value === '__custom__' ? (customInput.value.trim() || 'General') : select.value;
     }
 
+    function getSelectedSubCategoryFromModal() {
+      const select = document.getElementById('import-sub-category-select');
+      const customInput = document.getElementById('import-sub-category-custom');
+      return select.value === '__custom__' ? customInput.value.trim() : select.value;
+    }
+
+    function updateManagerToolbarButtons() {
+      const isStock = window.currentSection === 'stock';
+      const stockBtn = document.getElementById('toolbar-stock-line-btn');
+      const syncBtn = document.getElementById('toolbar-sync-sheet-btn');
+      const hintEl = document.getElementById('manager-toolbar-hint');
+
+      if (stockBtn) stockBtn.classList.toggle('hidden', !isStock);
+      if (syncBtn) syncBtn.classList.toggle('hidden', !isStock);
+      if (hintEl) {
+        hintEl.textContent = isStock
+          ? 'Weekday/Weekend Pars & Stock Lines editable'
+          : 'Specs & categories editable';
+      }
+    }
+
     function setSection(sec) {
       window.currentSection = sec;
       currentCategory = 'all';
+      updateManagerToolbarButtons();
       renderCategoryPills();
       renderActiveView();
     }
@@ -1836,6 +2360,7 @@
       searchQuery = (val || '').trim().toLowerCase();
       if (window.currentSection === 'home' && searchQuery.length > 0) {
         window.currentSection = 'recipes';
+        updateManagerToolbarButtons();
         renderCategoryPills();
       }
       renderActiveView();
@@ -1987,7 +2512,6 @@
         return `<div class="space-y-3">${blocks.join('')}</div>`;
       };
 
-      // When viewing "All", group strictly in the top pill category order
       if (currentCategory === 'all') {
         const orderedCategories = getAllCategoriesForSection(window.currentSection);
         const groupsHtml = orderedCategories.map(catName => {
@@ -2459,7 +2983,7 @@
 
       document.getElementById('managerParHint').textContent = isManager
         ? 'Manager Unlocked: Edit Weekday & Weekend Pars directly on any row below'
-        : 'Unlock Manager Mode (1234) to edit Weekday & Weekend Pars';
+        : 'Unlock Manager Mode (1404) to edit Weekday & Weekend Pars';
 
       // Filter and group stock lines
       const filtered = stockState.items.filter(item => {
@@ -2849,6 +3373,21 @@
       renderDetailContent();
     }
 
+    function scaleMethodText(stepText, scale) {
+      if (!stepText || scale === 1) return stepText;
+      // Only scale batch ingredient measurements (g, kg, ml, l, pcs, pc, eggs, yolks)
+      // Automatically leaves temperatures (°C), percentages (%), times (mins/s/h), and dimensions (cm/mm) untouched
+      return stepText.replace(
+        /(^|[\s(\[\/\-–])(\d+(?:\.\d+)?)\s*(kg|g|ml|l|pcs|pc|eggs?|yolks?)(?![a-zA-Z0-9°%])/gi,
+        (match, prefix, numStr, unit) => {
+          const val = parseFloat(numStr);
+          if (isNaN(val)) return match;
+          const scaled = Math.round(val * scale * 10) / 10;
+          return `${prefix}<strong class="text-brand-terracotta font-extrabold">${scaled}${unit}</strong>`;
+        }
+      );
+    }
+
     function renderDetailContent() {
       const scaleEl = document.getElementById('modal-scale-controls');
       const body = document.getElementById('modal-body-content');
@@ -2903,14 +3442,14 @@
           <div class="lg:col-span-7 flex flex-col gap-3">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <h4 class="text-xs font-black uppercase text-brand-forest tracking-wider">Method &amp; Prep Execution</h4>
+                <h4 class="text-xs font-black uppercase text-brand-forest tracking-wider">Method &amp; Prep Execution ${currentScale !== 1 ? `<span class="text-brand-terracotta">(${currentScale}x Scaled)</span>` : ''}</h4>
                 <span class="text-[10px] font-bold text-brand-rust uppercase tracking-widest">Step-by-Step</span>
               </div>
               <ol class="space-y-2 text-xs">
                 ${(currentModalSpec.steps || []).map((st, i) => `
                   <li class="flex items-start gap-3 p-3 rounded-xl bg-brand-cream/45 border border-brand-border hover:border-brand-terracotta/50 transition">
                     <span class="w-5 h-5 rounded-full bg-brand-forest text-brand-cream font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${i + 1}</span>
-                    <span class="text-brand-forest leading-relaxed font-medium">${st}</span>
+                    <span class="text-brand-forest leading-relaxed font-medium">${scaleMethodText(st, currentScale)}</span>
                   </li>
                 `).join('')}
               </ol>
@@ -2931,7 +3470,7 @@
       const sec = ['recipes', 'sops', 'barista'].includes(currentModalSpec.section) ? currentModalSpec.section : 'recipes';
       document.getElementById('import-section').value = sec;
       updateCategoryDropdown(sec, currentModalSpec.category);
-      document.getElementById('import-sub-category').value = currentModalSpec.subCategory || '';
+      updateSubCategoryDropdown(sec, currentModalSpec.category, currentModalSpec.subCategory || '');
 
       document.getElementById('import-title').value = currentModalSpec.title || '';
       document.getElementById('import-base-unit').value = currentModalSpec.baseUnit || '';
@@ -2951,11 +3490,12 @@
       } else {
         openPinModal('Enter PIN to access Manager Mode', () => {
           isManager = true;
+          updateManagerToolbarButtons();
           document.getElementById('manager-toolbar').classList.remove('hidden');
           document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-brand-cream';
           document.getElementById('manager-label').textContent = 'Manager';
           renderActiveView();
-          showToast('Manager Mode unlocked — Weekday/Weekend Pars & Specs editable.');
+          showToast('Manager Mode unlocked.');
         });
       }
     }
@@ -3055,7 +3595,7 @@
       const currentSec = ['recipes', 'sops', 'barista'].includes(window.currentSection) ? window.currentSection : 'recipes';
       document.getElementById('import-section').value = currentSec;
       updateCategoryDropdown(currentSec);
-      document.getElementById('import-sub-category').value = '';
+      updateSubCategoryDropdown(currentSec, getSelectedCategoryFromModal(), '');
 
       document.getElementById('import-base-unit').value = '1x Base';
       document.getElementById('import-probe').value = '';
@@ -3076,7 +3616,7 @@
       const editId = document.getElementById('edit-spec-id').value;
       const sec = document.getElementById('import-section').value;
       const cat = getSelectedCategoryFromModal();
-      const subCategory = document.getElementById('import-sub-category').value.trim();
+      const subCategory = getSelectedSubCategoryFromModal();
       const title = document.getElementById('import-title').value.trim();
       const baseUnit = document.getElementById('import-base-unit').value.trim() || '1x Base';
       const probeTemp = document.getElementById('import-probe').value.trim() || 'Core: 88°C';
@@ -3154,12 +3694,14 @@
     function init() {
       managerPin = '1404';
       localStorage.setItem(STORAGE_KEYS.pin, '1404');
+      mergeMissingSampleSpecsLocally();
       const now = new Date();
       const todayDay = DAYS_OF_WEEK[now.getDay()];
       const headerDateEl = document.getElementById('live-date-header');
       if (headerDateEl) {
         headerDateEl.textContent = `${todayDay}, ${now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} • Greetland`;
       }
+      updateManagerToolbarButtons();
       initFirebaseSync();
       renderCategoryPills();
       renderActiveView();
