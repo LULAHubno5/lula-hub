@@ -17,33 +17,44 @@
         extend: {
           colors: {
             brand: {
-              cream: '#FFF9F5',
-              dark: '#1C1917',
-              pink: '#F472B6',
-              accent: '#E11D48',
-              border: '#E7E5E4'
+              forest: '#374629',
+              cream: '#e9e0cd',
+              terracotta: '#d24b27',
+              rust: '#953b20',
+              dark: '#25301b',
+              border: '#d5c9b1'
             }
           }
         }
       }
-    }
+    };
   </script>
   <style>
     body {
-      background-color: #FFF9F5;
+      background-color: #e9e0cd;
+      color: #374629;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
-      user-select: none;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+    .lula-wordmark {
+      font-family: Georgia, "Times New Roman", serif;
+      letter-spacing: 0.14em;
+    }
+    .lula-tagline {
+      letter-spacing: 0.18em;
     }
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
       height: 6px;
     }
     .custom-scrollbar::-webkit-scrollbar-track {
-      background: #f5f5f4;
+      background: #dfd4be;
     }
     .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: #d6d3d1;
+      background: #953b20;
       border-radius: 9999px;
     }
     button, a, select, input, textarea {
@@ -51,55 +62,57 @@
     }
   </style>
 </head>
-<body class="text-brand-dark min-h-screen flex flex-col antialiased">
+<body class="text-brand-forest min-h-screen flex flex-col antialiased">
 
-  <!-- TOP HEADER -->
-  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-brand-border px-4 py-2.5 shadow-sm">
+  <!-- Toast / Status Banner -->
+  <div id="toast-banner" class="fixed bottom-4 right-4 z-[70] hidden max-w-sm bg-brand-forest text-brand-cream px-4 py-3 rounded-xl shadow-xl border border-brand-rust text-xs font-semibold flex items-center gap-2.5">
+    <i id="toast-icon" class="ph-bold ph-check-circle text-brand-terracotta text-base shrink-0"></i>
+    <span id="toast-message">Updated</span>
+  </div>
+
+  <!-- SIMPLIFIED TOP HEADER (Brand Logo Mark + Search + Staff/Manager Mode only) -->
+  <header class="sticky top-0 z-40 bg-brand-forest text-brand-cream border-b border-brand-rust px-4 py-2.5 shadow-sm">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
-      
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2">
-          <div class="w-8 h-8 rounded-lg bg-brand-accent flex items-center justify-center text-white font-black tracking-wider text-sm shadow-sm">
-            L
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <h1 class="text-sm font-black tracking-tight uppercase leading-none">LULA</h1>
-              <div id="cloud-status" class="flex items-center gap-1 pl-1">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span class="text-[9px] font-bold text-emerald-600 uppercase">Live Cloud Sync</span>
-              </div>
-            </div>
-            <p class="text-[10px] text-stone-500 font-medium tracking-wider uppercase">Hub • Victoria Mills</p>
-          </div>
+
+      <!-- Custom LULA Brand Logo Graphic (Clickable back to Home) -->
+      <button type="button" onclick="setSection('home')" title="Back to LULA Home" class="flex items-center gap-3 text-left group shrink-0 focus:outline-none">
+        <svg viewBox="0 0 284 88" class="h-10 sm:h-11 w-auto block group-hover:opacity-90 transition" role="img" aria-label="LULA — A Place For Every Moment">
+          <!-- L -->
+          <path fill="#e9e0cd" d="M10 8h22c2.2 0 4 1.8 4 4v26c0 1.7 1.3 3 3 3h11c2.2 0 4 1.8 4 4v23c0 2.2-1.8 4-4 4H26C14.9 72 6 63.1 6 52V12c0-2.2 1.8-4 4-4z"/>
+          <!-- U -->
+          <path fill="#e9e0cd" d="M68 8h22c2.2 0 4 1.8 4 4v28c0 4.4 2.6 7 6 7s6-2.6 6-7V12c0-2.2 1.8-4 4-4h22c2.2 0 4 1.8 4 4v32c0 17.5-12.5 29-36 29s-36-11.5-36-29V12c0-2.2 1.8-4 4-4z"/>
+          <!-- L -->
+          <path fill="#e9e0cd" d="M150 8h22c2.2 0 4 1.8 4 4v26c0 1.7 1.3 3 3 3h11c2.2 0 4 1.8 4 4v23c0 2.2-1.8 4-4 4h-24c-11.1 0-20-8.9-20-20V12c0-2.2 1.8-4 4-4z"/>
+          <!-- A -->
+          <path fill="#e9e0cd" fill-rule="evenodd" d="M225 8h24c2 0 3.7 1.4 4 3.4l11 56.6c.4 2.2-1.3 4-3.5 4h-18c-1.9 0-3.5-1.3-3.9-3.1l-2.3-11.9c-.4-1.8-2-3-3.8-3h-11c-1.8 0-3.4 1.2-3.8 3l-2.3 11.9c-.4 1.8-2 3.1-3.9 3.1h-17c-2.2 0-3.9-1.8-3.5-4l11-56.6c.3-2 2-3.4 4-3.4zm12 19.5c-.9 0-1.7.7-1.9 1.6l-2.8 14.4c-.2 1.2.7 2.3 1.9 2.3h5.6c1.2 0 2.1-1.1 1.9-2.3l-2.8-14.4c-.2-.9-1-1.6-1.9-1.6z"/>
+          <!-- A PLACE FOR EVERY MOMENT -->
+          <text x="142" y="84" text-anchor="middle" fill="#e9e0cd" font-family="'Courier New', Courier, monospace" font-weight="700" font-size="11.2" letter-spacing="2.6">A PLACE FOR EVERY MOMENT</text>
+        </svg>
+        <div class="hidden md:block border-l border-brand-cream/25 pl-3">
+          <div id="live-date-header" class="text-[11px] font-semibold text-brand-cream/90 leading-tight tabular-nums">A Place For Every Moment • Greetland</div>
+          <div class="text-[10px] text-brand-cream/65 leading-tight">Kitchen &amp; Bar Hub</div>
         </div>
+      </button>
 
-        <div class="h-6 w-px bg-stone-200 hidden sm:block"></div>
-
-        <nav class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl">
-          <button onclick="setSection('recipes')" id="tab-recipes" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs">
-            <i class="ph-bold ph-cooking-pot text-sm"></i>
-            <span>Prep & Recipes</span>
-          </button>
-          <button onclick="setSection('sops')" id="tab-sops" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
-            <i class="ph-bold ph-fork-knife text-sm"></i>
-            <span>Kitchen SOPs</span>
-          </button>
-          <button onclick="setSection('barista')" id="tab-barista" class="nav-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900">
-            <i class="ph-bold ph-coffee text-sm"></i>
-            <span>Barista & Bar</span>
-          </button>
-        </nav>
-      </div>
-
+      <!-- Right Controls: Search + Staff/Manager Mode -->
       <div class="flex items-center gap-2">
-        <div class="relative w-40 sm:w-64">
-          <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm"></i>
-          <input type="text" id="global-search" oninput="handleSearch(this.value)" placeholder="Search specs..." 
-            class="w-full bg-stone-100 border border-transparent focus:border-stone-400 focus:bg-white rounded-lg pl-8 pr-3 py-1 text-xs outline-none transition font-medium">
+        <div class="relative w-36 sm:w-60">
+          <i class="ph-bold ph-magnifying-glass absolute left-2.5 top-1/2 -translate-y-1/2 text-brand-forest/70 text-sm"></i>
+          <input
+            type="text"
+            id="global-search"
+            oninput="handleSearch(this.value)"
+            placeholder="Search specs, SKUs & stock..."
+            class="w-full bg-brand-cream text-brand-forest placeholder:text-brand-forest/60 border border-transparent focus:border-brand-terracotta rounded-lg pl-8 pr-3 py-1 text-xs outline-none transition font-medium"
+          />
         </div>
 
-        <button onclick="toggleManagerLock()" id="manager-btn" class="px-2.5 py-1 rounded-lg border border-stone-200 text-xs font-bold flex items-center gap-1 text-stone-600 hover:bg-stone-50 transition">
+        <button
+          type="button"
+          onclick="toggleManagerLock()"
+          id="manager-btn"
+          class="px-2.5 py-1 rounded-lg bg-brand-rust hover:bg-brand-terracotta text-brand-cream border border-brand-terracotta/50 text-xs font-bold flex items-center gap-1 transition whitespace-nowrap"
+        >
           <i id="manager-icon" class="ph-bold ph-lock-key text-xs"></i>
           <span id="manager-label" class="hidden sm:inline">Staff Mode</span>
         </button>
@@ -109,118 +122,541 @@
   </header>
 
   <!-- MANAGER ADMIN TOOLBAR -->
-  <div id="manager-toolbar" class="hidden bg-stone-900 text-stone-100 px-4 py-2 border-b border-stone-800 transition">
+  <div id="manager-toolbar" class="hidden bg-brand-dark text-brand-cream px-4 py-2 border-b border-brand-rust transition">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-xs">
       <div class="flex items-center gap-2">
-        <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span class="font-bold uppercase tracking-wider text-[11px] text-stone-300">Manager Unlocked</span>
-        <span class="text-stone-500">|</span>
-        <span class="text-stone-400 text-[10px]">Changes broadcast live across all screens.</span>
+        <span class="inline-block w-2 h-2 rounded-full bg-brand-terracotta animate-pulse"></span>
+        <span class="font-bold uppercase tracking-wider text-[11px] text-brand-cream">Manager Unlocked</span>
+        <span class="text-brand-cream/40">|</span>
+        <span class="text-brand-cream/80 text-[10px]">Weekday/Weekend Pars &amp; Specs editable</span>
       </div>
-      <div class="flex items-center gap-2">
-        <button onclick="openImportModal()" class="bg-rose-600 hover:bg-rose-500 text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-sm transition">
+      <div class="flex flex-wrap items-center gap-2">
+        <button type="button" onclick="openImportModal()" class="bg-brand-terracotta hover:bg-brand-rust text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-xs transition">
           <i class="ph-bold ph-plus-circle"></i>
           <span>+ Add Spec</span>
         </button>
-        <button onclick="promptChangePin()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 font-semibold px-2 py-1 rounded-md border border-stone-700 transition">
+        <button type="button" onclick="openNewStockModal()" class="bg-brand-rust hover:bg-brand-terracotta text-white font-bold px-2.5 py-1 rounded-md flex items-center gap-1 shadow-xs transition">
+          <i class="ph-bold ph-plus"></i>
+          <span>+ Stock Line</span>
+        </button>
+        <button type="button" onclick="openSheetSyncModal()" class="bg-brand-forest hover:bg-brand-rust text-brand-cream font-semibold px-2.5 py-1 rounded-md border border-brand-cream/25 flex items-center gap-1 transition">
+          <i class="ph-bold ph-table"></i>
+          <span>Sync Master Sheet</span>
+        </button>
+        <button type="button" onclick="openPinChangeModal()" class="bg-brand-forest hover:bg-brand-rust text-brand-cream font-semibold px-2 py-1 rounded-md border border-brand-cream/20 transition">
           Change PIN
         </button>
-        <button onclick="lockManager()" class="text-stone-400 hover:text-white px-2 py-1 transition font-bold">
+        <button type="button" onclick="lockManager()" class="text-brand-cream/75 hover:text-white px-2 py-1 transition font-bold">
           Lock Hub
         </button>
       </div>
     </div>
   </div>
 
-  <!-- CATEGORY PILLS (NOW FULLY DYNAMIC) -->
-  <div id="category-bar-wrapper" class="bg-white border-b border-brand-border px-4 py-2 sticky top-[49px] z-30 shadow-xs">
+  <!-- CATEGORY / SECTION FILTER BAR (Shown inside Recipes / SOPs / Barista) -->
+  <div id="category-bar-wrapper" class="hidden bg-brand-cream/95 border-b border-brand-border px-4 py-2 sticky top-[54px] z-30 shadow-2xs">
     <div class="max-w-7xl mx-auto flex items-center justify-between gap-3 overflow-x-auto custom-scrollbar">
-      <div id="category-pills" class="flex items-center gap-1.5 flex-nowrap min-w-max"></div>
-      <div id="active-count" class="text-[11px] font-semibold text-stone-400 whitespace-nowrap pl-2"></div>
+      <div class="flex items-center gap-2 flex-nowrap min-w-max">
+        <button type="button" onclick="setSection('home')" class="px-2.5 py-1 rounded-lg bg-brand-forest text-brand-cream text-xs font-bold flex items-center gap-1 hover:bg-brand-rust transition">
+          <i class="ph-bold ph-arrow-left text-xs"></i>
+          <span>Home</span>
+        </button>
+        <span class="h-4 w-px bg-brand-border"></span>
+        <div id="category-pills" class="flex items-center gap-1.5 flex-nowrap"></div>
+      </div>
+      <div id="active-count" class="text-[11px] font-semibold text-brand-rust whitespace-nowrap pl-2"></div>
     </div>
   </div>
 
   <!-- MAIN VIEW -->
   <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6">
-    <div id="catalog-view" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"></div>
-    
-    <div id="empty-state" class="text-center py-20">
-      <div class="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center mx-auto mb-3 text-stone-400 text-xl">
+
+    <!-- CLEAN HOME LAUNCHER VIEW (Default Landing View) -->
+    <section id="home-view" class="space-y-5">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div>
+          <p class="lula-tagline text-[10px] font-bold uppercase text-brand-rust">A Place For Every Moment • Greetland</p>
+          <h2 class="lula-wordmark text-xl sm:text-2xl font-bold uppercase text-brand-forest mt-0.5">LULA Hub</h2>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <button type="button" onclick="setSection('recipes')" class="bg-brand-forest text-brand-cream hover:bg-brand-dark border border-brand-forest rounded-2xl p-6 text-left shadow-sm hover:shadow-md transition group">
+          <div class="w-11 h-11 rounded-xl bg-brand-terracotta text-white flex items-center justify-center text-xl mb-4 group-hover:scale-105 transition">
+            <i class="ph-bold ph-cooking-pot"></i>
+          </div>
+          <h3 class="text-base font-black uppercase tracking-wide">Recipes</h3>
+          <p class="text-xs text-brand-cream/80 mt-1">
+            Kitchen &amp; bakehouse recipe specs, scaling &amp; batch prep.
+          </p>
+        </button>
+
+        <button type="button" onclick="setSection('stock')" class="bg-white hover:border-brand-terracotta border border-brand-border rounded-2xl p-6 text-left shadow-xs hover:shadow-md transition group">
+          <div class="w-11 h-11 rounded-xl bg-brand-cream text-brand-terracotta border border-brand-border flex items-center justify-center text-xl mb-4 group-hover:scale-105 transition">
+            <i class="ph-bold ph-package"></i>
+          </div>
+          <h3 class="text-base font-black text-brand-forest uppercase tracking-wide">Stock &amp; Order</h3>
+          <p class="text-xs text-brand-forest/75 mt-1">
+            Quick-Count &amp; Weekly Walk, supplier minimums &amp; order sheet.
+          </p>
+        </button>
+
+        <button type="button" onclick="setSection('sops')" class="bg-white hover:border-brand-terracotta border border-brand-border rounded-2xl p-6 text-left shadow-xs hover:shadow-md transition group">
+          <div class="w-11 h-11 rounded-xl bg-brand-cream text-brand-forest border border-brand-border flex items-center justify-center text-xl mb-4 group-hover:scale-105 transition">
+            <i class="ph-bold ph-fork-knife"></i>
+          </div>
+          <h3 class="text-base font-black text-brand-forest uppercase tracking-wide">SOPs</h3>
+          <p class="text-xs text-brand-forest/75 mt-1">
+            Prep &amp; floor standard operating procedures.
+          </p>
+        </button>
+
+        <button type="button" onclick="setSection('haccp')" class="bg-white hover:border-brand-terracotta border border-brand-border rounded-2xl p-6 text-left shadow-xs hover:shadow-md transition group">
+          <div class="w-11 h-11 rounded-xl bg-brand-cream text-brand-rust border border-brand-border flex items-center justify-center text-xl mb-4 group-hover:scale-105 transition">
+            <i class="ph-bold ph-shield-check"></i>
+          </div>
+          <h3 class="text-base font-black text-brand-forest uppercase tracking-wide">HACCP</h3>
+          <p class="text-xs text-brand-forest/75 mt-1">
+            Temperature, chill &amp; food safety checks.
+          </p>
+        </button>
+      </div>
+    </section>
+
+    <!-- COMPACT CLICKABLE SPEC LIST VIEW -->
+    <div id="catalog-view" class="hidden flex flex-col gap-2"></div>
+
+    <!-- FULL STOCK & ORDER ENGINE VIEW (Branded to LULA Forest/Cream/Terracotta/Rust) -->
+    <section id="stock-view" class="hidden space-y-4">
+      <!-- Top Action Bar -->
+      <div class="bg-white rounded-2xl border border-brand-border p-4 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="setSection('home')" class="px-2.5 py-1.5 rounded-lg bg-brand-cream hover:bg-brand-border text-brand-forest text-xs font-bold flex items-center gap-1 transition">
+            <i class="ph-bold ph-arrow-left"></i>
+            <span>Home</span>
+          </button>
+          <div>
+            <div class="flex items-center gap-2 flex-wrap">
+              <h2 class="text-base font-black text-brand-forest uppercase tracking-tight">LULA Stock &amp; Order</h2>
+              <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-cream text-brand-rust border border-brand-border">
+                Synced: Master Purchasing Sheet
+              </span>
+            </div>
+            <p class="text-xs text-brand-forest/70">
+              Count active stock to auto-generate supplier orders. Unlock Manager Mode (<span class="font-mono font-bold">1234</span>) to edit Weekday/Weekend Pars.
+            </p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 flex-wrap">
+          <button
+            type="button"
+            onclick="openOrderSheetModal()"
+            class="px-3.5 py-2 rounded-xl bg-brand-terracotta hover:bg-brand-rust active:scale-[0.99] text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5"
+          >
+            <i class="ph-bold ph-clipboard-text text-sm"></i>
+            <span>Order Sheet</span>
+            <span id="headerOrderCountBadge" class="px-1.5 py-0.5 rounded-md bg-black/20 text-white font-mono text-xs">0</span>
+          </button>
+
+          <button
+            type="button"
+            onclick="openSuppliersModal()"
+            class="px-3 py-2 rounded-xl bg-brand-cream hover:bg-brand-border text-brand-forest border border-brand-border font-bold text-xs transition"
+          >
+            Suppliers &amp; Mins
+          </button>
+
+          <button
+            type="button"
+            onclick="zeroStockCounts()"
+            class="px-3 py-2 rounded-xl bg-white hover:bg-brand-cream text-brand-rust border border-brand-border font-semibold text-xs transition"
+            title="Clear active stock counts back to 0"
+          >
+            Zero Counts
+          </button>
+        </div>
+      </div>
+
+      <!-- Control Strip: Count Mode, Target Delivery Drop Window, Big Walk-Through Day -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 bg-white border border-brand-border rounded-2xl p-4 shadow-2xs">
+        <!-- Count Mode Switcher -->
+        <div class="lg:col-span-5 flex flex-col justify-between gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-black uppercase tracking-wider text-brand-rust">Count Mode</span>
+            <span id="walkThroughBadge" class="text-[11px] font-bold px-2 py-0.5 rounded-full"></span>
+          </div>
+          <div class="grid grid-cols-2 gap-1.5 bg-brand-cream p-1 rounded-xl border border-brand-border">
+            <button
+              id="modeQuickBtn"
+              type="button"
+              onclick="setCountMode('quick')"
+              class="py-2 px-3 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center"
+            >
+              <span>Daily Quick-Count</span>
+              <span id="quickCountSub" class="text-[10px] font-normal opacity-80">14 Core Fast-Movers</span>
+            </button>
+            <button
+              id="modeWeeklyBtn"
+              type="button"
+              onclick="setCountMode('weekly')"
+              class="py-2 px-3 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center"
+            >
+              <span>Weekly Full Walk</span>
+              <span id="weeklyCountSub" class="text-[10px] font-normal opacity-80">All Kitchen Lines</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Target Delivery Drop / Run Window -->
+        <div class="lg:col-span-4 flex flex-col justify-between gap-2">
+          <label for="deliveryWindowSelect" class="text-xs font-black uppercase tracking-wider text-brand-rust">
+            Target Delivery Drop / Run Window
+          </label>
+          <select
+            id="deliveryWindowSelect"
+            onchange="setDeliveryWindow(this.value)"
+            class="w-full h-[48px] px-3 rounded-xl bg-brand-cream border border-brand-border text-brand-forest text-xs sm:text-sm font-bold focus:outline-none focus:border-brand-terracotta"
+          >
+            <option value="next_mon">Next Mon Drop (Weekday Par • Brakes/Pilgrim/Zanfish/Sykes/Milk)</option>
+            <option value="next_wed">Next Wed Drop (Midweek Par • Brakes/Pilgrim/Zanfish/Sykes/Rogers/Milk)</option>
+            <option value="next_fri">Next Fri Drop (Pre-Weekend Par • Brakes/Pilgrim/Zanfish/Sykes/Rogers/Milk)</option>
+            <option value="weekend_buffer">Weekend Cover Buffer (Weekend Par • Sat/Sun Service Push)</option>
+          </select>
+        </div>
+
+        <!-- Big Walk-Through Day Selector -->
+        <div class="lg:col-span-3 flex flex-col justify-between gap-2">
+          <label for="bigWalkDaySelect" class="text-xs font-black uppercase tracking-wider text-brand-rust">
+            Big Walk-Through Day
+          </label>
+          <select
+            id="bigWalkDaySelect"
+            onchange="setBigWalkDay(this.value)"
+            class="w-full h-[48px] px-3 rounded-xl bg-brand-cream border border-brand-border text-brand-forest text-xs sm:text-sm font-bold focus:outline-none focus:border-brand-terracotta"
+          >
+            <option value="Monday">Monday (Default Full Sweep)</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+            <option value="Sunday">Sunday</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Standing Orders & Batch Dependency Alerts -->
+      <div class="bg-white border border-brand-border rounded-2xl p-4 shadow-2xs space-y-3">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-xs font-black uppercase tracking-wider text-brand-forest">
+              Standing Orders &amp; Delivery Schedule Rules
+            </h3>
+            <p class="text-xs text-brand-forest/70 mt-0.5">
+              Toggle Rogers Bakery (Tue–Sat) &amp; Milkman (Mon/Wed/Fri) standing runs on/off, or count manual top-ups below.
+            </p>
+          </div>
+          <div id="standingOrdersContainer" class="flex flex-wrap items-center gap-2"></div>
+        </div>
+      </div>
+
+      <!-- Supplier Baskets & Minimum Order Rebalancer Panel -->
+      <div id="supplierBasketSection" class="bg-white border border-brand-border rounded-2xl p-4 space-y-3.5 shadow-2xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h3 class="text-sm font-black text-brand-forest uppercase tracking-tight">
+              Supplier Baskets &amp; Minimum Order Engine
+            </h3>
+            <p class="text-xs text-brand-forest/75">
+              Brakes min <span class="font-mono font-bold text-brand-forest">£150.00</span> (Mon/Wed/Fri) • Pilgrim's min <span class="font-mono font-bold text-brand-forest">£200.00</span> (Mon–Fri). Rebalancer shifts eligible items with lowest net £ impact.
+            </p>
+          </div>
+          <div id="rebalanceActions" class="flex items-center gap-2 flex-wrap"></div>
+        </div>
+
+        <!-- Rebalance Delta Summary Box -->
+        <div id="rebalanceAuditBox" class="hidden rounded-xl bg-brand-cream border border-brand-terracotta/50 p-3.5 space-y-2">
+          <div class="flex items-center justify-between gap-2 flex-wrap">
+            <span class="text-xs font-black uppercase tracking-wider text-brand-rust">
+              Smart Rebalance Applied — Net Cost Impact Audit
+            </span>
+            <span id="rebalanceNetDeltaBadge" class="font-mono text-xs font-bold px-2.5 py-1 rounded-full"></span>
+          </div>
+          <ul id="rebalanceMovesList" class="text-xs text-brand-forest space-y-1"></ul>
+        </div>
+
+        <!-- Supplier Cards Grid -->
+        <div id="supplierCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-2.5"></div>
+      </div>
+
+      <!-- Zone Filter Pills -->
+      <div class="flex items-center justify-between gap-2 flex-wrap">
+        <div class="flex items-center gap-1.5 overflow-x-auto custom-scrollbar pb-1" id="zoneFilterPills"></div>
+        <div id="managerParHint" class="text-[11px] font-semibold text-brand-rust">
+          Unlock Manager Mode (1234) to edit Weekday &amp; Weekend Pars
+        </div>
+      </div>
+
+      <!-- Stock & Order Items List -->
+      <div id="stockItemsContainer" class="space-y-4"></div>
+    </section>
+
+    <!-- HACCP & FOOD SAFETY VIEW -->
+    <section id="haccp-view" class="hidden space-y-4">
+      <div class="bg-white rounded-2xl border border-brand-border p-5 shadow-xs flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="setSection('home')" class="px-2.5 py-1.5 rounded-lg bg-brand-cream hover:bg-brand-border text-brand-forest text-xs font-bold flex items-center gap-1 transition">
+            <i class="ph-bold ph-arrow-left"></i>
+            <span>Home</span>
+          </button>
+          <div>
+            <h2 class="text-base font-black text-brand-forest uppercase tracking-tight">HACCP &amp; Food Safety Checks</h2>
+            <p class="text-xs text-brand-forest/70">Tap any check item to toggle completion for the current shift.</p>
+          </div>
+        </div>
+        <button type="button" onclick="resetHaccpChecks()" class="px-3 py-1.5 rounded-lg bg-brand-cream hover:bg-brand-border text-xs font-bold text-brand-forest">
+          Reset Shift Checks
+        </button>
+      </div>
+      <div id="haccp-checklist" class="bg-white rounded-2xl border border-brand-border divide-y divide-brand-border/60 shadow-xs overflow-hidden"></div>
+    </section>
+
+    <!-- EMPTY STATE -->
+    <div id="empty-state" class="hidden text-center py-20 bg-white rounded-2xl border border-brand-border">
+      <div class="w-12 h-12 rounded-full bg-brand-cream flex items-center justify-center mx-auto mb-3 text-brand-rust text-xl">
         <i class="ph-bold ph-notebook"></i>
       </div>
-      <h3 class="text-sm font-bold text-stone-800 uppercase tracking-wider">No specs loaded yet</h3>
-      <p class="text-xs text-stone-500 mt-1 max-w-sm mx-auto">Tap "Staff Mode" at the top right to unlock Manager Mode (PIN: 1234) and add your first spec.</p>
+      <h3 class="text-sm font-bold text-brand-forest uppercase tracking-wider">No matching specs found</h3>
+      <p class="text-xs text-brand-forest/70 mt-1 max-w-sm mx-auto">
+        Clear your search/filter or tap "Staff Mode" at the top right (PIN: 1234) to add a new spec.
+      </p>
     </div>
   </main>
 
   <!-- MASTER UNIFIED SPEC MODAL -->
   <div id="detail-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-2 sm:p-4">
     <div id="modal-container" class="bg-white w-full max-w-5xl max-h-[96vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-brand-border">
-      
-      <!-- Modal Header -->
-      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-stone-50/80 shrink-0">
-        <div>
-          <div class="flex items-center gap-2">
-            <span id="modal-category-badge" class="bg-stone-900 text-white text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wide">Category</span>
-            <span id="modal-time-badge" class="text-[11px] font-bold text-stone-500"></span>
+      <div class="px-5 py-3 border-b border-brand-border flex items-center justify-between bg-brand-cream/70 shrink-0 gap-3">
+        <div class="min-w-0">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span id="modal-category-badge" class="bg-brand-forest text-brand-cream text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wide">Category</span>
+            <span id="modal-time-badge" class="text-[11px] font-bold text-brand-rust"></span>
           </div>
-          <h2 id="modal-title" class="text-lg sm:text-xl font-black text-stone-900 tracking-tight mt-0.5">Title</h2>
+          <h2 id="modal-title" class="text-lg sm:text-xl font-black text-brand-forest tracking-tight mt-0.5 truncate">Title</h2>
         </div>
-        <div class="flex items-center gap-2">
-          <!-- Multipliers: 0.5x, 1x, 2x, 3x, 4x -->
-          <div id="modal-scale-controls" class="flex items-center bg-stone-200 p-0.5 rounded-lg text-xs font-bold gap-0.5"></div>
-          <button onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-stone-200 text-stone-600 flex items-center justify-center text-lg">
+        <div class="flex items-center gap-2 shrink-0">
+          <div id="modal-scale-controls" class="flex items-center bg-brand-border p-0.5 rounded-lg text-xs font-bold gap-0.5"></div>
+          <button type="button" onclick="closeDetailModal()" class="w-8 h-8 rounded-full hover:bg-brand-border text-brand-forest flex items-center justify-center text-lg">
             <i class="ph-bold ph-x"></i>
           </button>
         </div>
       </div>
 
-      <!-- STICKY EQUIPMENT & PRE-HEAT HUD BAR -->
-      <div id="modal-equipment-hud" class="bg-amber-500/10 border-b border-amber-500/20 px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
+      <div id="modal-equipment-hud" class="bg-brand-cream border-b border-brand-border px-5 py-2.5 flex flex-wrap items-center justify-between gap-3 shrink-0">
         <div class="flex items-center gap-2.5">
-          <div class="w-7 h-7 rounded-lg bg-amber-500 text-white flex items-center justify-center font-bold text-sm shadow-xs">
+          <div class="w-7 h-7 rounded-lg bg-brand-terracotta text-white flex items-center justify-center font-bold text-sm shadow-2xs">
             <i class="ph-bold ph-fire"></i>
           </div>
           <div>
-            <span class="text-[9px] uppercase font-black tracking-wider text-amber-900 block leading-tight">Pre-Heat & Rational Setup</span>
-            <span id="hud-oven-setting" class="text-xs font-extrabold text-stone-900 leading-tight block">Rational SCC: 160°C Dry Heat | Fan 2</span>
+            <span class="text-[9px] uppercase font-black tracking-wider text-brand-rust block leading-tight">Pre-Heat &amp; Rational Setup</span>
+            <span id="hud-oven-setting" class="text-xs font-extrabold text-brand-forest leading-tight block">Rational SCC: 160°C Dry Heat | Fan 2</span>
           </div>
         </div>
 
-        <div class="flex items-center gap-4 text-xs font-medium text-stone-600">
+        <div class="flex items-center gap-3 sm:gap-4 text-xs font-medium text-brand-forest/80 flex-wrap">
           <div class="flex items-center gap-1.5">
-            <i class="ph-bold ph-clock text-amber-700"></i>
-            <span>Bake / Cook: <strong id="hud-bake-time" class="text-stone-900 font-bold">30–33 Mins</strong></span>
+            <i class="ph-bold ph-clock text-brand-terracotta"></i>
+            <span>Bake / Cook: <strong id="hud-bake-time" class="text-brand-forest font-bold">30–33 Mins</strong></span>
           </div>
-          <div class="h-3 w-px bg-stone-300"></div>
+          <div class="h-3 w-px bg-brand-border hidden sm:block"></div>
           <div class="flex items-center gap-1.5">
-            <i class="ph-bold ph-snowflake text-blue-600"></i>
-            <span>Storage: <strong id="hud-shelf-life" class="text-stone-900 font-bold">3 Mos Frozen</strong></span>
+            <i class="ph-bold ph-snowflake text-brand-rust"></i>
+            <span>Storage: <strong id="hud-shelf-life" class="text-brand-forest font-bold">3 Mos Frozen</strong></span>
           </div>
-          <div class="h-3 w-px bg-stone-300 hidden sm:block"></div>
-          <div class="hidden sm:flex items-center gap-1.5 text-emerald-800 font-bold">
-            <i class="ph-bold ph-thermometer-simple"></i>
+          <div class="h-3 w-px bg-brand-border hidden md:block"></div>
+          <div class="hidden md:flex items-center gap-1.5 text-brand-forest font-bold">
+            <i class="ph-bold ph-thermometer-simple text-brand-terracotta"></i>
             <span id="hud-probe-temp">Core: 88°C Target</span>
           </div>
         </div>
       </div>
-      
-      <!-- Unified Body -->
+
       <div id="modal-body-content" class="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar"></div>
-      
-      <!-- Modal Footer -->
-      <div class="px-5 py-2.5 border-t border-brand-border bg-stone-50 flex items-center justify-between text-xs shrink-0">
-        <span id="modal-footer-notes" class="text-[11px] text-stone-500 font-medium flex items-center gap-1.5">
-          <i class="ph-bold ph-shield-check text-emerald-600"></i> LULA Kitchen Standards & FIFO Certified
+
+      <div class="px-5 py-2.5 border-t border-brand-border bg-brand-cream/60 flex items-center justify-between text-xs shrink-0 gap-2 flex-wrap">
+        <span id="modal-footer-notes" class="text-[11px] text-brand-forest/80 font-medium flex items-center gap-1.5">
+          <i class="ph-bold ph-shield-check text-brand-terracotta"></i> LULA Kitchen Standards &amp; FIFO Certified
         </span>
         <div class="flex items-center gap-2">
-          <button id="modal-edit-btn" onclick="openEditModalForCurrentSpec()" class="hidden bg-stone-800 hover:bg-stone-700 text-stone-200 font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
+          <button type="button" id="modal-edit-btn" onclick="openEditModalForCurrentSpec()" class="hidden bg-brand-forest hover:bg-brand-rust text-brand-cream font-bold px-3 py-1.5 rounded-lg text-xs transition flex items-center gap-1">
             <i class="ph-bold ph-pencil-simple"></i> Edit Spec
           </button>
-          <button id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-rose-600 hover:text-rose-700 font-bold px-2 py-1 rounded hover:bg-rose-50 text-xs transition">
+          <button type="button" id="modal-delete-btn" onclick="deleteCurrentSpec()" class="hidden text-brand-rust hover:text-brand-terracotta font-bold px-2 py-1 rounded hover:bg-brand-cream text-xs transition">
             Delete Spec
           </button>
-          <button onclick="closeDetailModal()" class="bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs px-4 py-1.5 rounded-lg">Done</button>
+          <button type="button" onclick="closeDetailModal()" class="bg-brand-forest hover:bg-brand-dark text-brand-cream font-bold text-xs px-4 py-1.5 rounded-lg">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUPPLIERS & MINIMUMS CONFIG MODAL -->
+  <div id="suppliersModal" class="fixed inset-0 z-50 hidden bg-stone-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-brand-border rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 space-y-4 shadow-2xl custom-scrollbar">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3">
+        <div>
+          <h3 class="text-base font-black text-brand-forest uppercase">Suppliers, Delivery Days &amp; Minimums</h3>
+          <p class="text-xs text-brand-forest/70">Customize minimum order thresholds (£) and standing order defaults.</p>
+        </div>
+        <button type="button" onclick="closeSuppliersModal()" class="w-8 h-8 rounded-lg bg-brand-cream hover:bg-brand-border text-brand-forest font-bold">✕</button>
+      </div>
+      <div id="supplierConfigList" class="space-y-2.5"></div>
+      <div class="flex justify-end gap-2 pt-2 border-t border-brand-border">
+        <button type="button" onclick="restoreDefaultSuppliers()" class="px-3.5 py-2 rounded-xl bg-brand-cream hover:bg-brand-border text-xs font-bold text-brand-forest">
+          Restore LULA Defaults
+        </button>
+        <button type="button" onclick="closeSuppliersModal()" class="px-4 py-2 rounded-xl bg-brand-forest hover:bg-brand-rust text-xs font-bold text-brand-cream">
+          Done
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- GOOGLE SHEET SYNC MODAL (Links LULA Master Supplier Purchasing & Order Comparison Sheet) -->
+  <div id="sheetSyncModal" class="fixed inset-0 z-50 hidden bg-stone-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-brand-border rounded-2xl max-w-xl w-full p-5 space-y-3 shadow-2xl text-xs">
+      <div class="flex items-center justify-between border-b border-brand-border pb-2.5">
+        <div>
+          <h3 class="text-sm font-black text-brand-forest uppercase">Sync with LULA Master Purchasing Sheet</h3>
+          <p class="text-[11px] text-brand-forest/70">Paste rows copied directly from your Google Sheet (Tab: Master Purchasing) to update pack prices &amp; best suppliers.</p>
+        </div>
+        <button type="button" onclick="closeSheetSyncModal()" class="text-brand-forest/60 hover:text-brand-forest font-bold">✕</button>
+      </div>
+      <textarea
+        id="sheetPasteInput"
+        rows="6"
+        placeholder="Paste rows from Google Sheets (Columns: Category | Item Name | Pack Size | Primary Supplier | Pilgrim Price | Pilgrim Unit | Brakes Price | Brakes Unit | Variance | Best Supplier | Notes | Sykes Price)..."
+        class="w-full bg-brand-cream p-2.5 rounded-xl border border-brand-border font-mono text-[11px] outline-none focus:border-brand-terracotta"
+      ></textarea>
+      <div class="flex justify-end gap-2 pt-2 border-t border-brand-border">
+        <button type="button" onclick="closeSheetSyncModal()" class="px-3 py-1.5 rounded-lg font-semibold text-brand-forest/70 hover:bg-brand-cream">Cancel</button>
+        <button type="button" onclick="applySheetPasteSync()" class="px-4 py-1.5 rounded-lg font-bold bg-brand-terracotta text-white hover:bg-brand-rust">Update Prices &amp; Suppliers</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD STOCK LINE MODAL -->
+  <div id="stock-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-lg rounded-2xl p-5 shadow-2xl border border-brand-border space-y-3 text-xs">
+      <div class="flex items-center justify-between border-b border-brand-border pb-2.5">
+        <h3 class="text-sm font-black text-brand-forest uppercase">Add Stock &amp; Order Line</h3>
+        <button type="button" onclick="closeNewStockModal()" class="text-brand-forest/60 hover:text-brand-forest"><i class="ph-bold ph-x"></i></button>
+      </div>
+      <div>
+        <label class="block font-bold text-brand-forest mb-1">Item Name &amp; Pack Spec</label>
+        <input id="newItemName" type="text" placeholder="e.g. Avocado Hass Case (24s)" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-medium" />
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Storage Zone</label>
+          <select id="newItemZone" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-medium">
+            <option value="Fridges">Fridges</option>
+            <option value="Freezers">Freezers</option>
+            <option value="Dry Store & Chem">Dry Store &amp; Chem</option>
+            <option value="Barista & Drinks">Barista &amp; Drinks</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">SKU / Code</label>
+          <input id="newItemSku" type="text" placeholder="e.g. BRK-8821" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-mono" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Weekday Par</label>
+          <input id="newItemWeekdayPar" type="number" min="0" step="1" value="4" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border tabular-nums font-bold" />
+        </div>
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Weekend Par</label>
+          <input id="newItemWeekendPar" type="number" min="0" step="1" value="6" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border tabular-nums font-bold" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Primary Supplier</label>
+          <select id="newItemPrimarySupplier" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-medium">
+            <option value="brakes">Brakes</option>
+            <option value="pilgrims">Pilgrim's</option>
+            <option value="zanfish">Zanfish</option>
+            <option value="sykes">Sykes House Farm</option>
+            <option value="rogers">Rogers Bakery</option>
+            <option value="milkman">Milkman</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Pack Price (£)</label>
+          <input id="newItemPrice" type="number" min="0" step="0.01" value="12.50" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-mono tabular-nums" />
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Backup Supplier (Optional)</label>
+          <select id="newItemBackupSupplier" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-medium">
+            <option value="">None</option>
+            <option value="brakes">Brakes</option>
+            <option value="pilgrims">Pilgrim's</option>
+            <option value="zanfish">Zanfish</option>
+            <option value="sykes">Sykes House Farm</option>
+            <option value="rogers">Rogers Bakery</option>
+            <option value="milkman">Milkman</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Backup Pack Price (£)</label>
+          <input id="newItemBackupPrice" type="number" min="0" step="0.01" placeholder="0.00" class="w-full px-3 py-2 rounded-xl bg-brand-cream border border-brand-border font-mono tabular-nums" />
+        </div>
+      </div>
+      <label class="flex items-center gap-2 pt-1 font-semibold text-brand-forest cursor-pointer">
+        <input id="newItemQuickCount" type="checkbox" checked class="rounded border-brand-border text-brand-terracotta" />
+        Include in Daily Quick-Count (~14 core lines)
+      </label>
+      <div class="flex justify-end gap-2 pt-2 border-t border-brand-border">
+        <button type="button" onclick="closeNewStockModal()" class="px-3.5 py-1.5 rounded-lg font-semibold text-brand-forest/70 hover:bg-brand-cream">Cancel</button>
+        <button type="button" onclick="saveNewStockLine()" class="px-4 py-1.5 rounded-lg font-bold bg-brand-terracotta text-white hover:bg-brand-rust">Add to Stock List</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- COPY-READY SUPPLIER ORDER SHEET MODAL -->
+  <div id="orderSheetModal" class="fixed inset-0 z-50 hidden bg-stone-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white border border-brand-border rounded-2xl max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl">
+      <div class="flex items-center justify-between border-b border-brand-border bg-brand-cream/70 p-4 sm:p-5 rounded-t-2xl">
+        <div>
+          <h3 class="text-base font-black text-brand-forest uppercase">Copy-Ready Supplier Order Sheet</h3>
+          <p id="orderSheetMeta" class="text-xs text-brand-rust font-semibold mt-0.5"></p>
+        </div>
+        <button type="button" onclick="closeOrderSheetModal()" class="w-8 h-8 rounded-lg bg-white hover:bg-brand-border text-brand-forest font-bold">✕</button>
+      </div>
+
+      <div class="p-4 sm:p-5 overflow-y-auto space-y-3 flex-1">
+        <textarea
+          id="orderSheetTextarea"
+          rows="17"
+          readonly
+          class="w-full rounded-xl bg-brand-cream/60 border border-brand-border p-3.5 font-mono text-xs text-brand-forest leading-relaxed focus:outline-none"
+        ></textarea>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-between gap-2 border-t border-brand-border p-4 bg-brand-cream/50 rounded-b-2xl">
+        <span id="orderSheetGrandTotal" class="font-mono text-sm font-black text-brand-forest"></span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="downloadOrderSheetTxt()" class="px-3.5 py-2 rounded-xl bg-white hover:bg-brand-cream text-brand-forest font-bold text-xs border border-brand-border">
+            Download .TXT
+          </button>
+          <button type="button" onclick="copyOrderSheetText()" class="px-4 py-2 rounded-xl bg-brand-terracotta hover:bg-brand-rust text-white font-bold text-xs sm:text-sm">
+            Copy Order Sheet
+          </button>
         </div>
       </div>
     </div>
@@ -228,161 +664,977 @@
 
   <!-- MANAGER PIN PAD MODAL -->
   <div id="pin-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-xs rounded-2xl p-5 shadow-2xl text-center border border-stone-200">
-      <div class="w-10 h-10 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mx-auto mb-2 text-xl">
+    <div class="bg-white w-full max-w-xs rounded-2xl p-5 shadow-2xl text-center border border-brand-border">
+      <div class="w-10 h-10 rounded-full bg-brand-cream text-brand-terracotta flex items-center justify-center mx-auto mb-2 text-xl">
         <i class="ph-bold ph-lock-key"></i>
       </div>
-      <h3 class="text-sm font-black text-stone-900 uppercase">Manager PIN</h3>
-      <p id="pin-subtext" class="text-xs text-stone-500 mt-0.5 mb-4">Enter PIN to authorize</p>
+      <h3 class="text-sm font-black text-brand-forest uppercase">Manager PIN</h3>
+      <p id="pin-subtext" class="text-xs text-brand-forest/70 mt-0.5 mb-4">Enter PIN to authorize (Default: 1234)</p>
 
       <div id="pin-dots" class="flex justify-center gap-2 mb-5">
-        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
-        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
-        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
-        <div class="w-3 h-3 rounded-full border border-stone-400"></div>
+        <div class="w-3 h-3 rounded-full border border-brand-forest"></div>
+        <div class="w-3 h-3 rounded-full border border-brand-forest"></div>
+        <div class="w-3 h-3 rounded-full border border-brand-forest"></div>
+        <div class="w-3 h-3 rounded-full border border-brand-forest"></div>
       </div>
 
       <div class="grid grid-cols-3 gap-2 max-w-[200px] mx-auto mb-3">
-        <button onclick="pressPin('1')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">1</button>
-        <button onclick="pressPin('2')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">2</button>
-        <button onclick="pressPin('3')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">3</button>
-        <button onclick="pressPin('4')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">4</button>
-        <button onclick="pressPin('5')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">5</button>
-        <button onclick="pressPin('6')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">6</button>
-        <button onclick="pressPin('7')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">7</button>
-        <button onclick="pressPin('8')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">8</button>
-        <button onclick="pressPin('9')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">9</button>
-        <button onclick="clearPin()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-stone-600">C</button>
-        <button onclick="pressPin('0')" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-bold text-sm text-stone-900 active:scale-95">0</button>
-        <button onclick="closePinModal()" class="h-11 rounded-xl bg-stone-50 hover:bg-stone-100 font-semibold text-xs text-rose-600">Cancel</button>
+        <button type="button" onclick="pressPin('1')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">1</button>
+        <button type="button" onclick="pressPin('2')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">2</button>
+        <button type="button" onclick="pressPin('3')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">3</button>
+        <button type="button" onclick="pressPin('4')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">4</button>
+        <button type="button" onclick="pressPin('5')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">5</button>
+        <button type="button" onclick="pressPin('6')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">6</button>
+        <button type="button" onclick="pressPin('7')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">7</button>
+        <button type="button" onclick="pressPin('8')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">8</button>
+        <button type="button" onclick="pressPin('9')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">9</button>
+        <button type="button" onclick="clearPin()" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-semibold text-xs text-brand-forest">C</button>
+        <button type="button" onclick="pressPin('0')" class="h-11 rounded-xl bg-brand-cream hover:bg-brand-border font-bold text-sm text-brand-forest active:scale-95">0</button>
+        <button type="button" onclick="closePinModal()" class="h-11 rounded-xl bg-stone-100 hover:bg-stone-200 font-semibold text-xs text-brand-rust">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHANGE PIN MODAL -->
+  <div id="change-pin-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
+    <div class="bg-white w-full max-w-xs rounded-2xl p-5 shadow-2xl border border-brand-border space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="text-sm font-black text-brand-forest uppercase">Set New 4-Digit PIN</h3>
+        <button type="button" onclick="closeChangePinModal()" class="text-brand-forest/60 hover:text-brand-forest"><i class="ph-bold ph-x"></i></button>
+      </div>
+      <input type="password" id="new-pin-input" maxlength="4" inputmode="numeric" placeholder="Enter 4 digits" class="w-full bg-brand-cream p-2.5 rounded-lg border border-brand-border text-center font-mono text-base tracking-widest outline-none focus:border-brand-terracotta" />
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="closeChangePinModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-forest/70 hover:bg-brand-cream">Cancel</button>
+        <button type="button" onclick="saveNewPin()" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-brand-forest text-brand-cream hover:bg-brand-rust">Save PIN</button>
       </div>
     </div>
   </div>
 
   <!-- ADD / EDIT SPEC MODAL -->
   <div id="import-modal" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-xs hidden flex items-center justify-center p-4">
-    <div class="bg-white w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border border-stone-200 custom-scrollbar">
-      <div class="flex items-center justify-between pb-3 border-b border-stone-200 mb-3">
+    <div class="bg-white w-full max-w-xl max-h-[92vh] overflow-y-auto rounded-2xl p-5 shadow-2xl border border-brand-border custom-scrollbar">
+      <div class="flex items-center justify-between pb-3 border-b border-brand-border mb-3">
         <div>
-          <h3 id="form-modal-heading" class="text-sm font-black text-stone-900 uppercase">Add / Edit Spec</h3>
-          <p id="form-modal-subheading" class="text-[11px] text-stone-500">Paste text below to auto-fill all fields instantly</p>
+          <h3 id="form-modal-heading" class="text-sm font-black text-brand-forest uppercase">Add / Edit Spec</h3>
+          <p id="form-modal-subheading" class="text-[11px] text-brand-forest/70">Paste LULA Smart Auto-Fill text below to populate all fields</p>
         </div>
-        <button onclick="closeImportModal()" class="text-stone-400 hover:text-stone-800"><i class="ph-bold ph-x text-base"></i></button>
+        <button type="button" onclick="closeImportModal()" class="text-brand-forest/60 hover:text-brand-forest"><i class="ph-bold ph-x text-base"></i></button>
       </div>
 
-      <!-- ONE-BOX SMART PASTE ZONE -->
-      <div class="mb-4 bg-rose-50/50 border-2 border-dashed border-brand-accent/40 rounded-xl p-3">
+      <div class="mb-4 bg-brand-cream/70 border-2 border-dashed border-brand-terracotta/50 rounded-xl p-3">
         <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-black uppercase text-brand-accent flex items-center gap-1.5">
+          <span class="text-xs font-black uppercase text-brand-terracotta flex items-center gap-1.5">
             <i class="ph-bold ph-magic-wand text-base"></i> Smart Auto-Fill (Paste Recipe Text Here)
           </span>
-          <span class="text-[10px] text-stone-500 font-semibold">Extracts Title, Pre-Heat, Ingredients & Method</span>
+          <span class="text-[10px] text-brand-forest/70 font-semibold">Extracts Title, Pre-Heat, Ingredients &amp; Method</span>
         </div>
-        <textarea id="smart-paste-box" rows="3" placeholder="Paste whole recipe block here... it will auto-populate every field below instantly!" 
+        <textarea
+          id="smart-paste-box"
+          rows="3"
+          placeholder="Paste LULA recipe block here... it will auto-populate every field below instantly!"
           oninput="handleSmartPaste(this.value)"
-          class="w-full bg-white p-2 rounded-lg border border-brand-border font-mono text-[11px] outline-none focus:border-brand-accent"></textarea>
+          class="w-full bg-white p-2 rounded-lg border border-brand-border font-mono text-[11px] outline-none focus:border-brand-terracotta"
+        ></textarea>
       </div>
 
-      <!-- Plating Photo Attachment & Camera Controls -->
-      <div class="mb-3 p-3 bg-stone-50 border border-stone-200 rounded-xl">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-bold text-stone-800 flex items-center gap-1.5">
-            <i class="ph-bold ph-camera text-rose-600"></i> Plating Standard Photo
-          </span>
-          <span id="photo-status" class="text-[10px] font-semibold text-stone-400">No photo set</span>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <!-- Button 1: Live Camera Snapshot -->
-          <button type="button" onclick="document.getElementById('camera-input').click()" 
-            class="py-2 px-3 rounded-lg bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-2xs">
-            <i class="ph-bold ph-camera-plus text-stone-900 text-sm"></i>
-            <span>Take Live Photo</span>
-          </button>
-          <!-- Button 2: Upload Existing Photo from Gallery -->
-          <button type="button" onclick="document.getElementById('file-input').click()" 
-            class="py-2 px-3 rounded-lg bg-white border border-stone-300 hover:border-stone-400 text-stone-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-2xs">
-            <i class="ph-bold ph-image text-stone-900 text-sm"></i>
-            <span>Upload Photo</span>
-          </button>
-        </div>
-        <!-- Hidden file inputs -->
-        <input type="file" id="camera-input" onchange="handleFileSelect(event)" accept="image/*" capture="environment" class="hidden">
-        <input type="file" id="file-input" onchange="handleFileSelect(event)" accept="image/*" class="hidden">
-      </div>
+      <input type="hidden" id="edit-spec-id" value="" />
 
-      <input type="hidden" id="edit-spec-id" value="">
-
-      <!-- Individual Editable Fields -->
       <div class="space-y-3 text-xs">
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Section</label>
-            <select id="import-section" onchange="handleSectionChangeInModal(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium">
-              <option value="recipes">Prep & Recipes</option>
-              <option value="sops">Kitchen SOPs</option>
-              <option value="barista">Barista & Bar</option>
+            <label class="block font-bold text-brand-forest mb-1">Section</label>
+            <select id="import-section" onchange="handleSectionChangeInModal(this.value)" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-medium">
+              <option value="recipes">Recipes</option>
+              <option value="sops">SOPs</option>
+              <option value="barista">Barista &amp; Bar</option>
             </select>
           </div>
           <div>
-            <label class="block font-bold text-stone-700 mb-1">Category (Sub-Section)</label>
-            <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-medium"></select>
-            <input type="text" id="import-category-custom" placeholder="Type custom category (e.g. Specials)..." class="hidden mt-1.5 w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
+            <label class="block font-bold text-brand-forest mb-1">Category (Sub-Section)</label>
+            <select id="import-category-select" onchange="handleCategorySelectChange(this.value)" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-medium"></select>
+            <input type="text" id="import-category-custom" placeholder="Type custom category (e.g. Specials)..." class="hidden mt-1.5 w-full bg-brand-cream p-2 rounded-lg border border-brand-border" />
           </div>
         </div>
 
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Dish / Spec Title</label>
-          <input type="text" id="import-title" placeholder="e.g. Master Cookie Dough Base" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-stone-900">
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold text-stone-700 mb-1">Base Yield Unit (1x)</label>
-            <input type="text" id="import-base-unit" placeholder="e.g. 10 Cookies / 1 Tin / 1L Bottle" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-rose-700">
-          </div>
-          <div>
-            <label class="block font-bold text-stone-700 mb-1">Core Probe / Quality Target</label>
-            <input type="text" id="import-probe" placeholder="e.g. Core: 86°C - 88°C" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-bold text-emerald-800">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-bold text-stone-700 mb-1">Rational Pre-Heat / Mode</label>
-            <input type="text" id="import-time" placeholder="e.g. Rational SCC: 160°C Dry Heat, 14 Mins" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-semibold text-amber-900">
-          </div>
-          <div>
-            <label class="block font-bold text-stone-700 mb-1">Shelf Life / Storage Vessel</label>
-            <input type="text" id="import-shelf" placeholder="e.g. Airtight Display Container (FIFO) - 3 Days" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200">
-          </div>
-        </div>
-
-        <div>
-          <label class="block font-bold text-stone-700 mb-1 flex items-center justify-between">
-            <span>1x Base Ingredients (Grams / Pcs)</span>
-            <span class="text-[10px] text-stone-400 font-normal">Format: Ingredient: 500g</span>
+          <label class="block font-bold text-brand-forest mb-1 flex items-center justify-between">
+            <span>Sub-Heading / Group <span class="font-normal text-brand-forest/60">(Optional — e.g. Brownies, Cookies, No-Bake)</span></span>
           </label>
-          <textarea id="import-ingredients" rows="5" placeholder="Plain Flour (T55): 875g&#10;Unsalted Butter: 450g" class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <input type="text" id="import-sub-category" list="sub-category-suggestions" placeholder="e.g. Brownies, Cookies, No-Bake..." class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-semibold text-brand-rust" />
+          <datalist id="sub-category-suggestions">
+            <option value="Brownies"></option>
+            <option value="Cookies"></option>
+            <option value="No-Bake"></option>
+            <option value="Loaf Cakes & Sponges"></option>
+            <option value="Puddings"></option>
+            <option value="Dressings & Emulsions"></option>
+            <option value="Glazes & Oils"></option>
+          </datalist>
         </div>
 
         <div>
-          <label class="block font-bold text-stone-700 mb-1">Method / Prep Workflow (1 per line)</label>
-          <textarea id="import-steps" rows="5" placeholder="In a mixing bowl, combine melted butter and sugars...&#10;Fold in chocolate chunks..." class="w-full bg-stone-100 p-2 rounded-lg border border-stone-200 font-mono text-[11px]"></textarea>
+          <label class="block font-bold text-brand-forest mb-1">Dish / Spec Title</label>
+          <input type="text" id="import-title" placeholder="e.g. Master Cookie Dough Base" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-bold text-brand-forest" />
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-brand-forest mb-1">Base Yield Unit (1x)</label>
+            <input type="text" id="import-base-unit" placeholder="e.g. 10 Cookies / 1 Tin / 1L Bottle" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-bold text-brand-terracotta" />
+          </div>
+          <div>
+            <label class="block font-bold text-brand-forest mb-1">Core Probe / Cost Target</label>
+            <input type="text" id="import-probe" placeholder="e.g. Core: 86°C - 88°C" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-bold text-brand-forest" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-brand-forest mb-1">Rational Pre-Heat / Mode</label>
+            <input type="text" id="import-time" placeholder="e.g. Rational SCC: 160°C Dry Heat, 14 Mins" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-semibold text-brand-rust" />
+          </div>
+          <div>
+            <label class="block font-bold text-brand-forest mb-1">Shelf Life / Storage Vessel</label>
+            <input type="text" id="import-shelf" placeholder="e.g. Airtight Display Container (FIFO) - 3 Days" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border" />
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-brand-forest mb-1 flex items-center justify-between">
+            <span>1x Base Ingredients (Grams / Pcs)</span>
+            <span class="text-[10px] text-brand-forest/60 font-normal">Format: Ingredient: 500g</span>
+          </label>
+          <textarea id="import-ingredients" rows="5" placeholder="Plain Flour (T55): 875g&#10;Unsalted Butter: 450g" class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-mono text-[11px]"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-brand-forest mb-1">Method / Prep Workflow (1 per line)</label>
+          <textarea id="import-steps" rows="5" placeholder="Combine melted butter and sugars...&#10;Fold in chocolate chunks..." class="w-full bg-brand-cream p-2 rounded-lg border border-brand-border font-mono text-[11px]"></textarea>
         </div>
       </div>
 
-      <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-stone-100">
-        <button onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-stone-600 hover:bg-stone-100">Cancel</button>
-        <button id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-rose-600 hover:bg-rose-500 text-white shadow-xs">Save & Broadcast Everywhere</button>
+      <div class="flex justify-end gap-2 mt-4 pt-3 border-t border-brand-border">
+        <button type="button" onclick="closeImportModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-forest/70 hover:bg-brand-cream">Cancel</button>
+        <button type="button" id="import-submit-btn" onclick="saveImportedSpec()" class="px-4 py-1.5 rounded-lg text-xs font-black bg-brand-terracotta hover:bg-brand-rust text-white shadow-2xs">Save &amp; Broadcast</button>
       </div>
     </div>
   </div>
 
   <script>
-    // State
-    window.specs = JSON.parse(localStorage.getItem('lula_local_specs') || '[]');
-    let managerPin = localStorage.getItem('lula_pin') || '1234';
-    window.currentSection = 'recipes';
+    const STORAGE_KEYS = {
+      specs: 'lula_hub_specs_v1',
+      stockState: 'lula_hub_stock_state_v1',
+      haccp: 'lula_hub_haccp_v1',
+      pin: 'lula_hub_pin_v1'
+    };
+
+    const DAYS_OF_WEEK = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const STORAGE_ZONES = ['Fridges', 'Freezers', 'Dry Store & Chem', 'Barista & Drinks'];
+
+    const DEFAULT_CATEGORIES = {
+      recipes: ['Main Recipes', 'Sauces & Dressings', 'Bread & Doughs', 'Bakes'],
+      sops: ['Breakfast', 'Brunch', 'Lunch', 'Sides & Garnishes'],
+      barista: ['Espresso & Iced', 'Matcha & Specialty', 'House Syrups & Cold Foams', 'Cocktails & Booze']
+    };
+
+    const DEFAULT_SUPPLIERS = {
+      brakes: {
+        id: 'brakes',
+        name: 'Brakes',
+        shortLabel: 'Brakes',
+        days: ['Monday', 'Wednesday', 'Friday'],
+        daysText: 'Mon / Wed / Fri',
+        minOrder: 150.00,
+        isStanding: false,
+        standingEnabled: false,
+        notes: 'Core dry/chilled/frozen; Egg SKU 5029219 & Rindless Streaky 27850'
+      },
+      pilgrims: {
+        id: 'pilgrims',
+        name: "Pilgrim's",
+        shortLabel: "Pilgrim's",
+        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+        daysText: 'Mon – Fri',
+        minOrder: 200.00,
+        isStanding: false,
+        standingEnabled: false,
+        notes: 'Min order £200.00; watch backup routing when under minimum'
+      },
+      zanfish: {
+        id: 'zanfish',
+        name: 'Zanfish',
+        shortLabel: 'Zanfish',
+        days: ['Monday', 'Wednesday', 'Friday'],
+        daysText: 'Mon / Wed / Fri',
+        minOrder: 0.00,
+        isStanding: false,
+        standingEnabled: false,
+        notes: 'Fresh fish & seafood drop'
+      },
+      sykes: {
+        id: 'sykes',
+        name: 'Sykes House Farm',
+        shortLabel: 'Sykes Farm',
+        days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysText: 'Mon – Sat',
+        minOrder: 0.00,
+        isStanding: false,
+        standingEnabled: false,
+        notes: 'Local butchery: Cumberland Sausages Code 907'
+      },
+      rogers: {
+        id: 'rogers',
+        name: 'Rogers Bakery',
+        shortLabel: 'Rogers Bakery',
+        days: ['Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+        daysText: 'Tue – Sat',
+        minOrder: 0.00,
+        isStanding: true,
+        standingEnabled: true,
+        notes: 'Standing order Tue–Sat (Wildfarmed Sourdough Bloomer); toggleable per run'
+      },
+      milkman: {
+        id: 'milkman',
+        name: 'Milkman',
+        shortLabel: 'Milkman',
+        days: ['Monday', 'Wednesday', 'Friday'],
+        daysText: 'Mon / Wed / Fri',
+        minOrder: 0.00,
+        isStanding: true,
+        standingEnabled: true,
+        notes: 'Standing order Mon/Wed/Fri; toggleable per run'
+      }
+    };
+
+    // Stock lines pre-seeded directly from LULA Master Supplier Purchasing & Order Comparison Sheet
+    const DEFAULT_STOCK_ITEMS = [
+      {
+        id: 'eggs_180',
+        name: 'Free Range Eggs (15 doz / 180)',
+        zone: 'Fridges',
+        sku: '5029219',
+        weekdayPar: 2,
+        weekendPar: 3,
+        primarySupplier: 'brakes',
+        unitPrice: 32.81,
+        backupSupplier: 'pilgrims',
+        backupPrice: 36.98,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'bacon_unsmoked_streaky',
+        name: 'Rindless Streaky Bacon (2.27kg)',
+        zone: 'Fridges',
+        sku: '27850',
+        weekdayPar: 4,
+        weekendPar: 6,
+        primarySupplier: 'brakes',
+        unitPrice: 10.66,
+        backupSupplier: 'pilgrims',
+        backupPrice: 13.37,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'chicken_breasts_5kg',
+        name: 'Chicken Breasts / Strips (5kg)',
+        zone: 'Freezers',
+        sku: 'BRK-CHK5',
+        weekdayPar: 4,
+        weekendPar: 6,
+        primarySupplier: 'brakes',
+        unitPrice: 24.00,
+        backupSupplier: 'pilgrims',
+        backupPrice: 25.00,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'cumberland_sausage_907',
+        name: 'Cumberland Sausages 70g (Code 907)',
+        zone: 'Fridges',
+        sku: '907',
+        weekdayPar: 4,
+        weekendPar: 7,
+        primarySupplier: 'sykes',
+        unitPrice: 18.33,
+        backupSupplier: 'pilgrims',
+        backupPrice: 20.62,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'halloumi_block',
+        name: 'Halloumi Cheese (4x250g / 1kg)',
+        zone: 'Fridges',
+        sku: '71035',
+        weekdayPar: 3,
+        weekendPar: 5,
+        primarySupplier: 'brakes',
+        unitPrice: 10.25,
+        backupSupplier: 'pilgrims',
+        backupPrice: 8.00,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'unsalted_butter',
+        name: 'Unsalted Butter Case (20x250g)',
+        zone: 'Fridges',
+        sku: '74826',
+        weekdayPar: 2,
+        weekendPar: 3,
+        primarySupplier: 'brakes',
+        unitPrice: 29.99,
+        backupSupplier: 'pilgrims',
+        backupPrice: 25.00,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'grated_mozz_cheddar',
+        name: 'Sysco Grated Mild Cheddar (1kg)',
+        zone: 'Fridges',
+        sku: '5030334',
+        weekdayPar: 4,
+        weekendPar: 6,
+        primarySupplier: 'brakes',
+        unitPrice: 3.81,
+        backupSupplier: 'pilgrims',
+        backupPrice: 5.18,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'moma_oat_milk',
+        name: 'Oat Milk Barista MOMA (12x1L)',
+        zone: 'Barista & Drinks',
+        sku: '151969',
+        weekdayPar: 4,
+        weekendPar: 6,
+        primarySupplier: 'brakes',
+        unitPrice: 16.52,
+        backupSupplier: 'pilgrims',
+        backupPrice: 18.00,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'hash_puffs',
+        name: 'Aviko Rosti Bites / Hash Nuggets (2.5kg)',
+        zone: 'Freezers',
+        sku: 'AVK-25',
+        weekdayPar: 3,
+        weekendPar: 6,
+        primarySupplier: 'brakes',
+        unitPrice: 6.52,
+        backupSupplier: 'pilgrims',
+        backupPrice: 7.15,
+        quickCount: true,
+        standingLine: false
+      },
+      {
+        id: 'sourdough_bloomer',
+        name: 'Wildfarmed White Sourdough Bloomer (8x800g)',
+        zone: 'Dry Store & Chem',
+        sku: 'WFD-800',
+        weekdayPar: 3,
+        weekendPar: 5,
+        primarySupplier: 'brakes',
+        unitPrice: 42.38,
+        backupSupplier: 'rogers',
+        backupPrice: 27.76,
+        quickCount: true,
+        standingLine: true
+      }
+    ];
+
+    const SAMPLE_SPECS = [
+      {
+        id: 'sample-granola',
+        title: 'Granola (~1.47kg Base Batch)',
+        section: 'recipes',
+        category: 'Main Recipes',
+        baseUnit: 'Approx. 1.47kg (per 1x Batch)',
+        probeTemp: 'Even Golden Crisp',
+        targetTime: 'Rational SCC (140°C Dry Heat, Fan 2) | 15m + 10–12m',
+        shelfLife: '14 Days Ambient (FIFO)',
+        ingredients: [
+          { name: 'Rolled Oats (Stage 1: Base Bake)', amount: '600g', unit: '' },
+          { name: 'Maple Flavored Syrup (Stage 1: Base Bake)', amount: '300g', unit: '' },
+          { name: 'Vegetable Oil (Stage 1: Base Bake)', amount: '20ml', unit: '' },
+          { name: 'Fine Sea Salt (Stage 1: Base Bake)', amount: '7g', unit: '' },
+          { name: 'Grated Tonka Bean (Microplaned into liquids)', amount: '1pc', unit: '' },
+          { name: 'Flaked Almonds (Stage 2: Mid-Bake)', amount: '200g', unit: '' },
+          { name: 'Mixed Nuts Chopped (Stage 2: Mid-Bake)', amount: '100g', unit: '' },
+          { name: 'Dried Fruit Mix (Stage 3: Post-Bake Cold)', amount: '150g', unit: '' },
+          { name: 'Dried Papaya Diced (Stage 3: Post-Bake Cold)', amount: '100g', unit: '' }
+        ],
+        steps: [
+          'Wet Foundation & Infusion: Preheat Rational SCC to 140°C Dry Heat, Fan Speed 2 (Low). Weigh 300g maple syrup, 20ml vegetable oil, and 7g sea salt into a large bowl. Microplane 1 whole tonka bean straight into liquids and whisk vigorously.',
+          'Oat Coating: Pour 600g rolled oats into wet spice foundation. Fold thoroughly with a spatula until 100% glistening and coated with zero dry syrup pockets at the base.',
+          'Rational Roast (Phase 1): Spread oats evenly across non-stick 1/1 GN tray (1 tray per 1x batch), keeping layer loose for airflow. Bake at 140°C for exactly 15 minutes.',
+          'Mid-Bake Inclusions (Phase 2): Pull trays out, scatter 200g flaked almonds and 100g chopped mixed nuts over oats, toss gently, and return to Rational for 10–12 mins until deep golden.',
+          'Cold Post-Bake Blending (Phase 3): Cool baked granola completely to room temperature, then fold in 150g dried fruit mix and 100g diced dried papaya.',
+          'Decant cooled granola into an airtight container or GN tray with a tight-fitting lid. Date-label and hold at ambient room temperature for up to 14 days (FIFO).'
+        ],
+        timestamp: 1732100005000
+      },
+      {
+        id: 'sample-lemon-dijon-dressing',
+        title: 'House Lemon & Dijon Sandwich Dressing & Finishing Oil',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: '~500ml Emulsion (70–100 Portions @ 5–7ml)',
+        probeTemp: 'Cold <5°C / Oil 60°C–65°C Steep',
+        targetTime: 'Stick Blender Emulsion / 15m Gentle Steep',
+        shelfLife: 'Emulsion: 7–10d Chilled / Oil: 14d RT',
+        ingredients: [
+          { name: 'Fresh Lemon Juice (Strained)', amount: '120ml', unit: '' },
+          { name: 'Fresh Lemon Zest', amount: '4g', unit: '' },
+          { name: 'White Wine Vinegar', amount: '30ml', unit: '' },
+          { name: 'Dijon Mustard', amount: '25g', unit: '' },
+          { name: 'Honey or Agave', amount: '20g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '6g', unit: '' },
+          { name: 'Cracked Black Pepper', amount: '1.5g', unit: '' },
+          { name: 'Extra Virgin Olive Oil (EVOO)', amount: '150ml', unit: '' },
+          { name: 'Neutral Oil (Rapeseed/Sunflower)', amount: '150ml', unit: '' }
+        ],
+        steps: [
+          'Acid & Binder Matrix: Combine lemon juice, zest, white wine vinegar, Dijon, honey/agave, sea salt, and black pepper in a tall jug.',
+          'Complete Dissolution: Blend with immersion stick blender on high for 15–20 seconds until salt and honey dissolve.',
+          'Controlled Emulsification: Reduce speed to medium and slowly stream in 150ml EVOO + 150ml neutral oil until glossy and thick.',
+          'Storage & Line Rule: Funnel into 500ml FIFO squeeze bottle (<5°C, 7–10d). Toss greens in a metal bowl (5–7ml)—never dress directly on bread.'
+        ],
+        timestamp: 1732100006000
+      },
+      {
+        id: 'sample-chilli-lime-dressing',
+        title: 'Chilli & Lime Dressing (~1.0L / 1,028g)',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: '1.0L Batch (~1,028g)',
+        probeTemp: 'Cold Holding <5°C',
+        targetTime: 'High-Speed Blender / Blixer',
+        shelfLife: '5 Days Max Chilled (<5°C)',
+        ingredients: [
+          { name: 'Mayonnaise', amount: '400g', unit: '' },
+          { name: 'Neutral Vegetable Oil', amount: '250g', unit: '' },
+          { name: 'Lime Juice (Strained Pulp-Free)', amount: '120g', unit: '' },
+          { name: 'Spinach Leaves', amount: '60g', unit: '' },
+          { name: 'Coriander (Leaves & Soft Stems)', amount: '50g', unit: '' },
+          { name: 'Parsley (Picked Leaves)', amount: '50g', unit: '' },
+          { name: 'Red Chillies (Trimmed)', amount: '40g', unit: '' },
+          { name: 'Dijon Mustard', amount: '25g', unit: '' },
+          { name: 'Garlic Cloves (Peeled)', amount: '20g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '10g', unit: '' },
+          { name: 'Fine Ground Black Pepper', amount: '3g', unit: '' }
+        ],
+        steps: [
+          'Liquid Catalyst Base: Add strained lime juice, salt, pepper, Dijon, garlic, and trimmed red chillies to blender jug.',
+          'Initial Liquefaction: Blend on high for 30–45 seconds until garlic and chillies are liquefied.',
+          'Green Load & Pulse: Add coriander, parsley, and spinach; pulse 5–6 times then blend high 20s to vibrant green paste.',
+          'Fat Emulsion Feed: On low/medium speed, stream in mayonnaise and neutral oil until thick and glossy, then bottle <5°C (FIFO).'
+        ],
+        timestamp: 1732100007000
+      },
+      {
+        id: 'sample-house-aioli',
+        title: 'House Aioli (~1.0L / 988g)',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: '1.0 Litre Batch (~988g)',
+        probeTemp: 'Cold Holding <4°C',
+        targetTime: 'Microplane + 3m Enzyme Hold + Stick Blend',
+        shelfLife: '7 Days Max Chilled (<4°C)',
+        ingredients: [
+          { name: 'Commercial Heavy-Duty Mayo', amount: '900g', unit: '' },
+          { name: 'Fresh Garlic Cloves (Microplaned)', amount: '35g', unit: '' },
+          { name: 'Fresh Lemon Juice (Strained)', amount: '25g', unit: '' },
+          { name: 'Extra Virgin Olive Oil', amount: '20g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '6g', unit: '' },
+          { name: 'Fine Ground White Pepper', amount: '2g', unit: '' }
+        ],
+        steps: [
+          'Garlic Prep & Enzyme Lock: Microplane garlic into bowl with lemon juice, salt, and white pepper; rest 3 full minutes.',
+          'Base Incorporation: Add heavy-duty mayo and EVOO over the garlic base.',
+          'High-Shear Blend: Stick-blend from bottom up for 30 seconds until smooth and ivory-white.',
+          'Storage: Decant into 1L clear FIFO squeeze bottles and hold below 4°C for up to 7 days.'
+        ],
+        timestamp: 1732100008000
+      },
+      {
+        id: 'sample-house-chilli-oil',
+        title: 'House Chilli Oil (500ml Base)',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: '500ml Base Batch',
+        probeTemp: 'Flash Oil: Strictly 180°C',
+        targetTime: 'Induction Probe 180°C Flash Pour',
+        shelfLife: '14 Days Strict Rotation (<5°C)',
+        ingredients: [
+          { name: 'Vegetable Oil (Neutral Base)', amount: '500ml', unit: '' },
+          { name: 'Chilli Flakes', amount: '22g', unit: '' },
+          { name: 'Fresh Ginger (Peeled & Microplaned)', amount: '15g', unit: '' },
+          { name: 'Fresh Garlic (Peeled & Minced)', amount: '10g', unit: '' },
+          { name: 'Sesame Seeds', amount: '9g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '15g', unit: '' },
+          { name: 'Caster Sugar', amount: '6g', unit: '' },
+          { name: 'Gochujang Paste', amount: '16g', unit: '' }
+        ],
+        steps: [
+          'Dry & Wet Staging: In a deep stainless steel GN/pot, weigh dry spices and cluster microplaned ginger, garlic, and gochujang in the center.',
+          'Flash Pour: Heat neutral oil on induction to strictly 180°C, turn off heat, and stream slowly over the wet cluster.',
+          'Dissolve & Cool Uncovered: Stir after bubbling eases until dissolved; cool uncovered on wire rack before bottling & storing <5°C.',
+          'Line Rule: Shake vigorously before dressing plates so sediment blends with oil.'
+        ],
+        timestamp: 1732100009000
+      },
+      {
+        id: 'sample-nut-free-pesto',
+        title: 'Nut-Free Green Pesto (Half Batch)',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: '~550g Yield (0.5x Half Batch)',
+        probeTemp: 'Toast 180°C / Cool Before Blend',
+        targetTime: 'Rational Dry Heat 180°C (6–8m) + Robot-Coupe',
+        shelfLife: '3 Days Max Chilled (Do Not Freeze)',
+        ingredients: [
+          { name: 'Fresh Basil Leaves (Picked & Dry)', amount: '250g', unit: '' },
+          { name: 'Baby Spinach (Raw)', amount: '75g', unit: '' },
+          { name: 'Sunflower Seeds', amount: '137.5g', unit: '' },
+          { name: 'Extra Virgin Olive Oil (Chilled)', amount: '225ml', unit: '' },
+          { name: 'Fresh Garlic (Peeled)', amount: '17.5g', unit: '' },
+          { name: 'Lemon Juice (Fresh)', amount: '25ml', unit: '' },
+          { name: 'Fine Sea Salt', amount: '7g', unit: '' },
+          { name: 'Black Pepper (Cracked)', amount: '1.5g', unit: '' }
+        ],
+        steps: [
+          'Toast & Chill: Toast sunflower seeds at 180°C dry heat for 6–8 mins and cool completely; chill Robot-Coupe bowl, blade, and EVOO for 20 mins.',
+          'Coarse Grind: Pulse garlic, salt, and cold toasted seeds to coarse grit without turning into paste.',
+          'Emulsify & Finish: Pulse basil and spinach while streaming cold EVOO, then fold in lemon juice and pepper by hand.',
+          'Oil Plug Storage: Pack tightly into GN 1/9 pan with a 2mm olive oil plug; chill max 3 days (do not freeze).'
+        ],
+        timestamp: 1732100010000
+      },
+      {
+        id: 'sample-smoke-maple-glaze',
+        title: 'Signature Smoke & Maple Glaze (~1.5kg)',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: 'Approx. 1.5kg Yield',
+        probeTemp: 'Hold 45°C–50°C / Fat ~50°C',
+        targetTime: 'Induction / Bain Marie (45°C–50°C)',
+        shelfLife: '5 Days Chilled / Bain Marie Hold',
+        ingredients: [
+          { name: 'Maple-Flavored Golden Syrup', amount: '700g', unit: '' },
+          { name: 'Cleaned Bacon Fat (~50°C Liquid)', amount: '420g', unit: '' },
+          { name: 'Rice Vinegar (Start 150g, up to 225g)', amount: '150g', unit: '' },
+          { name: 'Dijon Mustard', amount: '110g', unit: '' },
+          { name: 'Water (or Bourbon)', amount: '140g', unit: '' },
+          { name: 'Smoked Paprika (Pimentón)', amount: '25g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '12g', unit: '' },
+          { name: 'Black Pepper (Fine Ground)', amount: '3g', unit: '' }
+        ],
+        steps: [
+          'Liquefy Fat & Base: Melt bacon fat gently to ~50°C (not smoking); combine syrup, 150g rice vinegar, Dijon, water/bourbon, and spices.',
+          'Emulsify: Stick-blend on medium-high while streaming warm bacon fat until glossy and unified.',
+          'Balance & Hold: Taste test and add up to 75g extra rice vinegar if needed; hold at 45°C–50°C in Bain Marie or chill up to 5 days.'
+        ],
+        timestamp: 1732100011000
+      },
+      {
+        id: 'sample-smokey-harissa',
+        title: 'Smokey Harissa Sauce (~3.0L / 3,450g)',
+        section: 'recipes',
+        category: 'Sauces & Dressings',
+        baseUnit: '3,450g (~3.0 Litres)',
+        probeTemp: 'Cool Uncovered / Chill <5°C',
+        targetTime: 'Induction Simmer 20–25m + High-Speed Blend',
+        shelfLife: '7 Days Max Chilled (<5°C)',
+        ingredients: [
+          { name: 'Italian Whole Plum Tomatoes (Hand-Crushed)', amount: '2400g', unit: '' },
+          { name: 'Premium Rose Harissa Paste', amount: '450g', unit: '' },
+          { name: 'Clear Blossom Honey', amount: '180g', unit: '' },
+          { name: 'Banana Shallots (Fine Diced)', amount: '200g', unit: '' },
+          { name: 'Olive Oil (Sautéing)', amount: '80g', unit: '' },
+          { name: 'Fresh Garlic Cloves (Fine Minced)', amount: '50g', unit: '' },
+          { name: 'Apple Cider Vinegar', amount: '45g', unit: '' },
+          { name: 'Smoked Paprika (Pimentón)', amount: '20g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '20g', unit: '' },
+          { name: 'Fine Ground Black Pepper', amount: '5g', unit: '' }
+        ],
+        steps: [
+          'Sweat & Bloom: Sauté diced shallots in olive oil 4–5 mins, then stir in garlic, rose harissa, and smoked paprika for 60 seconds.',
+          'Tomato Reduction: Add hand-crushed plum tomatoes and simmer uncovered on low for 20–25 mins until thick.',
+          'Balance & Blitz: Stir in honey, apple cider vinegar, salt, and pepper (simmer 3m), then blitz on high for 60–90s until smooth.',
+          'Cool & Bottle: Cool uncovered to room temp, fill 3x 1L FIFO squeeze bottles, and store below 5°C for up to 7 days.'
+        ],
+        timestamp: 1732100012000
+      },
+      {
+        id: 'sample-shakshuka',
+        title: 'Shakshuka Base (Zero-Hob Rational Method)',
+        section: 'recipes',
+        category: 'Main Recipes',
+        baseUnit: '20 Portions (5kg / 1x GN)',
+        probeTemp: 'Hold >63°C / Chill <5°C in 90m',
+        targetTime: 'Rational Combi 160°C 25m → Hot Air 175°C 25m',
+        shelfLife: '4 Days Fridges / 3 Mos Freezers',
+        ingredients: [
+          { name: 'Olive Oil', amount: '120ml', unit: '' },
+          { name: 'Brown Onions (Pulsed 5-8mm)', amount: '800g', unit: '' },
+          { name: 'Fresh Garlic Cloves (Minced)', amount: '60g', unit: '' },
+          { name: 'Smokey Harissa Paste', amount: '160g', unit: '' },
+          { name: 'Tomato Paste (Double Conc.)', amount: '120g', unit: '' },
+          { name: 'Canned Chopped Tomatoes', amount: '3200g', unit: '' },
+          { name: 'Roasted Red Peppers (Drained)', amount: '1250g', unit: '' },
+          { name: 'Ground Cumin', amount: '25g', unit: '' },
+          { name: 'Ground Smoked Paprika', amount: '25g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '27.5g', unit: '' }
+        ],
+        steps: [
+          'Robot-Coupe Prep: Mince garlic and pulse onions and drained red peppers coarsely (5-8mm).',
+          'Direct Pan Staging: Combine oil, onions, garlic, harissa, tomato paste, and spices in 100mm 1/1 GN pan.',
+          'Stage 1 Combi: Add tomatoes, peppers, and seasoning. Run Rational Combi 160°C | 25% Steam | Fan 3 for 25 mins.',
+          'Stage 2 Roast: Stir edge-to-center, then run Hot Air 175°C | 0% Steam | Fan 3 for 25-30 mins until glossy.',
+          'Service & Storage: Bake eggs at 200°C (10-15% steam) for 3.5-4 mins. Cool reserve <5°C within 90 mins.'
+        ],
+        timestamp: 1732100004000
+      },
+      {
+        id: 'sample-fried-chicken',
+        title: 'Fried Chicken Marinade & Base (5kg Modular)',
+        section: 'recipes',
+        category: 'Main Recipes',
+        baseUnit: '1x 10L Tub (~6.29kg)',
+        probeTemp: 'Fry 175°C → Core 75°C',
+        targetTime: '12–24h Cure in Fridges (<5°C)',
+        shelfLife: '24h Raw Cured / 4L Tubs Freezers',
+        ingredients: [
+          { name: 'Chicken Strips (Cleaned)', amount: '5000g', unit: '' },
+          { name: 'Buttermilk', amount: '909g', unit: '' },
+          { name: 'Dijon Mustard', amount: '200g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '40g', unit: '' },
+          { name: 'Onion Powder', amount: '40g', unit: '' },
+          { name: 'Garlic Powder', amount: '40g', unit: '' },
+          { name: 'Five-Spice Powder', amount: '24g', unit: '' },
+          { name: 'Caster Sugar', amount: '16g', unit: '' },
+          { name: 'MSG', amount: '16g', unit: '' }
+        ],
+        steps: [
+          'Dry Blend: Whisk salt, onion powder, garlic powder, five-spice, caster sugar, and MSG.',
+          'Liquid Emulsion: Whisk buttermilk, Dijon mustard, and dry spice blend in a clean 10L tub until smooth.',
+          'Protein Integration: Massage 5kg cleaned chicken strips into marinade until every piece is coated.',
+          'Cure & Trigger Check: Label FIFO and cure 12-24h below 5°C. Check frozen 4L tub levels every Sunday.'
+        ],
+        timestamp: 1732100003000
+      },
+      {
+        id: 'sample-flatbreads',
+        title: 'Par-Baked Flatbreads & Panuozzo Bases',
+        section: 'recipes',
+        category: 'Bread & Doughs',
+        baseUnit: '12x 130g Balls (~1,560g)',
+        probeTemp: 'Target FDT: 23°C–25°C',
+        targetTime: 'Lincat Deck Oven 350°C (90s–2m)',
+        shelfLife: '16h Ambient / 3 Days Fridges',
+        ingredients: [
+          { name: 'Strong Pizza Flour', amount: '910g', unit: '' },
+          { name: 'Chilled Water (Split 550g / 60g)', amount: '610g', unit: '' },
+          { name: 'Fine Sea Salt', amount: '23g', unit: '' },
+          { name: 'Extra Virgin Olive Oil', amount: '14g', unit: '' },
+          { name: 'Instant Dry Yeast', amount: '2g', unit: '' }
+        ],
+        steps: [
+          'Initial Mix (Bassinage): Mix flour, yeast, and 550g chilled water on Speed 1 for 4-5 mins.',
+          'Second Water & Salt: Add salt and drizzle remaining 60g water on Speed 2 until absorbed.',
+          'Oil & Rest: Drizzle EVOO, mix 2-3 mins until elastic, rest covered 20 mins, scale 130g balls, cold ferment 24-48h.',
+          'Par-Bake: Stretch in semolina (8-9 inches) and par-bake at 350°C for 90s-2 mins.'
+        ],
+        timestamp: 1732100002000
+      },
+      {
+        id: 'sample-brownies',
+        title: 'Fudgy Counter Brownies (Master Bowl)',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: 'Brownies',
+        baseUnit: '17–18 Tins (900g/tin)',
+        probeTemp: 'Slight centre wobble at 24m',
+        targetTime: 'Rational 165°C Dry Heat | 0% Hum | 23–25m',
+        shelfLife: '7 Days Counter Rotation',
+        ingredients: [
+          { name: 'Dark Chocolate Buttons (50-70%)', amount: '3000g', unit: '' },
+          { name: 'Unsalted Butter', amount: '3000g', unit: '' },
+          { name: 'Brown Soft Sugar', amount: '4125g', unit: '' },
+          { name: 'Large Free-Range Eggs', amount: '60pc', unit: '' },
+          { name: 'Plain Flour (Sieved)', amount: '1500g', unit: '' },
+          { name: 'Premium Cocoa Powder', amount: '750g', unit: '' }
+        ],
+        steps: [
+          'Melt chocolate and butter gently over Bain-Marie or Rational 65°C steam; cool slightly.',
+          'Whip eggs and brown sugar on high speed 4-5 mins to ribbon stage, then fold in warm chocolate mix on low.',
+          'Sift flour and cocoa powder; mix on low for 30 seconds max.',
+          'Scale 900g per lined MasterClass tin, bake at 165°C (0% moisture) 23-25 mins, chill thoroughly, slice with hot dry knife.'
+        ],
+        timestamp: 1732100001000
+      },
+      {
+        id: 'sample-cookie-dough',
+        title: 'Master Choc Chip Cookie Dough',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: 'Cookies',
+        baseUnit: '25 Cookies (~3.2kg)',
+        probeTemp: 'Core: 86°C–88°C',
+        targetTime: 'Rational SCC: 160°C Dry Heat | Fan 2 | 14 Mins',
+        shelfLife: '72h Chill / 3 Mos Freezers (-18°C)',
+        ingredients: [
+          { name: 'Plain Flour (T55)', amount: '875g', unit: '' },
+          { name: 'Unsalted Butter', amount: '450g', unit: '' },
+          { name: 'Light Brown Soft Sugar', amount: '420g', unit: '' },
+          { name: 'Caster Sugar', amount: '310g', unit: '' },
+          { name: 'Dark & Milk Chocolate Chunks', amount: '650g', unit: '' }
+        ],
+        steps: [
+          'Cream butter and sugars until smooth, then beat in eggs and vanilla.',
+          'Fold in sifted flour, bicarb, salt, and chocolate chunks until just combined.',
+          'Portion, chill or freeze dough balls FIFO, and bake at 160°C dry heat for ~14 mins.'
+        ],
+        timestamp: 1732099999000
+      },
+      {
+        id: 'sample-cookie-pie-base',
+        title: 'Cookie Pie Base',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: 'Cookies',
+        baseUnit: '1x Deep Tin Base',
+        probeTemp: 'Set edges, tender centre',
+        targetTime: 'Rational SCC: 160°C Dry Heat | Low Fan | 30–33 Mins',
+        shelfLife: 'Airtight Container (FIFO)',
+        ingredients: [
+          { name: 'Plain Flour', amount: '500g', unit: '' },
+          { name: 'Unsalted Butter (Softened)', amount: '250g', unit: '' },
+          { name: 'Light Brown Sugar', amount: '200g', unit: '' },
+          { name: 'Caster Sugar', amount: '120g', unit: '' },
+          { name: 'Chocolate Chips', amount: '300g', unit: '' }
+        ],
+        steps: [
+          'Mix butter and sugars until combined, then mix in egg and dry ingredients.',
+          'Press evenly into lined pie tin and bake at 160°C dry heat (0% moisture, low fan) for 30–33 mins.',
+          'Cool completely before filling or layering.'
+        ],
+        timestamp: 1732099998000
+      },
+      {
+        id: 'sample-house-hash-browns',
+        title: 'House Hash Browns',
+        section: 'recipes',
+        category: 'Main Recipes',
+        baseUnit: '1x Prep Batch',
+        probeTemp: 'Core >75°C / Crisp Golden',
+        targetTime: 'Steam 100% 130°C 20 Mins',
+        shelfLife: '4 Days Fridges / 30 Days Freezers',
+        ingredients: [
+          { name: 'Grated Potato', amount: '2000g', unit: '' },
+          { name: 'Seasoning & Starch Binder', amount: '120g', unit: '' }
+        ],
+        steps: [
+          'Press excess moisture from grated potato and season evenly.',
+          'Form and cook per Rational / fryer spec until crisp and golden.'
+        ],
+        timestamp: 1732099997000
+      },
+      {
+        id: 'sample-buttermilk-pancakes',
+        title: 'Buttermilk Pancakes',
+        section: 'recipes',
+        category: 'Main Recipes',
+        baseUnit: '1x Batter Batch',
+        probeTemp: 'Golden both sides',
+        targetTime: 'Rational SCC: 140°C Combi Mode | 65% Steam | Fan 2',
+        shelfLife: '3 Days Fridges (FIFO) / 1 Mo Freezers',
+        ingredients: [
+          { name: 'Buttermilk', amount: '1000ml', unit: '' },
+          { name: 'Self-Raising Flour', amount: '650g', unit: '' },
+          { name: 'Eggs', amount: '4pc', unit: '' },
+          { name: 'Melted Butter', amount: '80g', unit: '' }
+        ],
+        steps: [
+          'Whisk wet ingredients and fold into flour until just smooth with small lumps.',
+          'Rest briefly, portion onto hot flattop/pan, flip once golden, and store FIFO.'
+        ],
+        timestamp: 1732099996000
+      },
+      {
+        id: 'sample-krispie-slice',
+        title: 'Chocolate Orange Rice Krispies & Cookie Dough Slice',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: 'No-Bake',
+        baseUnit: '1x Tray / Slab',
+        probeTemp: 'Set chilled',
+        targetTime: 'No-Bake / Blast Chill Set',
+        shelfLife: '5 Days Ambient / 7 Days Fridges',
+        ingredients: [
+          { name: 'Rice Krispies', amount: '250g', unit: '' },
+          { name: 'Dark & Orange Chocolate', amount: '450g', unit: '' },
+          { name: 'Butter', amount: '150g', unit: '' }
+        ],
+        steps: [
+          'Melt chocolate and butter gently, fold through Rice Krispies and orange zest/flavouring.',
+          'Press firmly into lined tray and chill until set before portioning.'
+        ],
+        timestamp: 1732099995000
+      },
+      {
+        id: 'sample-sticky-toffee-pudding',
+        title: 'Sticky Toffee Pudding',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: 'Puddings',
+        baseUnit: '1x Gastronorm Batch',
+        probeTemp: 'Piping hot through centre',
+        targetTime: 'Rational Combi 160°C | 20% Steam | Fan 3 | 32–35 Mins',
+        shelfLife: '4 Days Fridges / Freeze portions up to 30 Days',
+        ingredients: [
+          { name: 'Chopped Dates', amount: '500g', unit: '' },
+          { name: 'Dark Muscovado Sugar', amount: '450g', unit: '' },
+          { name: 'Flour', amount: '500g', unit: '' },
+          { name: 'Eggs', amount: '6pc', unit: '' }
+        ],
+        steps: [
+          'Soak dates with bicarb and hot water, cream butter and sugar, add eggs and flour, then fold in dates.',
+          'Bake in Rational combi at 160°C (20% steam, Fan 3) for 32–35 mins and serve with hot toffee sauce.'
+        ],
+        timestamp: 1732099994000
+      },
+      {
+        id: 'sample-honeycomb-shards',
+        title: 'Golden Honeycomb Shards',
+        section: 'recipes',
+        category: 'Bakes',
+        subCategory: 'No-Bake',
+        baseUnit: '1x Tray Batch',
+        probeTemp: 'Hard crack 149°C–150°C',
+        targetTime: '12 Mins Active Prep | 60 Mins Ambient Cool',
+        shelfLife: '14 Days Ambient (DO NOT REFRIGERATE)',
+        ingredients: [
+          { name: 'Granulated Sugar', amount: '400g', unit: '' },
+          { name: 'Golden Syrup', amount: '150g', unit: '' },
+          { name: 'Bicarbonate of Soda', amount: '20g', unit: '' }
+        ],
+        steps: [
+          'Boil sugar and golden syrup to 149°C–150°C, remove from heat, and whisk in bicarb.',
+          'Pour immediately into lined tin without stirring further, cool 60 mins at room temp, and break into shards.'
+        ],
+        timestamp: 1732099993000
+      },
+      {
+        id: 'sample-sop-pass',
+        title: 'Pass Check & Zero-Sog Sandwich Assembly',
+        section: 'sops',
+        category: 'Lunch',
+        baseUnit: 'Per Order Build',
+        probeTemp: 'Hot hold >63°C / Cold <5°C',
+        targetTime: 'Under 6 Mins Ticket Time',
+        shelfLife: 'Immediate Service',
+        ingredients: [
+          { name: 'Lemon & Dijon Dressing (Toss Bowl)', amount: '6ml', unit: '' },
+          { name: 'Aioli / Spiced Mayo Barrier', amount: '20g', unit: '' }
+        ],
+        steps: [
+          'Never dress rocket or spinach directly on bread; toss in metal bowl with 5-7ml emulsion.',
+          'Spread fat/protein barrier (aioli, butter, cheese) onto toasted crumb before mounting greens.',
+          'Verify allergen flags and garnish with micro-herbs or chilli oil right before pass.'
+        ],
+        timestamp: 1732100000000
+      }
+    ];
+
+    const SAMPLE_HACCP = [
+      { id: 'hc-1', label: 'Fridges & Freezers Temp Check (<5°C Fridges / -18°C Freezers)', done: false },
+      { id: 'hc-2', label: 'Blast Chill / Rapid Cool Log (<5°C within 90 mins)', done: false },
+      { id: 'hc-3', label: 'FIFO Date-Dot & Allergen Labelling Check', done: false },
+      { id: 'hc-4', label: 'Rational Combi & Line Sanitizer / Chem Check', done: false }
+    ];
+
+    function createDefaultStockState() {
+      const todayName = DAYS_OF_WEEK[new Date().getDay()];
+      const counts = {};
+      DEFAULT_STOCK_ITEMS.forEach((item) => {
+        counts[item.id] = 0;
+      });
+      return {
+        bigWalkDay: 'Monday',
+        countMode: todayName === 'Monday' ? 'weekly' : 'quick',
+        deliveryWindow: 'next_mon',
+        activeZone: 'ALL',
+        suppliers: structuredClone(DEFAULT_SUPPLIERS),
+        items: structuredClone(DEFAULT_STOCK_ITEMS),
+        counts,
+        rebalancedMoves: {},
+        rebalanceReport: null
+      };
+    }
+
+    function loadStockState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.stockState);
+        if (!raw) return createDefaultStockState();
+        const parsed = JSON.parse(raw);
+        const def = createDefaultStockState();
+        const mergedSuppliers = { ...def.suppliers, ...(parsed.suppliers || {}) };
+        const mergedItems = Array.isArray(parsed.items) && parsed.items.length ? parsed.items : def.items;
+        const mergedCounts = { ...def.counts };
+        mergedItems.forEach((it) => {
+          mergedCounts[it.id] = typeof (parsed.counts && parsed.counts[it.id]) === 'number'
+            ? Math.max(0, parsed.counts[it.id])
+            : 0;
+        });
+        return {
+          ...def,
+          ...parsed,
+          suppliers: mergedSuppliers,
+          items: mergedItems,
+          counts: mergedCounts,
+          rebalancedMoves: parsed.rebalancedMoves || {},
+          rebalanceReport: parsed.rebalanceReport || null
+        };
+      } catch (err) {
+        return createDefaultStockState();
+      }
+    }
+
+    function loadFromStorage(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return structuredClone(fallback);
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : structuredClone(fallback);
+      } catch (err) {
+        return structuredClone(fallback);
+      }
+    }
+
+    function saveToStorage(key, value) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (err) {
+        console.warn('Storage save skipped:', err);
+      }
+    }
+
+    // Global State
+    window.specs = loadFromStorage(STORAGE_KEYS.specs, SAMPLE_SPECS);
+    let stockState = loadStockState();
+    let haccpChecks = loadFromStorage(STORAGE_KEYS.haccp, SAMPLE_HACCP);
+    let managerPin = '1404';
+
+    window.currentSection = 'home';
     let currentCategory = 'all';
     let searchQuery = '';
     let isManager = false;
@@ -391,126 +1643,98 @@
     let currentModalSpec = null;
     let currentScale = 1;
     let checkedIngredients = new Set();
-    let stagedImage = null;
+    let toastTimer = null;
+    let db = null;
 
-    const DEFAULT_CATEGORIES = {
-      recipes: ["Main Recipes", "Sauces & Dressings", "Bread & Doughs", "Bakes"],
-      sops: ["Breakfast", "Brunch", "Lunch", "Sides & Garnishes"],
-      barista: ["Espresso & Iced", "Matcha & Specialty", "House Syrups & Cold Foams", "Cocktails & Booze"]
-    };
+    function saveStockState() {
+      saveToStorage(STORAGE_KEYS.stockState, stockState);
+    }
 
-    // Helper: parses ingredient string with attached units into numeric & unit parts
+    function showToast(message, isError) {
+      const banner = document.getElementById('toast-banner');
+      const msgEl = document.getElementById('toast-message');
+      const iconEl = document.getElementById('toast-icon');
+      if (!banner || !msgEl || !iconEl) return;
+      msgEl.textContent = message;
+      iconEl.className = isError
+        ? 'ph-bold ph-warning-circle text-brand-terracotta text-base shrink-0'
+        : 'ph-bold ph-check-circle text-brand-terracotta text-base shrink-0';
+      banner.classList.remove('hidden');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        banner.classList.add('hidden');
+      }, 3600);
+    }
+
+    // Firebase Sync for Specs & Shared Manager PIN (1404 default across all devices)
+    function initFirebaseSync() {
+      try {
+        const firebaseConfig = {
+          apiKey: "AIzaSyBbrvyDhGxJEQ4TN-9iO-WQixvb8GhfVQE",
+          authDomain: "lula-hub.firebaseapp.com",
+          projectId: "lula-hub",
+          storageBucket: "lula-hub.firebasestorage.app",
+          messagingSenderId: "461988583707",
+          appId: "1:461988583707:web:96dca60800ad120def5bbe"
+        };
+        if (window.firebase && window.firebase.apps) {
+          if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+          db = firebase.firestore();
+
+          // Sync shared Manager PIN so every tablet/computer uses 1404 (or any updated PIN)
+          const pinDocRef = db.collection("lula_config").doc("manager_pin");
+          pinDocRef.get().then((docSnap) => {
+            if (docSnap.exists && /^\d{4}$/.test(docSnap.data().pin || '')) {
+              managerPin = docSnap.data().pin;
+              localStorage.setItem(STORAGE_KEYS.pin, managerPin);
+            } else {
+              managerPin = '1404';
+              localStorage.setItem(STORAGE_KEYS.pin, '1404');
+              pinDocRef.set({ pin: '1404', updatedAt: Date.now() }, { merge: true }).catch(() => {});
+            }
+          }).catch(() => {
+            managerPin = '1404';
+          });
+
+          db.collection("lula_specs").onSnapshot((snapshot) => {
+            if (!snapshot.empty) {
+              const items = [];
+              snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+              items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+              window.specs = items;
+              saveToStorage(STORAGE_KEYS.specs, items);
+              renderCategoryPills();
+              renderActiveView();
+            }
+          });
+        }
+      } catch (err) {
+        console.warn("Firebase sync fallback active:", err);
+      }
+    }
+
     function parseIngValue(rawVal) {
       if (!rawVal) return { num: null, unit: '', isNumber: false };
       const str = rawVal.toString().trim();
       const match = str.match(/^([\d\.]+)\s*(.*)$/);
       if (match) {
         const val = parseFloat(match[1]);
-        if (!isNaN(val)) {
-          return { num: val, unit: match[2] || '', isNumber: true };
-        }
+        if (!isNaN(val)) return { num: val, unit: match[2] || '', isNumber: true };
       }
       return { num: null, unit: str, isNumber: false };
     }
 
-    // Dynamic Category Gatherer (Collects defaults + any custom category added)
     function getAllCategoriesForSection(sec) {
       const set = new Set(DEFAULT_CATEGORIES[sec] || []);
       (window.specs || []).forEach(s => {
-        if (s.section === sec && s.category && s.category.trim()) {
-          set.add(s.category.trim());
-        }
+        if (s.section === sec && s.category && s.category.trim()) set.add(s.category.trim());
       });
       return Array.from(set);
     }
 
-    // SMART AUTO-FILL PARSER (Matches flexible labels, removes weird unicode whitespace/bullets)
     function handleSmartPaste(raw) {
       if (!raw || raw.trim().length < 15) return;
-      // Clean hidden zero-width spaces or BOM characters
       const text = raw.replace(/[\u200B-\u200D\uFEFF]/g, '').trim();
-
-      // CASE 1: HTML Document
-      if (text.includes('<html') || text.includes('<!DOCTYPE') || text.includes('<table')) {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-
-        const h1 = doc.querySelector('h1');
-        const titleEl = doc.querySelector('title');
-        let title = '';
-        if (h1 && h1.innerText.trim()) {
-          title = h1.innerText.trim();
-        } else if (titleEl) {
-          title = titleEl.innerText.replace(/^LULA.*?—\s*/, '').replace(/\(30L Spec\)/, '').trim();
-        }
-        if (title) document.getElementById('import-title').value = title;
-
-        let cat = 'Bakes';
-        let sec = 'recipes';
-        const pageText = doc.body.innerText.toLowerCase();
-        if (pageText.includes('espresso') || pageText.includes('matcha') || pageText.includes('syrup')) {
-          sec = 'barista'; cat = 'House Syrups & Cold Foams';
-        } else if (pageText.includes('brunch') || pageText.includes('breakfast') || pageText.includes('poached egg')) {
-          sec = 'sops'; cat = 'Brunch';
-        } else if (pageText.includes('dough') || pageText.includes('bread') || pageText.includes('focaccia')) {
-          sec = 'recipes'; cat = 'Bread & Doughs';
-        }
-        document.getElementById('import-section').value = sec;
-        updateCategoryDropdown(sec, cat);
-
-        let divisor = 1;
-        if (pageText.includes('100') && (pageText.includes('12.87kg') || pageText.includes('30l'))) {
-          divisor = 4;
-          document.getElementById('import-base-unit').value = '25 Cookies (~3.2kg)';
-        } else {
-          document.getElementById('import-base-unit').value = '1x Base';
-        }
-
-        const metaCards = doc.querySelectorAll('.grid > div, .metadata-card, [class*="rounded"]');
-        metaCards.forEach(c => {
-          const t = c.innerText;
-          if (t.includes('Equipment') || t.includes('Combi') || t.includes('Settings')) {
-            const lines = t.split('\n').filter(Boolean);
-            if (lines[1]) document.getElementById('import-time').value = lines[1].trim();
-          }
-          if (t.includes('Shelf Life') || t.includes('Storage')) {
-            const lines = t.split('\n').filter(Boolean);
-            if (lines[1]) document.getElementById('import-shelf').value = lines[1].trim();
-          }
-        });
-
-        const rows = doc.querySelectorAll('table tbody tr');
-        const ingLines = [];
-        rows.forEach(tr => {
-          const tds = tr.querySelectorAll('td');
-          if (tds.length >= 2) {
-            const name = tds[0].innerText.replace(/Phase.*?:/gi, '').trim();
-            const valStr = tds[1].innerText.replace(/,/g, '').trim();
-            const num = parseFloat(valStr);
-            const unit = valStr.replace(/[\d\.]/g, '').trim() || 'g';
-
-            if (name && !isNaN(num) && !valStr.toLowerCase().includes('scaled')) {
-              const baseNum = Math.round(num / divisor);
-              ingLines.push(`${name}: ${baseNum}${unit}`);
-            }
-          }
-        });
-        if (ingLines.length) document.getElementById('import-ingredients').value = ingLines.join('\n');
-
-        const steps = [];
-        const stepEls = doc.querySelectorAll('ol li, .space-y-1 > div, .space-y-2 > div');
-        stepEls.forEach(el => {
-          let s = el.innerText.replace(/^\d+[\.\)]?\s*/, '').trim();
-          s = s.replace(/^[0-9]\s*/, '').trim();
-          if (s.length > 5 && !steps.includes(s)) steps.push(s);
-        });
-        if (steps.length) document.getElementById('import-steps').value = steps.join('\n');
-
-        flashGreenPasteBox();
-        return;
-      }
-
-      // CASE 2: Text paste (Handles ANY standard key prefix)
       const lines = text.split('\n');
       let currentField = null;
       let ingLines = [];
@@ -519,7 +1743,6 @@
       lines.forEach(rawLine => {
         const line = rawLine.trim();
         if (!line) return;
-
         if (line.match(/^(Dish\s*\/\s*Spec\s*Title|Title)\s*:\s*/i)) {
           document.getElementById('import-title').value = line.replace(/^(Dish\s*\/\s*Spec\s*Title|Title)\s*:\s*/i, '').trim();
         } else if (line.match(/^Section\s*:\s*/i)) {
@@ -532,45 +1755,36 @@
         } else if (line.match(/^Category\s*:\s*/i)) {
           const cat = line.replace(/^Category\s*:\s*/i, '').trim();
           updateCategoryDropdown(document.getElementById('import-section').value, cat);
-        } else if (line.match(/^Base Yield Unit.*?:/i) || line.match(/^Yield.*?:/i)) {
-          document.getElementById('import-base-unit').value = line.replace(/^(Base Yield Unit.*?|Yield.*?):\s*/i, '').trim();
+        } else if (line.match(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i)) {
+          document.getElementById('import-sub-category').value = line.replace(/^(Sub-?Category|Sub-?Heading|Sub-?Section|Group)\s*:\s*/i, '').trim();
+        } else if (line.match(/^Base Yield Unit.*?:/i) || line.match(/^(Batch Yield|Yield).*?:/i)) {
+          document.getElementById('import-base-unit').value = line.replace(/^(Base Yield Unit.*?|Batch Yield.*?|Yield.*?):\s*/i, '').trim();
         } else if (line.match(/^(Rational Pre-?Heat|Pre-?Heat|Target Time).*?:/i)) {
           document.getElementById('import-time').value = line.replace(/^(Rational Pre-?Heat.*?|Pre-?Heat.*?|Target Time.*?):\s*/i, '').trim();
         } else if (line.match(/^(Shelf Life|Storage Vessel).*?:/i)) {
           document.getElementById('import-shelf').value = line.replace(/^(Shelf Life.*?|Storage Vessel.*?):\s*/i, '').trim();
-        } else if (line.match(/^(Core Probe|Quality Target|Probe|Internal Temp).*?:/i)) {
-          document.getElementById('import-probe').value = line.replace(/^(Core Probe.*?|Quality Target.*?|Probe.*?|Internal Temp.*?):\s*/i, '').trim();
+        } else if (line.match(/^(Core Probe|Quality Target|Probe|Internal Temp|Portion Cost).*?:/i)) {
+          document.getElementById('import-probe').value = line.replace(/^(Core Probe.*?|Quality Target.*?|Probe.*?|Internal Temp.*?|Portion Cost.*?):\s*/i, '').trim();
         } else if (line.match(/^(1x\s*Base\s*Ingredients|Ingredients).*?:/i)) {
           currentField = 'ingredients';
         } else if (line.match(/^(Method\s*\/\s*Prep\s*Workflow|Method|Steps|Workflow).*?:/i)) {
           currentField = 'method';
         } else if (currentField === 'ingredients') {
-          // If hit a sub-heading or colon pair
-          if (line.includes(':')) {
-            ingLines.push(line);
-          }
+          const cleanBullet = line.replace(/^[-•*]\s*/, '').trim();
+          if (cleanBullet.includes(':')) ingLines.push(cleanBullet);
         } else if (currentField === 'method') {
-          stepLines.push(line.replace(/^\d+[\.\)]?\s*/, ''));
+          stepLines.push(line.replace(/^\d+[\.\)]?\s*/, '').trim());
         }
       });
 
       if (ingLines.length) document.getElementById('import-ingredients').value = ingLines.join('\n');
       if (stepLines.length) document.getElementById('import-steps').value = stepLines.join('\n');
-
-      flashGreenPasteBox();
-    }
-
-    function flashGreenPasteBox() {
-      const pasteBox = document.getElementById('smart-paste-box');
-      pasteBox.classList.add('border-emerald-500', 'bg-emerald-50');
-      setTimeout(() => pasteBox.classList.remove('border-emerald-500', 'bg-emerald-50'), 1200);
     }
 
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
       const subCats = getAllCategoriesForSection(sectionVal);
-
       select.innerHTML = subCats.map(c => `<option value="${c}">${c}</option>`).join('') + `<option value="__custom__">Custom...</option>`;
 
       if (selectedCategory && subCats.includes(selectedCategory)) {
@@ -588,10 +1802,7 @@
       }
     }
 
-    function handleSectionChangeInModal(sec) {
-      updateCategoryDropdown(sec);
-    }
-
+    function handleSectionChangeInModal(sec) { updateCategoryDropdown(sec); }
     function handleCategorySelectChange(val) {
       const customInput = document.getElementById('import-category-custom');
       if (val === '__custom__') {
@@ -602,69 +1813,17 @@
         customInput.value = '';
       }
     }
-
     function getSelectedCategoryFromModal() {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
-      if (select.value === '__custom__') {
-        return customInput.value.trim() || 'General';
-      }
-      return select.value;
-    }
-
-    // Firebase Connection
-    let db = null;
-    try {
-      const firebaseConfig = {
-        apiKey: "AIzaSyBbrvyDhGxJEQ4TN-9iO-WQixvb8GhfVQE",
-        authDomain: "lula-hub.firebaseapp.com",
-        projectId: "lula-hub",
-        storageBucket: "lula-hub.firebasestorage.app",
-        messagingSenderId: "461988583707",
-        appId: "1:461988583707:web:96dca60800ad120def5bbe"
-      };
-      if (window.firebase) {
-        if (!firebase.apps.length) {
-          firebase.initializeApp(firebaseConfig);
-        }
-        db = firebase.firestore();
-
-        db.collection("lula_specs").onSnapshot((snapshot) => {
-          const items = [];
-          snapshot.forEach(doc => {
-            items.push({ id: doc.id, ...doc.data() });
-          });
-          items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
-          window.specs = items;
-          localStorage.setItem('lula_local_specs', JSON.stringify(items));
-          renderCategoryPills();
-          renderCatalog();
-        }, (err) => {
-          console.warn("Cloud offline / sync error:", err);
-        });
-      }
-    } catch (e) {
-      console.warn("Firebase init skipped:", e);
-    }
-
-    function init() {
-      renderCategoryPills();
-      renderCatalog();
+      return select.value === '__custom__' ? (customInput.value.trim() || 'General') : select.value;
     }
 
     function setSection(sec) {
       window.currentSection = sec;
       currentCategory = 'all';
-      document.querySelectorAll('.nav-tab').forEach(t => {
-        t.className = 'nav-tab px-3.5 py-1.5 rounded-lg text-xs font-semibold text-stone-600 transition flex items-center gap-1.5 hover:text-stone-900';
-      });
-      const activeTab = document.getElementById(`tab-${sec}`);
-      if (activeTab) {
-        activeTab.className = 'nav-tab px-3.5 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1.5 bg-white text-stone-900 shadow-xs';
-      }
-
       renderCategoryPills();
-      renderCatalog();
+      renderActiveView();
     }
 
     function setCategory(cat) {
@@ -675,63 +1834,972 @@
 
     function handleSearch(val) {
       searchQuery = (val || '').trim().toLowerCase();
-      renderCatalog();
+      if (window.currentSection === 'home' && searchQuery.length > 0) {
+        window.currentSection = 'recipes';
+        renderCategoryPills();
+      }
+      renderActiveView();
     }
 
-    // Category pills now include ANY custom category ever entered
     function renderCategoryPills() {
+      const wrapper = document.getElementById('category-bar-wrapper');
+      const isSpecSection = ['recipes', 'sops', 'barista'].includes(window.currentSection);
+      if (!isSpecSection) {
+        wrapper.classList.add('hidden');
+        return;
+      }
+      wrapper.classList.remove('hidden');
+
       const el = document.getElementById('category-pills');
       const cats = ["All", ...getAllCategoriesForSection(window.currentSection)];
       el.innerHTML = cats.map(c => `
-        <button onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
-          currentCategory === c.toLowerCase() ? 'bg-stone-900 text-white shadow-xs' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+        <button type="button" onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
+          currentCategory === c.toLowerCase() ? 'bg-brand-forest text-brand-cream shadow-2xs' : 'bg-white border border-brand-border text-brand-forest hover:bg-brand-cream'
         }">${c}</button>
       `).join('');
     }
 
+    function renderActiveView() {
+      const homeView = document.getElementById('home-view');
+      const catalogView = document.getElementById('catalog-view');
+      const stockView = document.getElementById('stock-view');
+      const haccpView = document.getElementById('haccp-view');
+      const emptyState = document.getElementById('empty-state');
+
+      homeView.classList.add('hidden');
+      catalogView.classList.add('hidden');
+      stockView.classList.add('hidden');
+      haccpView.classList.add('hidden');
+      emptyState.classList.add('hidden');
+
+      if (window.currentSection === 'home') {
+        homeView.classList.remove('hidden');
+      } else if (window.currentSection === 'stock') {
+        stockView.classList.remove('hidden');
+        renderStockEngine();
+      } else if (window.currentSection === 'haccp') {
+        haccpView.classList.remove('hidden');
+        renderHaccpView();
+      } else {
+        renderCatalog();
+      }
+    }
+
+    // Compact clickable list rows
     function renderCatalog() {
-      const grid = document.getElementById('catalog-view');
+      const list = document.getElementById('catalog-view');
       const empty = document.getElementById('empty-state');
       const items = (window.specs || []).filter(item => {
         if (item.section !== window.currentSection) return false;
         if (currentCategory !== 'all' && item.category?.toLowerCase() !== currentCategory) return false;
-        if (searchQuery && !item.title?.toLowerCase().includes(searchQuery)) return false;
+        if (searchQuery && !item.title?.toLowerCase().includes(searchQuery) && !item.category?.toLowerCase().includes(searchQuery)) return false;
         return true;
       });
 
-      document.getElementById('active-count').innerText = `${items.length} items`;
-      
+      document.getElementById('active-count').textContent = `${items.length} items`;
+
       if (items.length === 0) {
-        grid.innerHTML = '';
-        grid.classList.add('hidden');
+        list.innerHTML = '';
+        list.classList.add('hidden');
         empty.classList.remove('hidden');
         return;
       }
 
       empty.classList.add('hidden');
-      grid.classList.remove('hidden');
-      grid.innerHTML = items.map(item => `
-        <div onclick="openDetail('${item.id}')" class="bg-white rounded-xl border border-brand-border hover:border-stone-400 cursor-pointer overflow-hidden shadow-xs hover:shadow-md transition flex flex-col active:scale-[0.98]">
-          ${item.image ? `
-            <div class="h-28 w-full bg-stone-100 overflow-hidden relative">
-              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover">
-              <span class="absolute top-2 left-2 bg-black/60 backdrop-blur-xs text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">
-                ${item.category || 'Spec'}
-              </span>
+      list.classList.remove('hidden');
+
+      const renderRow = (item) => `
+        <button type="button" onclick="openDetail('${item.id}')" class="w-full bg-white rounded-xl border border-brand-border hover:border-brand-terracotta px-4 py-3 text-left shadow-2xs hover:shadow-sm transition flex items-center justify-between gap-3 active:scale-[0.995]">
+          <div class="flex items-center gap-3 min-w-0">
+            <span class="shrink-0 bg-brand-forest text-brand-cream text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wide">
+              ${item.subCategory ? item.subCategory : (item.category || 'Spec')}
+            </span>
+            <div class="min-w-0">
+              <div class="font-bold text-sm text-brand-forest truncate">${item.title}</div>
+              <div class="text-[11px] text-brand-forest/70 truncate">${item.targetTime || 'Standard'} • ${item.shelfLife || 'Fresh'}</div>
             </div>
-          ` : `
-            <div class="h-20 ${item.color || 'bg-stone-800'} flex items-center justify-center relative text-white">
-              <i class="ph-bold ph-cooking-pot text-2xl"></i>
-              <span class="absolute top-2 left-2 bg-black/40 text-white text-[9px] font-black uppercase px-1.5 py-0.5 rounded">
-                ${item.category || 'Spec'}
-              </span>
+          </div>
+          <div class="flex items-center gap-2 shrink-0 text-brand-rust">
+            <span class="hidden sm:inline text-[11px] font-semibold text-brand-forest/75">${item.baseUnit || ''}</span>
+            <i class="ph-bold ph-caret-right text-sm"></i>
+          </div>
+        </button>
+      `;
+
+      const PREFERRED_SUB_ORDER = ['Brownies', 'Cookies', 'No-Bake', 'Loaf Cakes & Sponges', 'Puddings'];
+
+      const renderGroupedBySubCategory = (groupItems, isInsideAllView) => {
+        const sorted = [...groupItems].sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        const hasAnySub = sorted.some(it => it.subCategory && it.subCategory.trim());
+        if (!hasAnySub) {
+          return `<div class="flex flex-col gap-2">${sorted.map(renderRow).join('')}</div>`;
+        }
+
+        const subSet = new Set();
+        PREFERRED_SUB_ORDER.forEach(pref => {
+          if (sorted.some(it => (it.subCategory || '').trim().toLowerCase() === pref.toLowerCase())) {
+            subSet.add(pref);
+          }
+        });
+        sorted.forEach(it => {
+          const sc = (it.subCategory || '').trim();
+          if (sc && !Array.from(subSet).some(x => x.toLowerCase() === sc.toLowerCase())) {
+            subSet.add(sc);
+          }
+        });
+
+        const blocks = [];
+        subSet.forEach(subName => {
+          const matching = sorted.filter(it => (it.subCategory || '').trim().toLowerCase() === subName.toLowerCase());
+          if (matching.length) {
+            blocks.push(`
+              <div class="${isInsideAllView ? 'pl-2 sm:pl-3 border-l-2 border-brand-terracotta/40 space-y-1.5' : 'space-y-2 pt-2 first:pt-0'}">
+                <div class="flex items-center justify-between px-1">
+                  <h4 class="text-[11px] font-black uppercase tracking-wider text-brand-terracotta flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-brand-terracotta"></span>
+                    <span>${subName}</span>
+                  </h4>
+                  <span class="text-[10px] font-semibold text-brand-forest/55">${matching.length}</span>
+                </div>
+                <div class="flex flex-col gap-2">
+                  ${matching.map(renderRow).join('')}
+                </div>
+              </div>
+            `);
+          }
+        });
+
+        const ungrouped = sorted.filter(it => !(it.subCategory || '').trim());
+        if (ungrouped.length) {
+          blocks.push(`
+            <div class="${isInsideAllView ? 'pl-2 sm:pl-3 border-l-2 border-brand-border space-y-1.5' : 'space-y-2 pt-2'}">
+              <div class="flex items-center justify-between px-1">
+                <h4 class="text-[11px] font-black uppercase tracking-wider text-brand-forest/65">General</h4>
+                <span class="text-[10px] font-semibold text-brand-forest/55">${ungrouped.length}</span>
+              </div>
+              <div class="flex flex-col gap-2">
+                ${ungrouped.map(renderRow).join('')}
+              </div>
             </div>
-          `}
-          <div class="p-2.5">
-            <h4 class="font-black text-xs text-stone-900 leading-snug line-clamp-2">${item.title}</h4>
-            <div class="mt-1 text-[10px] text-stone-500 font-medium">${item.targetTime || 'Standard'} • ${item.shelfLife || 'Fresh'}</div>
+          `);
+        }
+
+        return `<div class="space-y-3">${blocks.join('')}</div>`;
+      };
+
+      // When viewing "All", group strictly in the top pill category order
+      if (currentCategory === 'all') {
+        const orderedCategories = getAllCategoriesForSection(window.currentSection);
+        const groupsHtml = orderedCategories.map(catName => {
+          const groupItems = items
+            .filter(it => (it.category || '').trim().toLowerCase() === catName.toLowerCase());
+          if (groupItems.length === 0) return '';
+          return `
+            <div class="space-y-2 pt-2 first:pt-0">
+              <div class="flex items-center justify-between px-1 border-b border-brand-border pb-1">
+                <h3 class="text-xs font-black uppercase tracking-wider text-brand-rust">${catName}</h3>
+                <span class="text-[11px] font-semibold text-brand-forest/60">${groupItems.length}</span>
+              </div>
+              ${renderGroupedBySubCategory(groupItems, true)}
+            </div>
+          `;
+        }).filter(Boolean);
+
+        const matchedIds = new Set(
+          orderedCategories.flatMap(catName =>
+            items
+              .filter(it => (it.category || '').trim().toLowerCase() === catName.toLowerCase())
+              .map(it => it.id)
+          )
+        );
+        const leftovers = items.filter(it => !matchedIds.has(it.id));
+        if (leftovers.length > 0) {
+          groupsHtml.push(`
+            <div class="space-y-2 pt-2">
+              <div class="flex items-center justify-between px-1 border-b border-brand-border pb-1">
+                <h3 class="text-xs font-black uppercase tracking-wider text-brand-rust">Other</h3>
+                <span class="text-[11px] font-semibold text-brand-forest/60">${leftovers.length}</span>
+              </div>
+              ${renderGroupedBySubCategory(leftovers, true)}
+            </div>
+          `);
+        }
+
+        list.innerHTML = groupsHtml.join('');
+        return;
+      }
+
+      list.innerHTML = renderGroupedBySubCategory(items, false);
+    }
+
+    // ==================== STOCK & ORDER ENGINE ====================
+    function getTargetPar(item) {
+      const win = stockState.deliveryWindow;
+      if (win === 'weekend_buffer') return Number(item.weekendPar || 0);
+      if (win === 'next_fri') {
+        return Math.max(Number(item.weekdayPar || 0), Math.round((Number(item.weekdayPar || 0) + Number(item.weekendPar || 0)) / 2));
+      }
+      return Number(item.weekdayPar || 0);
+    }
+
+    function getEffectiveAssignment(item) {
+      const move = stockState.rebalancedMoves && stockState.rebalancedMoves[item.id];
+      if (move && move.toSupplier) {
+        return {
+          supplierId: move.toSupplier,
+          unitPrice: Number(move.unitPrice),
+          isRebalanced: true,
+          fromSupplier: move.fromSupplier,
+          delta: Number(move.delta || 0)
+        };
+      }
+      return {
+        supplierId: item.primarySupplier,
+        unitPrice: Number(item.unitPrice),
+        isRebalanced: false,
+        fromSupplier: null,
+        delta: 0
+      };
+    }
+
+    function getItemOrderCalc(item) {
+      const count = Math.max(0, Number(stockState.counts[item.id] || 0));
+      const targetPar = getTargetPar(item);
+      const rawNeed = Math.max(0, targetPar - count);
+      const assign = getEffectiveAssignment(item);
+      const supplier = stockState.suppliers[assign.supplierId];
+
+      let orderQty = rawNeed;
+      if (supplier && supplier.isStanding && !supplier.standingEnabled && item.standingLine) {
+        orderQty = 0;
+      }
+
+      const lineCost = orderQty * assign.unitPrice;
+      return {
+        count,
+        targetPar,
+        orderQty,
+        supplierId: assign.supplierId,
+        unitPrice: assign.unitPrice,
+        lineCost,
+        isRebalanced: assign.isRebalanced,
+        fromSupplier: assign.fromSupplier,
+        delta: assign.delta
+      };
+    }
+
+    function computeSupplierBaskets() {
+      const baskets = {};
+      Object.keys(stockState.suppliers).forEach((supId) => {
+        const sup = stockState.suppliers[supId];
+        baskets[supId] = {
+          supplier: sup,
+          total: 0,
+          lineCount: 0,
+          items: [],
+          minOrder: Number(sup.minOrder || 0),
+          shortfall: 0,
+          meetsMinimum: true,
+          progressPct: 100
+        };
+      });
+
+      stockState.items.forEach((item) => {
+        const calc = getItemOrderCalc(item);
+        if (calc.orderQty > 0 && baskets[calc.supplierId]) {
+          const b = baskets[calc.supplierId];
+          b.total += calc.lineCost;
+          b.lineCount += 1;
+          b.items.push({ item, calc });
+        }
+      });
+
+      Object.keys(baskets).forEach((supId) => {
+        const b = baskets[supId];
+        if (b.minOrder > 0) {
+          b.shortfall = Math.max(0, b.minOrder - b.total);
+          b.meetsMinimum = b.total >= b.minOrder;
+          b.progressPct = Math.min(100, Math.round((b.total / b.minOrder) * 100));
+        } else {
+          b.shortfall = 0;
+          b.meetsMinimum = true;
+          b.progressPct = b.total > 0 ? 100 : 0;
+        }
+      });
+
+      return baskets;
+    }
+
+    function runSmartRebalance() {
+      stockState.rebalancedMoves = {};
+      stockState.rebalanceReport = null;
+
+      const baskets = computeSupplierBaskets();
+      const underMinSuppliers = Object.values(baskets).filter((b) => b.minOrder > 0 && b.shortfall > 0.009);
+
+      if (underMinSuppliers.length === 0) {
+        saveStockState();
+        renderStockEngine();
+        showToast('All minimum order thresholds are already met.');
+        return;
+      }
+
+      const movesLog = [];
+      let netCostDelta = 0;
+
+      underMinSuppliers.forEach((targetBasket) => {
+        const targetId = targetBasket.supplier.id;
+        let currentTotal = targetBasket.total;
+        const minReq = targetBasket.minOrder;
+
+        const candidates = [];
+        stockState.items.forEach((item) => {
+          const calc = getItemOrderCalc(item);
+          if (
+            calc.orderQty > 0 &&
+            calc.supplierId !== targetId &&
+            item.backupSupplier === targetId &&
+            typeof item.backupPrice === 'number' &&
+            item.backupPrice > 0
+          ) {
+            const oldCost = calc.orderQty * calc.unitPrice;
+            const newCost = calc.orderQty * item.backupPrice;
+            const delta = newCost - oldCost;
+            candidates.push({
+              item,
+              qty: calc.orderQty,
+              fromSupplier: calc.supplierId,
+              toSupplier: targetId,
+              oldPrice: calc.unitPrice,
+              newPrice: item.backupPrice,
+              newCost,
+              delta
+            });
+          }
+        });
+
+        candidates.sort((a, b) => a.delta - b.delta);
+
+        for (const cand of candidates) {
+          if (currentTotal >= minReq) break;
+          stockState.rebalancedMoves[cand.item.id] = {
+            fromSupplier: cand.fromSupplier,
+            toSupplier: cand.toSupplier,
+            unitPrice: cand.newPrice,
+            oldPrice: cand.oldPrice,
+            qty: cand.qty,
+            delta: cand.delta
+          };
+          currentTotal += cand.newCost;
+          netCostDelta += cand.delta;
+          movesLog.push({
+            itemName: cand.item.name,
+            qty: cand.qty,
+            fromName: stockState.suppliers[cand.fromSupplier]?.shortLabel || cand.fromSupplier,
+            toName: stockState.suppliers[cand.toSupplier]?.shortLabel || cand.toSupplier,
+            delta: cand.delta
+          });
+        }
+      });
+
+      const updatedBaskets = computeSupplierBaskets();
+      const remainingShortfalls = Object.values(updatedBaskets).filter((b) => b.minOrder > 0 && b.shortfall > 0.009);
+
+      stockState.rebalanceReport = {
+        moves: movesLog,
+        netCostDelta,
+        remainingShortfalls: remainingShortfalls.map((b) => ({ name: b.supplier.shortLabel, shortfall: b.shortfall }))
+      };
+
+      saveStockState();
+      renderStockEngine();
+      showToast(
+        movesLog.length > 0
+          ? `Rebalanced ${movesLog.length} line(s) • Net impact ${formatSignedGBP(netCostDelta)}`
+          : 'No backup SKUs available to bridge the current shortfall.',
+        movesLog.length === 0
+      );
+    }
+
+    function undoSmartRebalance() {
+      stockState.rebalancedMoves = {};
+      stockState.rebalanceReport = null;
+      saveStockState();
+      renderStockEngine();
+      showToast('Rebalance reset — primary supplier SKUs restored.');
+    }
+
+    function setCountMode(mode) {
+      stockState.countMode = mode;
+      saveStockState();
+      renderStockEngine();
+    }
+
+    function setDeliveryWindow(val) {
+      stockState.deliveryWindow = val;
+      saveStockState();
+      renderStockEngine();
+      showToast('Delivery drop window updated — target pars recalculated.');
+    }
+
+    function setBigWalkDay(day) {
+      stockState.bigWalkDay = day;
+      const todayName = DAYS_OF_WEEK[new Date().getDay()];
+      if (todayName === day) stockState.countMode = 'weekly';
+      saveStockState();
+      renderStockEngine();
+      showToast(`Big Walk-Through Day set to ${day}.`);
+    }
+
+    function setStockZoneFilter(zone) {
+      stockState.activeZone = zone;
+      saveStockState();
+      renderStockEngine();
+    }
+
+    function stepStockCount(id, delta) {
+      stockState.counts[id] = Math.max(0, (Number(stockState.counts[id]) || 0) + delta);
+      saveStockState();
+      renderStockEngine();
+    }
+
+    function setStockCountDirect(id, val) {
+      stockState.counts[id] = Math.max(0, parseInt(val, 10) || 0);
+      saveStockState();
+      renderStockEngine();
+    }
+
+    function updateItemPar(id, field, val) {
+      if (!isManager) return;
+      const num = Math.max(0, parseInt(val, 10) || 0);
+      stockState.items = stockState.items.map(it => it.id === id ? { ...it, [field]: num } : it);
+      saveStockState();
+      renderStockEngine();
+      showToast(`Updated ${field === 'weekdayPar' ? 'Weekday' : 'Weekend'} Par to ${num}.`);
+    }
+
+    function zeroStockCounts() {
+      Object.keys(stockState.counts).forEach(k => { stockState.counts[k] = 0; });
+      stockState.rebalancedMoves = {};
+      stockState.rebalanceReport = null;
+      saveStockState();
+      renderStockEngine();
+      showToast('All active stock counts zeroed.');
+    }
+
+    function toggleStandingSupplier(id) {
+      if (!stockState.suppliers[id]) return;
+      stockState.suppliers[id].standingEnabled = !stockState.suppliers[id].standingEnabled;
+      saveStockState();
+      renderStockEngine();
+      showToast(`${stockState.suppliers[id].name} standing order ${stockState.suppliers[id].standingEnabled ? 'enabled' : 'paused'}.`);
+    }
+
+    function renderStockEngine() {
+      const todayDay = DAYS_OF_WEEK[new Date().getDay()];
+      const quickBtn = document.getElementById('modeQuickBtn');
+      const weeklyBtn = document.getElementById('modeWeeklyBtn');
+      const badge = document.getElementById('walkThroughBadge');
+
+      const quickTotal = stockState.items.filter(i => i.quickCount).length;
+      document.getElementById('quickCountSub').textContent = `${quickTotal} Core Fast-Movers`;
+      document.getElementById('weeklyCountSub').textContent = `All ${stockState.items.length} Kitchen Lines`;
+
+      if (stockState.countMode === 'quick') {
+        quickBtn.className = 'py-2 px-3 rounded-lg text-xs font-bold bg-brand-forest text-brand-cream shadow-2xs transition flex flex-col items-center justify-center';
+        weeklyBtn.className = 'py-2 px-3 rounded-lg text-xs font-semibold text-brand-forest hover:bg-brand-border/60 transition flex flex-col items-center justify-center';
+      } else {
+        weeklyBtn.className = 'py-2 px-3 rounded-lg text-xs font-bold bg-brand-forest text-brand-cream shadow-2xs transition flex flex-col items-center justify-center';
+        quickBtn.className = 'py-2 px-3 rounded-lg text-xs font-semibold text-brand-forest hover:bg-brand-border/60 transition flex flex-col items-center justify-center';
+      }
+
+      if (todayDay === stockState.bigWalkDay) {
+        badge.textContent = `Today is ${stockState.bigWalkDay} (Big Walk Day)`;
+        badge.className = 'text-[11px] font-bold px-2 py-0.5 rounded-full bg-brand-terracotta/15 text-brand-rust border border-brand-terracotta/40';
+      } else {
+        badge.textContent = `Full Sweep: ${stockState.bigWalkDay}s`;
+        badge.className = 'text-[11px] font-semibold px-2 py-0.5 rounded-full bg-brand-cream text-brand-forest border border-brand-border';
+      }
+
+      document.getElementById('deliveryWindowSelect').value = stockState.deliveryWindow;
+      document.getElementById('bigWalkDaySelect').value = stockState.bigWalkDay;
+
+      // Standing orders
+      const standingContainer = document.getElementById('standingOrdersContainer');
+      const standingSups = ['rogers', 'milkman'].map(id => stockState.suppliers[id]).filter(Boolean);
+      standingContainer.innerHTML = standingSups.map(sup => {
+        const active = Boolean(sup.standingEnabled);
+        return `
+          <button
+            type="button"
+            onclick="toggleStandingSupplier('${sup.id}')"
+            class="px-3 py-2 rounded-xl border text-left transition flex items-center gap-2.5 ${
+              active
+                ? 'bg-brand-forest text-brand-cream border-brand-forest'
+                : 'bg-brand-cream text-brand-forest/70 border-brand-border'
+            }"
+          >
+            <span class="w-2.5 h-2.5 rounded-full ${active ? 'bg-brand-terracotta' : 'bg-brand-forest/30'}"></span>
+            <div>
+              <div class="text-xs font-bold leading-tight">${sup.name} Standing</div>
+              <div class="text-[10px] opacity-80">${sup.daysText} • ${active ? 'Active' : 'Paused'}</div>
+            </div>
+          </button>
+        `;
+      }).join('');
+
+      // Supplier baskets & rebalancer
+      const baskets = computeSupplierBaskets();
+      const anyShortfall = Object.values(baskets).some(b => b.minOrder > 0 && b.shortfall > 0.009);
+      const hasMoves = Object.keys(stockState.rebalancedMoves || {}).length > 0;
+
+      let totalOrderLines = 0;
+      Object.values(baskets).forEach(b => { totalOrderLines += b.lineCount; });
+      document.getElementById('headerOrderCountBadge').textContent = String(totalOrderLines);
+
+      document.getElementById('rebalanceActions').innerHTML = `
+        <button
+          type="button"
+          onclick="runSmartRebalance()"
+          class="px-3 py-1.5 rounded-xl font-bold text-xs transition flex items-center gap-1.5 ${
+            anyShortfall
+              ? 'bg-brand-terracotta hover:bg-brand-rust text-white shadow-xs'
+              : 'bg-brand-cream hover:bg-brand-border text-brand-forest border border-brand-border'
+          }"
+        >
+          <i class="ph-bold ph-arrows-left-right"></i>
+          <span>Smart Rebalance (Lowest Cost Impact)</span>
+        </button>
+        ${hasMoves ? `<button type="button" onclick="undoSmartRebalance()" class="px-3 py-1.5 rounded-xl bg-white hover:bg-brand-cream text-brand-rust border border-brand-border font-bold text-xs transition">Undo Rebalance</button>` : ''}
+      `;
+
+      const auditBox = document.getElementById('rebalanceAuditBox');
+      if (stockState.rebalanceReport && hasMoves) {
+        auditBox.classList.remove('hidden');
+        const netDelta = stockState.rebalanceReport.netCostDelta;
+        const badgeEl = document.getElementById('rebalanceNetDeltaBadge');
+        badgeEl.textContent = `Net Cost Change: ${formatSignedGBP(netDelta)}`;
+        badgeEl.className = `font-mono text-xs font-bold px-2.5 py-0.5 rounded-full ${
+          netDelta <= 0 ? 'bg-brand-forest text-brand-cream' : 'bg-brand-terracotta text-white'
+        }`;
+        document.getElementById('rebalanceMovesList').innerHTML = stockState.rebalanceReport.moves.map(m => `
+          <li class="flex items-center justify-between gap-2 bg-white px-3 py-1.5 rounded-lg border border-brand-border">
+            <span>Moved <strong>${m.qty}x ${m.itemName}</strong> from ${m.fromName} → <strong class="text-brand-rust">${m.toName}</strong></span>
+            <span class="font-mono font-bold">${formatSignedGBP(m.delta)}</span>
+          </li>
+        `).join('');
+      } else {
+        auditBox.classList.add('hidden');
+      }
+
+      document.getElementById('supplierCardsGrid').innerHTML = Object.values(baskets).map(b => {
+        const hasMin = b.minOrder > 0;
+        let statusPill = '';
+        let barColor = 'bg-brand-forest';
+
+        if (!hasMin) {
+          statusPill = b.total > 0
+            ? '<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-forest text-brand-cream">READY</span>'
+            : '<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-cream text-brand-forest/70 border border-brand-border">NO MIN</span>';
+        } else if (b.meetsMinimum) {
+          statusPill = '<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-forest text-brand-cream">MIN MET</span>';
+        } else if (b.total > 0) {
+          statusPill = `<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-terracotta text-white">-${formatGBP(b.shortfall)}</span>`;
+          barColor = 'bg-brand-terracotta';
+        } else {
+          statusPill = `<span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-brand-cream text-brand-rust border border-brand-border">MIN ${formatGBP(b.minOrder)}</span>`;
+          barColor = 'bg-brand-rust/40';
+        }
+
+        const pct = hasMin ? b.progressPct : (b.total > 0 ? 100 : 0);
+        return `
+          <div class="rounded-xl bg-brand-cream/55 border ${hasMin && !b.meetsMinimum && b.total > 0 ? 'border-brand-terracotta' : 'border-brand-border'} p-3 flex flex-col justify-between gap-2">
+            <div class="flex items-start justify-between gap-1.5">
+              <div>
+                <div class="text-xs font-black text-brand-forest">${b.supplier.shortLabel}</div>
+                <div class="text-[10px] text-brand-forest/70">${b.supplier.daysText}</div>
+              </div>
+              ${statusPill}
+            </div>
+            <div>
+              <div class="flex items-baseline justify-between">
+                <span class="font-mono text-base font-black text-brand-forest tabular-nums">${formatGBP(b.total)}</span>
+                <span class="text-[11px] text-brand-forest/75 tabular-nums">${b.lineCount} line${b.lineCount === 1 ? '' : 's'}</span>
+              </div>
+              <div class="w-full h-1.5 rounded-full bg-brand-border overflow-hidden mt-1.5">
+                <div class="h-full ${barColor} transition-all duration-300" style="width: ${pct}%"></div>
+              </div>
+              <div class="flex justify-between text-[10px] text-brand-forest/70 mt-1 tabular-nums">
+                <span>${hasMin ? `Min ${formatGBP(b.minOrder)}` : 'Flexible Min'}</span>
+                <span>${hasMin ? `${b.progressPct}%` : (b.supplier.isStanding ? 'Standing' : 'Open')}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Zone pills
+      const zones = ['ALL', ...STORAGE_ZONES];
+      document.getElementById('zoneFilterPills').innerHTML = zones.map(z => {
+        const active = stockState.activeZone === z;
+        return `
+          <button
+            type="button"
+            onclick="setStockZoneFilter('${z}')"
+            class="px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap border transition ${
+              active
+                ? 'bg-brand-forest text-brand-cream border-brand-forest'
+                : 'bg-white text-brand-forest border-brand-border hover:bg-brand-cream'
+            }"
+          >
+            ${z === 'ALL' ? 'All Zones' : z}
+          </button>
+        `;
+      }).join('');
+
+      document.getElementById('managerParHint').textContent = isManager
+        ? 'Manager Unlocked: Edit Weekday & Weekend Pars directly on any row below'
+        : 'Unlock Manager Mode (1234) to edit Weekday & Weekend Pars';
+
+      // Filter and group stock lines
+      const filtered = stockState.items.filter(item => {
+        if (stockState.countMode === 'quick' && !item.quickCount) return false;
+        if (stockState.activeZone !== 'ALL' && item.zone !== stockState.activeZone) return false;
+        if (searchQuery) {
+          const supName = stockState.suppliers[item.primarySupplier]?.name || '';
+          const bakName = item.backupSupplier ? (stockState.suppliers[item.backupSupplier]?.name || '') : '';
+          const hay = `${item.name} ${item.sku || ''} ${item.zone} ${supName} ${bakName}`.toLowerCase();
+          if (!hay.includes(searchQuery)) return false;
+        }
+        return true;
+      });
+
+      const container = document.getElementById('stockItemsContainer');
+      if (filtered.length === 0) {
+        container.innerHTML = `<div class="rounded-2xl bg-white border border-brand-border p-8 text-center text-xs text-brand-forest/70">No stock lines match your current filter. Switch to Weekly Full Walk or clear search.</div>`;
+        return;
+      }
+
+      const grouped = {};
+      filtered.forEach(item => {
+        if (!grouped[item.zone]) grouped[item.zone] = [];
+        grouped[item.zone].push(item);
+      });
+
+      container.innerHTML = Object.entries(grouped).map(([zoneName, zoneItems]) => `
+        <div class="rounded-2xl bg-white border border-brand-border overflow-hidden shadow-2xs">
+          <div class="px-4 py-2.5 bg-brand-forest text-brand-cream flex items-center justify-between">
+            <h4 class="text-xs font-black uppercase tracking-wider">${zoneName}</h4>
+            <span class="text-[11px] font-mono text-brand-cream/80">${zoneItems.length} item${zoneItems.length === 1 ? '' : 's'}</span>
+          </div>
+          <div class="divide-y divide-brand-border/70">
+            ${zoneItems.map(item => {
+              const calc = getItemOrderCalc(item);
+              const supObj = stockState.suppliers[calc.supplierId] || { shortLabel: calc.supplierId };
+              const backupObj = item.backupSupplier ? stockState.suppliers[item.backupSupplier] : null;
+              const needsOrder = calc.orderQty > 0;
+
+              return `
+                <div class="p-3.5 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3 hover:bg-brand-cream/35 transition">
+                  <div class="space-y-1 min-w-0 flex-1">
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <span class="font-bold text-sm text-brand-forest">${item.name}</span>
+                      ${item.sku ? `<span class="font-mono text-[10px] px-2 py-0.5 rounded bg-brand-cream text-brand-forest border border-brand-border">SKU ${item.sku}</span>` : ''}
+                      ${
+                        calc.isRebalanced
+                          ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-brand-terracotta text-white">Rebalanced → ${supObj.shortLabel}</span>`
+                          : `<span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-brand-cream text-brand-rust border border-brand-border">${supObj.shortLabel} • ${formatGBP(calc.unitPrice)}</span>`
+                      }
+                    </div>
+
+                    <div class="flex items-center gap-3 text-xs text-brand-forest/80 flex-wrap tabular-nums">
+                      ${
+                        isManager
+                          ? `<label class="inline-flex items-center gap-1 font-bold text-brand-forest">
+                               Weekday Par:
+                               <input type="number" min="0" value="${item.weekdayPar}" onchange="updateItemPar('${item.id}', 'weekdayPar', this.value)" class="w-14 px-1.5 py-0.5 rounded bg-brand-cream border border-brand-terracotta font-mono text-xs text-center font-bold" />
+                             </label>
+                             <label class="inline-flex items-center gap-1 font-bold text-brand-forest">
+                               Weekend Par:
+                               <input type="number" min="0" value="${item.weekendPar}" onchange="updateItemPar('${item.id}', 'weekendPar', this.value)" class="w-14 px-1.5 py-0.5 rounded bg-brand-cream border border-brand-terracotta font-mono text-xs text-center font-bold" />
+                             </label>`
+                          : `<span>Weekday Par: <strong class="text-brand-forest">${item.weekdayPar}</strong></span>
+                             <span>Weekend Par: <strong class="text-brand-forest">${item.weekendPar}</strong></span>`
+                      }
+                      <span>Active Target: <strong class="text-brand-terracotta">${calc.targetPar}</strong></span>
+                      ${backupObj && item.backupPrice ? `<span class="text-[11px] text-brand-forest/65">Backup: ${backupObj.shortLabel} (${formatGBP(item.backupPrice)})</span>` : ''}
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between lg:justify-end gap-3 pt-2 lg:pt-0 border-t lg:border-t-0 border-brand-border/60">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-[10px] uppercase tracking-wider font-black text-brand-forest/70 mr-1">In Stock</span>
+                      <button type="button" onclick="stepStockCount('${item.id}', -1)" class="w-10 h-10 rounded-xl bg-brand-cream hover:bg-brand-border active:scale-95 border border-brand-border text-brand-forest font-black text-lg flex items-center justify-center">−</button>
+                      <input type="number" min="0" step="1" value="${calc.count}" onchange="setStockCountDirect('${item.id}', this.value)" class="w-14 h-10 rounded-xl bg-white border border-brand-border text-center font-mono text-sm font-black text-brand-forest tabular-nums focus:outline-none focus:border-brand-terracotta" />
+                      <button type="button" onclick="stepStockCount('${item.id}', 1)" class="w-10 h-10 rounded-xl bg-brand-cream hover:bg-brand-border active:scale-95 border border-brand-border text-brand-forest font-black text-lg flex items-center justify-center">+</button>
+                    </div>
+
+                    <div class="min-w-[116px] text-right rounded-xl px-3 py-1.5 border ${
+                      needsOrder ? 'bg-brand-terracotta/10 border-brand-terracotta' : 'bg-brand-cream/50 border-brand-border'
+                    }">
+                      <div class="text-[10px] uppercase tracking-wider font-black ${needsOrder ? 'text-brand-rust' : 'text-brand-forest/50'}">Order Qty</div>
+                      <div class="font-mono text-sm font-black tabular-nums ${needsOrder ? 'text-brand-terracotta' : 'text-brand-forest/60'}">
+                        ${calc.orderQty} <span class="text-xs font-bold">(${formatGBP(calc.lineCost)})</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              `;
+            }).join('')}
           </div>
         </div>
+      `).join('');
+    }
+
+    function openSuppliersModal() {
+      const list = document.getElementById('supplierConfigList');
+      list.innerHTML = Object.values(stockState.suppliers).map(sup => `
+        <div class="rounded-xl bg-brand-cream/60 border border-brand-border p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-black text-brand-forest">${sup.name}</div>
+            <div class="text-xs text-brand-rust font-bold">Delivery Days: ${sup.daysText}</div>
+            <div class="text-[11px] text-brand-forest/75">${sup.notes || ''}</div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div>
+              <label class="block text-[10px] uppercase font-black text-brand-forest mb-1">Min Order (£)</label>
+              <input type="number" min="0" step="5" value="${Number(sup.minOrder || 0).toFixed(2)}" onchange="updateSupplierMin('${sup.id}', this.value)" class="w-28 px-2.5 py-1.5 rounded-lg bg-white border border-brand-border font-mono text-xs font-bold text-brand-forest" />
+            </div>
+          </div>
+        </div>
+      `).join('');
+      document.getElementById('suppliersModal').classList.remove('hidden');
+    }
+
+    function updateSupplierMin(id, val) {
+      if (!stockState.suppliers[id]) return;
+      stockState.suppliers[id].minOrder = Math.max(0, parseFloat(val) || 0);
+      saveStockState();
+      renderStockEngine();
+    }
+
+    function closeSuppliersModal() {
+      document.getElementById('suppliersModal').classList.add('hidden');
+      renderStockEngine();
+    }
+
+    function restoreDefaultSuppliers() {
+      stockState.suppliers = structuredClone(DEFAULT_SUPPLIERS);
+      saveStockState();
+      openSuppliersModal();
+      showToast('Restored default LULA supplier rules.');
+    }
+
+    function openNewStockModal() {
+      document.getElementById('newItemName').value = '';
+      document.getElementById('newItemSku').value = '';
+      document.getElementById('stock-modal').classList.remove('hidden');
+    }
+
+    function closeNewStockModal() {
+      document.getElementById('stock-modal').classList.add('hidden');
+    }
+
+    function saveNewStockLine() {
+      const name = document.getElementById('newItemName').value.trim();
+      if (!name) {
+        showToast('Please enter an item name.', true);
+        return;
+      }
+      const id = `custom_${Date.now()}`;
+      const backupSup = document.getElementById('newItemBackupSupplier').value || null;
+      const backupPriceVal = parseFloat(document.getElementById('newItemBackupPrice').value);
+
+      stockState.items.unshift({
+        id,
+        name,
+        zone: document.getElementById('newItemZone').value,
+        sku: document.getElementById('newItemSku').value.trim(),
+        weekdayPar: Math.max(0, parseInt(document.getElementById('newItemWeekdayPar').value, 10) || 0),
+        weekendPar: Math.max(0, parseInt(document.getElementById('newItemWeekendPar').value, 10) || 0),
+        primarySupplier: document.getElementById('newItemPrimarySupplier').value,
+        unitPrice: Math.max(0, parseFloat(document.getElementById('newItemPrice').value) || 0),
+        backupSupplier: backupSup,
+        backupPrice: backupSup && !Number.isNaN(backupPriceVal) && backupPriceVal > 0 ? backupPriceVal : null,
+        quickCount: document.getElementById('newItemQuickCount').checked,
+        standingLine: false
+      });
+      stockState.counts[id] = 0;
+      saveStockState();
+      closeNewStockModal();
+      setSection('stock');
+      showToast(`Added "${name}" to LULA stock list.`);
+    }
+
+    function openSheetSyncModal() {
+      document.getElementById('sheetPasteInput').value = '';
+      document.getElementById('sheetSyncModal').classList.remove('hidden');
+    }
+
+    function closeSheetSyncModal() {
+      document.getElementById('sheetSyncModal').classList.add('hidden');
+    }
+
+    function applySheetPasteSync() {
+      const raw = document.getElementById('sheetPasteInput').value.trim();
+      if (!raw) {
+        showToast('Paste rows from your Master Purchasing Google Sheet first.', true);
+        return;
+      }
+      const rows = raw.split('\n').map(r => r.split('\t'));
+      let updatedCount = 0;
+
+      rows.forEach(cols => {
+        if (cols.length < 7) return;
+        const itemName = (cols[1] || '').trim();
+        const primarySupRaw = (cols[3] || '').trim().toLowerCase();
+        const pilgrimPrice = parseFloat((cols[4] || '').replace(/[£,]/g, ''));
+        const brakesPrice = parseFloat((cols[6] || '').replace(/[£,]/g, ''));
+        const sykesPrice = parseFloat((cols[11] || '').replace(/[£,]/g, ''));
+        if (!itemName || itemName.toLowerCase() === 'item name') return;
+
+        let primaryKey = 'brakes';
+        if (primarySupRaw.includes('pilgrim')) primaryKey = 'pilgrims';
+        else if (primarySupRaw.includes('sykes')) primaryKey = 'sykes';
+        else if (primarySupRaw.includes('zanfish')) primaryKey = 'zanfish';
+        else if (primarySupRaw.includes('rogers')) primaryKey = 'rogers';
+        else if (primarySupRaw.includes('milk')) primaryKey = 'milkman';
+
+        const priceMap = { brakes: brakesPrice, pilgrims: pilgrimPrice, sykes: sykesPrice };
+        const chosenPrice = priceMap[primaryKey] || brakesPrice || pilgrimPrice || sykesPrice || 0;
+
+        const existing = stockState.items.find(it => it.name.toLowerCase().includes(itemName.toLowerCase().slice(0, 14)));
+        if (existing && chosenPrice > 0) {
+          existing.primarySupplier = primaryKey;
+          existing.unitPrice = chosenPrice;
+          updatedCount += 1;
+        }
+      });
+
+      saveStockState();
+      closeSheetSyncModal();
+      renderStockEngine();
+      showToast(updatedCount > 0 ? `Synced ${updatedCount} item prices from Master Sheet.` : 'Checked sheet paste — add new lines via + Stock Line.');
+    }
+
+    function buildOrderSheetText() {
+      const baskets = computeSupplierBaskets();
+      const windowLabel = document.getElementById('deliveryWindowSelect')?.selectedOptions[0]?.textContent || stockState.deliveryWindow;
+      const nowStr = new Date().toLocaleString('en-GB', {
+        weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      });
+
+      const lines = [
+        '====================================================',
+        'LULA COMMERCIAL KITCHEN — SUPPLIER ORDER SHEET',
+        'Location: Greetland, West Yorkshire',
+        `Generated: ${nowStr}`,
+        `Run Window: ${windowLabel}`,
+        `Count Mode: ${stockState.countMode === 'weekly' ? 'Weekly Full Walk-Through' : 'Daily Quick-Count'}`,
+        '====================================================',
+        ''
+      ];
+
+      let grandTotal = 0;
+      let hasAnyOrders = false;
+
+      Object.values(baskets).forEach(b => {
+        if (b.items.length === 0) return;
+        hasAnyOrders = true;
+        grandTotal += b.total;
+        const minStatus = b.minOrder > 0
+          ? (b.meetsMinimum ? `[MIN £${b.minOrder.toFixed(2)} MET]` : `[SHORT £${b.shortfall.toFixed(2)} OF £${b.minOrder.toFixed(2)} MIN]`)
+          : '[NO MIN]';
+
+        lines.push(`--- ${b.supplier.name.toUpperCase()} (${b.supplier.daysText}) ${minStatus} ---`);
+        b.items.forEach(({ item, calc }) => {
+          const skuTag = item.sku ? `[SKU: ${item.sku}]` : '';
+          const rebalTag = calc.isRebalanced ? ` (Rebalanced from ${stockState.suppliers[calc.fromSupplier]?.shortLabel || calc.fromSupplier})` : '';
+          lines.push(`• ${calc.orderQty}x ${item.name} ${skuTag} @ ${formatGBP(calc.unitPrice)} = ${formatGBP(calc.lineCost)}${rebalTag}`);
+        });
+        lines.push(`Supplier Subtotal: ${formatGBP(b.total)}`);
+        lines.push('');
+      });
+
+      if (!hasAnyOrders) {
+        lines.push('No items currently require ordering (Active Stock is at or above Target Par).');
+        lines.push('');
+      }
+
+      lines.push('----------------------------------------------------');
+      lines.push(`TOTAL ESTIMATED ORDER VALUE: ${formatGBP(grandTotal)}`);
+      lines.push('----------------------------------------------------');
+      return { text: lines.join('\n'), grandTotal };
+    }
+
+    function openOrderSheetModal() {
+      const { text, grandTotal } = buildOrderSheetText();
+      document.getElementById('orderSheetTextarea').value = text;
+      document.getElementById('orderSheetMeta').textContent = `Greetland Kitchen • ${stockState.countMode === 'weekly' ? 'Weekly Full Walk' : 'Daily Quick-Count'}`;
+      document.getElementById('orderSheetGrandTotal').textContent = `Total Order: ${formatGBP(grandTotal)}`;
+      document.getElementById('orderSheetModal').classList.remove('hidden');
+    }
+
+    function closeOrderSheetModal() {
+      document.getElementById('orderSheetModal').classList.add('hidden');
+    }
+
+    function copyOrderSheetText() {
+      const ta = document.getElementById('orderSheetTextarea');
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast('Supplier order sheet copied to clipboard!');
+      } catch (err) {
+        showToast('Select text and copy manually.', true);
+      }
+    }
+
+    function downloadOrderSheetTxt() {
+      const { text } = buildOrderSheetText();
+      const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `LULA-Order-Sheet-${new Date().toISOString().slice(0, 10)}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Downloaded order sheet .TXT file.');
+    }
+
+    // ==================== HACCP & SPECS ====================
+    function toggleHaccpItem(id) {
+      haccpChecks = haccpChecks.map(item => item.id === id ? { ...item, done: !item.done } : item);
+      saveToStorage(STORAGE_KEYS.haccp, haccpChecks);
+      renderHaccpView();
+    }
+
+    function resetHaccpChecks() {
+      haccpChecks = haccpChecks.map(item => ({ ...item, done: false }));
+      saveToStorage(STORAGE_KEYS.haccp, haccpChecks);
+      renderHaccpView();
+      showToast('Shift HACCP checks reset.');
+    }
+
+    function renderHaccpView() {
+      document.getElementById('haccp-checklist').innerHTML = haccpChecks.map(item => `
+        <button type="button" onclick="toggleHaccpItem('${item.id}')" class="w-full px-4 py-3.5 text-left flex items-center justify-between gap-3 hover:bg-brand-cream/40 transition text-xs">
+          <div class="flex items-center gap-3">
+            <span class="w-5 h-5 rounded border flex items-center justify-center ${item.done ? 'bg-brand-forest border-brand-forest text-brand-cream' : 'border-brand-border bg-white'}">
+              ${item.done ? '<i class="ph-bold ph-check text-[11px]"></i>' : ''}
+            </span>
+            <span class="font-bold ${item.done ? 'line-through text-brand-forest/40' : 'text-brand-forest'}">${item.label}</span>
+          </div>
+          <span class="text-[11px] font-bold ${item.done ? 'text-brand-forest' : 'text-brand-rust'}">${item.done ? 'Signed Off' : 'Pending'}</span>
+        </button>
       `).join('');
     }
 
@@ -741,17 +2809,15 @@
       currentScale = 1;
       checkedIngredients.clear();
 
-      document.getElementById('modal-title').innerText = currentModalSpec.title;
-      document.getElementById('modal-category-badge').innerText = currentModalSpec.category || 'Spec';
-      document.getElementById('modal-time-badge').innerText = currentModalSpec.baseUnit ? `Yield: ${currentModalSpec.baseUnit}` : 'Standard Batch';
+      document.getElementById('modal-title').textContent = currentModalSpec.title;
+      document.getElementById('modal-category-badge').textContent = currentModalSpec.category || 'Spec';
+      document.getElementById('modal-time-badge').textContent = currentModalSpec.baseUnit ? `Yield: ${currentModalSpec.baseUnit}` : 'Standard Batch';
 
-      // Sticky HUD Elements
-      document.getElementById('hud-oven-setting').innerText = currentModalSpec.targetTime || 'Prep / Ambient Execution';
-      
+      document.getElementById('hud-oven-setting').textContent = currentModalSpec.targetTime || 'Prep / Ambient Execution';
       const timeMatch = (currentModalSpec.targetTime || '').match(/\d+[\-–]\d+\s*m(ins)?|\d+\s*m(ins)?/i);
-      document.getElementById('hud-bake-time').innerText = timeMatch ? timeMatch[0] : (currentModalSpec.targetTime?.slice(0, 15) || 'As Specified');
-      document.getElementById('hud-shelf-life').innerText = currentModalSpec.shelfLife || 'Fresh Store';
-      document.getElementById('hud-probe-temp').innerText = currentModalSpec.probeTemp || 'Core: 88°C Standard';
+      document.getElementById('hud-bake-time').textContent = timeMatch ? timeMatch[0] : (currentModalSpec.targetTime?.slice(0, 22) || 'As Specified');
+      document.getElementById('hud-shelf-life').textContent = currentModalSpec.shelfLife || 'Fresh Store';
+      document.getElementById('hud-probe-temp').textContent = currentModalSpec.probeTemp || 'Core: 88°C Standard';
 
       const editBtn = document.getElementById('modal-edit-btn');
       const deleteBtn = document.getElementById('modal-delete-btn');
@@ -778,11 +2844,8 @@
     }
 
     function toggleIngredientCheck(idx) {
-      if (checkedIngredients.has(idx)) {
-        checkedIngredients.delete(idx);
-      } else {
-        checkedIngredients.add(idx);
-      }
+      if (checkedIngredients.has(idx)) checkedIngredients.delete(idx);
+      else checkedIngredients.add(idx);
       renderDetailContent();
     }
 
@@ -791,130 +2854,108 @@
       const body = document.getElementById('modal-body-content');
       const baseUnit = currentModalSpec.baseUnit || '1x Batch';
 
-      // Multipliers with visible active highlight state
       scaleEl.innerHTML = [0.5, 1, 2, 3, 4].map(m => `
-        <button onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs font-bold transition ${currentScale === m ? 'bg-stone-900 text-white shadow-xs' : 'text-stone-600 hover:text-stone-900'}">${m}x</button>
+        <button type="button" onclick="setScale(${m})" class="px-2.5 py-1 rounded text-xs font-bold transition ${currentScale === m ? 'bg-brand-forest text-brand-cream shadow-2xs' : 'text-brand-forest hover:bg-brand-cream'}">${m}x</button>
       `).join('');
 
       body.innerHTML = `
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
-          <!-- LEFT: Ingredients with Live Batch Scaler -->
-          <div class="lg:col-span-5 bg-stone-50/80 p-4 rounded-2xl border border-stone-200 flex flex-col justify-between">
+          <div class="lg:col-span-5 bg-brand-cream/55 p-4 rounded-2xl border border-brand-border flex flex-col justify-between">
             <div>
-              <div class="flex items-center justify-between mb-2 pb-2 border-b border-stone-200">
+              <div class="flex items-center justify-between mb-2 pb-2 border-b border-brand-border">
                 <div>
-                  <span class="text-xs font-black uppercase text-stone-800 tracking-wider">Ingredients (${currentScale}x)</span>
-                  <p class="text-[10px] text-rose-700 font-bold">${baseUnit ? `Base: ${baseUnit}` : ''}</p>
+                  <span class="text-xs font-black uppercase text-brand-forest tracking-wider">Ingredients (${currentScale}x)</span>
+                  <p class="text-[10px] text-brand-terracotta font-bold">${baseUnit ? `Base: ${baseUnit}` : ''}</p>
                 </div>
-                <span class="text-[10px] text-stone-500 font-semibold">Tap to cross off</span>
+                <span class="text-[10px] text-brand-forest/70 font-semibold">Tap to cross off</span>
               </div>
 
-              <ul class="divide-y divide-stone-200 text-xs">
+              <ul class="divide-y divide-brand-border/70 text-xs">
                 ${(currentModalSpec.ingredients || []).map((ing, idx) => {
                   const parsed = parseIngValue(ing.amount);
                   let displayAmt = ing.amount;
-
                   if (parsed.isNumber) {
                     const scaledNum = Math.round(parsed.num * currentScale * 10) / 10;
                     displayAmt = `${scaledNum}${parsed.unit ? parsed.unit : (ing.unit || '')}`;
                   }
-
                   const isChecked = checkedIngredients.has(idx);
-
                   return `
-                    <li onclick="toggleIngredientCheck(${idx})" class="py-2.5 px-2 flex items-center justify-between cursor-pointer rounded-lg hover:bg-stone-100/70 transition ${isChecked ? 'bg-emerald-50 text-stone-400' : ''}">
+                    <li onclick="toggleIngredientCheck(${idx})" class="py-2.5 px-2 flex items-center justify-between cursor-pointer rounded-lg hover:bg-white/70 transition ${isChecked ? 'bg-white/90 text-brand-forest/40' : ''}">
                       <div class="flex items-center gap-2.5">
-                        <div class="w-4 h-4 rounded border flex items-center justify-center transition ${isChecked ? 'bg-emerald-600 border-emerald-600 text-white' : 'border-stone-300 bg-white'}">
+                        <div class="w-4 h-4 rounded border flex items-center justify-center transition ${isChecked ? 'bg-brand-forest border-brand-forest text-brand-cream' : 'border-brand-border bg-white'}">
                           ${isChecked ? '<i class="ph-bold ph-check text-[10px]"></i>' : ''}
                         </div>
-                        <span class="font-medium ${isChecked ? 'line-through text-stone-400' : 'text-stone-800'}">${ing.name}</span>
+                        <span class="font-medium ${isChecked ? 'line-through text-brand-forest/40' : 'text-brand-forest'}">${ing.name}</span>
                       </div>
-                      <span class="font-bold font-mono text-xs ${isChecked ? 'line-through text-stone-400' : 'text-stone-900'}">${displayAmt}</span>
+                      <span class="font-bold font-mono text-xs ${isChecked ? 'line-through text-brand-forest/40' : 'text-brand-rust'}">${displayAmt}</span>
                     </li>
                   `;
                 }).join('')}
               </ul>
             </div>
             ${checkedIngredients.size > 0 ? `
-              <div class="mt-3 pt-2 border-t border-stone-200 text-right">
-                <button onclick="checkedIngredients.clear(); renderDetailContent();" class="text-[10px] font-bold text-stone-500 hover:text-stone-800 underline">Reset checklist</button>
+              <div class="mt-3 pt-2 border-t border-brand-border text-right">
+                <button type="button" onclick="checkedIngredients.clear(); renderDetailContent();" class="text-[10px] font-bold text-brand-rust hover:text-brand-forest underline">Reset checklist</button>
               </div>
             ` : ''}
           </div>
 
-          <!-- RIGHT: Method & Prep Execution Starting at Top (No Scrolling) -->
           <div class="lg:col-span-7 flex flex-col gap-3">
             <div>
               <div class="flex items-center justify-between mb-2">
-                <h4 class="text-xs font-black uppercase text-stone-800 tracking-wider">Method & Prep Execution</h4>
-                <span class="text-[10px] font-bold text-stone-400 uppercase tracking-widest">Step-by-Step</span>
+                <h4 class="text-xs font-black uppercase text-brand-forest tracking-wider">Method &amp; Prep Execution</h4>
+                <span class="text-[10px] font-bold text-brand-rust uppercase tracking-widest">Step-by-Step</span>
               </div>
               <ol class="space-y-2 text-xs">
                 ${(currentModalSpec.steps || []).map((st, i) => `
-                  <li class="flex items-start gap-3 p-3 rounded-xl bg-stone-50 border border-stone-200/80 hover:border-stone-300 transition">
-                    <span class="w-5 h-5 rounded-full bg-stone-900 text-white font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${i + 1}</span>
-                    <span class="text-stone-800 leading-relaxed font-medium">${st}</span>
+                  <li class="flex items-start gap-3 p-3 rounded-xl bg-brand-cream/45 border border-brand-border hover:border-brand-terracotta/50 transition">
+                    <span class="w-5 h-5 rounded-full bg-brand-forest text-brand-cream font-black text-[10px] flex items-center justify-center shrink-0 mt-0.5 shadow-2xs">${i + 1}</span>
+                    <span class="text-brand-forest leading-relaxed font-medium">${st}</span>
                   </li>
                 `).join('')}
               </ol>
             </div>
           </div>
-
         </div>
       `;
     }
 
-    // OPEN EDIT MODAL PRE-POPULATED
     function openEditModalForCurrentSpec() {
       if (!currentModalSpec) return;
       closeDetailModal();
 
-      document.getElementById('form-modal-heading').innerText = "Edit Spec";
-      document.getElementById('form-modal-subheading').innerText = "Update details, rename, or tweak pre-heat";
+      document.getElementById('form-modal-heading').textContent = "Edit Spec";
+      document.getElementById('form-modal-subheading').textContent = "Update details, rename, or tweak pre-heat";
       document.getElementById('edit-spec-id').value = currentModalSpec.id;
 
-      const sec = currentModalSpec.section || 'recipes';
+      const sec = ['recipes', 'sops', 'barista'].includes(currentModalSpec.section) ? currentModalSpec.section : 'recipes';
       document.getElementById('import-section').value = sec;
       updateCategoryDropdown(sec, currentModalSpec.category);
+      document.getElementById('import-sub-category').value = currentModalSpec.subCategory || '';
 
       document.getElementById('import-title').value = currentModalSpec.title || '';
       document.getElementById('import-base-unit').value = currentModalSpec.baseUnit || '';
       document.getElementById('import-probe').value = currentModalSpec.probeTemp || '';
       document.getElementById('import-time').value = currentModalSpec.targetTime || '';
       document.getElementById('import-shelf').value = currentModalSpec.shelfLife || '';
-
-      const ingText = (currentModalSpec.ingredients || []).map(i => `${i.name}: ${i.amount || ''} ${i.unit || ''}`.trim()).join('\n');
-      document.getElementById('import-ingredients').value = ingText;
-
-      const stepsText = (currentModalSpec.steps || []).join('\n');
-      document.getElementById('import-steps').value = stepsText;
-
-      stagedImage = currentModalSpec.image || null;
+      document.getElementById('import-ingredients').value = (currentModalSpec.ingredients || []).map(i => `${i.name}: ${i.amount || ''} ${i.unit || ''}`.trim()).join('\n');
+      document.getElementById('import-steps').value = (currentModalSpec.steps || []).join('\n');
       document.getElementById('smart-paste-box').value = '';
-
-      const photoStatus = document.getElementById('photo-status');
-      if (stagedImage) {
-        photoStatus.innerText = "Cover photo attached";
-        photoStatus.className = "text-[10px] font-bold text-emerald-600";
-      } else {
-        photoStatus.innerText = "No photo set";
-        photoStatus.className = "text-[10px] font-semibold text-stone-400";
-      }
 
       document.getElementById('import-modal').classList.remove('hidden');
     }
 
-    // MANAGER PIN & LOCK
     function toggleManagerLock() {
       if (isManager) {
         lockManager();
       } else {
-        openPinModal('Enter PIN to access manager mode', () => {
+        openPinModal('Enter PIN to access Manager Mode', () => {
           isManager = true;
           document.getElementById('manager-toolbar').classList.remove('hidden');
-          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-rose-600';
-          document.getElementById('manager-label').innerText = 'Manager';
+          document.getElementById('manager-icon').className = 'ph-bold ph-lock-key-open text-xs text-brand-cream';
+          document.getElementById('manager-label').textContent = 'Manager';
+          renderActiveView();
+          showToast('Manager Mode unlocked — Weekday/Weekend Pars & Specs editable.');
         });
       }
     }
@@ -923,26 +2964,45 @@
       isManager = false;
       document.getElementById('manager-toolbar').classList.add('hidden');
       document.getElementById('manager-icon').className = 'ph-bold ph-lock-key text-xs';
-      document.getElementById('manager-label').innerText = 'Staff Mode';
+      document.getElementById('manager-label').textContent = 'Staff Mode';
+      renderActiveView();
+      showToast('Hub locked to Staff Mode.');
     }
 
-    function promptChangePin() {
+    function openPinChangeModal() {
       openPinModal('Enter current PIN first', () => {
-        const newPin = prompt('Enter new 4-digit PIN:');
-        if (newPin && newPin.length === 4 && !isNaN(newPin)) {
-          managerPin = newPin;
-          localStorage.setItem('lula_pin', newPin);
-          alert('Manager PIN updated successfully.');
-        } else {
-          alert('Invalid PIN. Must be exactly 4 digits.');
-        }
+        document.getElementById('new-pin-input').value = '';
+        document.getElementById('change-pin-modal').classList.remove('hidden');
       });
+    }
+
+    function closeChangePinModal() {
+      document.getElementById('change-pin-modal').classList.add('hidden');
+    }
+
+    async function saveNewPin() {
+      const newPin = document.getElementById('new-pin-input').value.trim();
+      if (/^\d{4}$/.test(newPin)) {
+        managerPin = newPin;
+        localStorage.setItem(STORAGE_KEYS.pin, newPin);
+        if (db) {
+          try {
+            await db.collection("lula_config").doc("manager_pin").set({ pin: newPin, updatedAt: Date.now() }, { merge: true });
+          } catch (err) {
+            console.warn("Cloud PIN sync skipped:", err);
+          }
+        }
+        closeChangePinModal();
+        showToast('Manager PIN updated to ' + newPin + '.');
+      } else {
+        showToast('Enter exactly 4 numeric digits.', true);
+      }
     }
 
     function openPinModal(subtext, cb) {
       pinBuffer = '';
       pinCallback = cb;
-      document.getElementById('pin-subtext').innerText = subtext;
+      document.getElementById('pin-subtext').textContent = subtext;
       updateDots();
       document.getElementById('pin-modal').classList.remove('hidden');
     }
@@ -963,7 +3023,7 @@
               closePinModal();
               if (cb) cb();
             } else {
-              alert('Incorrect PIN');
+              showToast('Incorrect PIN (Manager PIN is 1404).', true);
               pinBuffer = '';
               updateDots();
             }
@@ -980,39 +3040,22 @@
     function updateDots() {
       const dots = document.querySelectorAll('#pin-dots > div');
       dots.forEach((dot, idx) => {
-        dot.className = idx < pinBuffer.length 
-          ? 'w-3 h-3 rounded-full bg-stone-900 border border-stone-900' 
-          : 'w-3 h-3 rounded-full border border-stone-400';
+        dot.className = idx < pinBuffer.length
+          ? 'w-3 h-3 rounded-full bg-brand-terracotta border border-brand-terracotta'
+          : 'w-3 h-3 rounded-full border border-brand-forest';
       });
-    }
-
-    function handleFileSelect(e) {
-      const files = e.target.files;
-      if (files.length) processFile(files[0]);
-    }
-
-    function processFile(file) {
-      if (file.type.startsWith('image/')) {
-        const reader = new FileReader();
-        reader.onload = (e) => { 
-          stagedImage = e.target.result; 
-          const photoStatus = document.getElementById('photo-status');
-          photoStatus.innerText = `Photo set: ${file.name || 'Captured'}`;
-          photoStatus.className = "text-[10px] font-bold text-emerald-600";
-        };
-        reader.readAsDataURL(file);
-      }
     }
 
     function openImportModal() {
       document.getElementById('edit-spec-id').value = '';
-      document.getElementById('form-modal-heading').innerText = "Add New Spec";
-      document.getElementById('form-modal-subheading').innerText = "Paste raw text below to auto-fill all fields instantly";
+      document.getElementById('form-modal-heading').textContent = "Add New Spec";
+      document.getElementById('form-modal-subheading').textContent = "Paste LULA Smart Auto-Fill text below to populate all fields";
       document.getElementById('import-title').value = '';
-      
-      const currentSec = window.currentSection;
+
+      const currentSec = ['recipes', 'sops', 'barista'].includes(window.currentSection) ? window.currentSection : 'recipes';
       document.getElementById('import-section').value = currentSec;
       updateCategoryDropdown(currentSec);
+      document.getElementById('import-sub-category').value = '';
 
       document.getElementById('import-base-unit').value = '1x Base';
       document.getElementById('import-probe').value = '';
@@ -1021,11 +3064,6 @@
       document.getElementById('import-ingredients').value = '';
       document.getElementById('import-steps').value = '';
       document.getElementById('smart-paste-box').value = '';
-
-      stagedImage = null;
-      const photoStatus = document.getElementById('photo-status');
-      photoStatus.innerText = "No photo set";
-      photoStatus.className = "text-[10px] font-semibold text-stone-400";
 
       document.getElementById('import-modal').classList.remove('hidden');
     }
@@ -1038,6 +3076,7 @@
       const editId = document.getElementById('edit-spec-id').value;
       const sec = document.getElementById('import-section').value;
       const cat = getSelectedCategoryFromModal();
+      const subCategory = document.getElementById('import-sub-category').value.trim();
       const title = document.getElementById('import-title').value.trim();
       const baseUnit = document.getElementById('import-base-unit').value.trim() || '1x Base';
       const probeTemp = document.getElementById('import-probe').value.trim() || 'Core: 88°C';
@@ -1047,77 +3086,83 @@
       const rawSteps = document.getElementById('import-steps').value.trim();
 
       if (!title) {
-        alert('Please enter a spec title.');
+        showToast('Please enter a spec title.', true);
         return;
       }
 
-      const submitBtn = document.getElementById('import-submit-btn');
-      submitBtn.innerText = 'Broadcasting...';
-      submitBtn.disabled = true;
-
       const parsedIngredients = rawIng.split('\n').filter(Boolean).map(line => {
-        const parts = line.split(':');
-        return { name: parts[0]?.trim(), amount: parts[1]?.trim() || '', unit: '' };
+        const clean = line.replace(/^[-•*]\s*/, '').trim();
+        const parts = clean.split(':');
+        return { name: parts[0]?.trim() || 'Ingredient', amount: parts[1]?.trim() || '', unit: '' };
       });
-      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.trim());
+      const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.replace(/^\d+[\.\)]?\s*/, '').trim());
 
       const specId = editId || ('spec-' + Date.now());
-
       const payload = {
+        id: specId,
         title,
         section: sec,
         category: cat,
+        subCategory,
         baseUnit,
         probeTemp,
         targetTime,
         shelfLife,
-        image: stagedImage || '',
-        color: sec === 'recipes' ? 'bg-amber-500' : (sec === 'sops' ? 'bg-rose-500' : 'bg-emerald-500'),
-        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec' }],
-        steps: parsedSteps.length ? parsedSteps : ['Execute to kitchen standards.'],
+        ingredients: parsedIngredients.length ? parsedIngredients : [{ name: 'Standard Prep', amount: 'As per spec', unit: '' }],
+        steps: parsedSteps.length ? parsedSteps : ['Execute to LULA kitchen standards.'],
         timestamp: Date.now()
       };
+
+      window.specs = (window.specs || []).filter(s => s.id !== specId);
+      window.specs.unshift(payload);
+      saveToStorage(STORAGE_KEYS.specs, window.specs);
 
       if (db) {
         try {
           await db.collection("lula_specs").doc(specId).set(payload, { merge: true });
         } catch (err) {
-          console.warn("Cloud save issue, saving locally:", err);
-          window.specs = window.specs.filter(s => s.id !== specId);
-          window.specs.unshift({ id: specId, ...payload });
-          localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
-          renderCategoryPills();
-          renderCatalog();
+          console.warn("Firestore save fallback used:", err);
         }
-      } else {
-        window.specs = window.specs.filter(s => s.id !== specId);
-        window.specs.unshift({ id: specId, ...payload });
-        localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
-        renderCategoryPills();
-        renderCatalog();
       }
 
       closeImportModal();
-      submitBtn.innerText = 'Save & Broadcast Everywhere';
-      submitBtn.disabled = false;
+      setSection(sec);
+      showToast(editId ? `Updated "${title}".` : `Saved "${title}" to ${cat}.`);
     }
 
     async function deleteCurrentSpec() {
       if (!currentModalSpec) return;
-      if (!confirm(`Delete "${currentModalSpec.title}" across all tablets?`)) return;
+      const deletedId = currentModalSpec.id;
+      const deletedTitle = currentModalSpec.title;
+      window.specs = (window.specs || []).filter(s => s.id !== deletedId);
+      saveToStorage(STORAGE_KEYS.specs, window.specs);
 
       if (db) {
         try {
-          await db.collection("lula_specs").doc(currentModalSpec.id).delete();
+          await db.collection("lula_specs").doc(deletedId).delete();
         } catch (err) {
-          console.warn("Cloud delete failed, deleting locally:", err);
+          console.warn("Firestore delete fallback used:", err);
         }
       }
-      window.specs = window.specs.filter(s => s.id !== currentModalSpec.id);
-      localStorage.setItem('lula_local_specs', JSON.stringify(window.specs));
+
       closeDetailModal();
       renderCategoryPills();
-      renderCatalog();
+      renderActiveView();
+      showToast(`Removed "${deletedTitle}".`);
+    }
+
+    function init() {
+      managerPin = '1404';
+      localStorage.setItem(STORAGE_KEYS.pin, '1404');
+      const now = new Date();
+      const todayDay = DAYS_OF_WEEK[now.getDay()];
+      const headerDateEl = document.getElementById('live-date-header');
+      if (headerDateEl) {
+        headerDateEl.textContent = `${todayDay}, ${now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} • Greetland`;
+      }
+      initFirebaseSync();
+      renderCategoryPills();
+      renderActiveView();
     }
 
     if (document.readyState === 'loading') {
