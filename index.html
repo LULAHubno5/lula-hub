@@ -1,4 +1,4 @@
-html_code = '''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -179,7 +179,7 @@ html_code = '''<!DOCTYPE html>
           </div>
           <h3 class="text-base font-black uppercase tracking-wide">Recipes</h3>
           <p class="text-xs text-brand-cream/80 mt-1">
-            Kitchen, bakehouse, NYC Cookies &amp; Cookie Pie batch specs.
+            LULA Kitchen &amp; LULA Bakehouse batch specs &amp; scaling.
           </p>
         </button>
 
@@ -210,6 +210,50 @@ html_code = '''<!DOCTYPE html>
           <h3 class="text-base font-black text-brand-forest uppercase tracking-wide">HACCP</h3>
           <p class="text-xs text-brand-forest/75 mt-1">
             Temperature, chill &amp; food safety checks.
+          </p>
+        </button>
+      </div>
+    </section>
+
+    <!-- RECIPES DIVISION LAUNCHER (LULA Kitchen vs. LULA Bakehouse) -->
+    <section id="recipes-hub-view" class="hidden space-y-5">
+      <div class="flex items-center justify-between border-b border-brand-border pb-3 gap-3">
+        <div class="flex items-center gap-3">
+          <button type="button" onclick="setSection('home')" class="px-2.5 py-1.5 rounded-lg bg-brand-forest text-brand-cream text-xs font-bold flex items-center gap-1 hover:bg-brand-rust transition">
+            <i class="ph-bold ph-arrow-left text-xs"></i>
+            <span>Home</span>
+          </button>
+          <div>
+            <p class="lula-tagline text-[10px] font-bold uppercase text-brand-rust">Select Production Division</p>
+            <h2 class="lula-wordmark text-xl sm:text-2xl font-bold uppercase text-brand-forest mt-0.5">Recipes</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl">
+        <button type="button" onclick="setRecipeDivision('kitchen')" class="bg-brand-forest text-brand-cream hover:bg-brand-dark border border-brand-forest rounded-2xl p-6 sm:p-7 text-left shadow-sm hover:shadow-md transition group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-terracotta text-white flex items-center justify-center text-2xl group-hover:scale-105 transition">
+              <i class="ph-bold ph-fork-knife"></i>
+            </div>
+            <span id="kitchen-division-count" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-white/15 text-brand-cream">0 specs</span>
+          </div>
+          <h3 class="text-lg font-black uppercase tracking-wide">LULA Kitchen</h3>
+          <p class="text-xs text-brand-cream/80 mt-1.5 leading-relaxed">
+            Main Recipes, Sauces &amp; Dressings, Bread &amp; Dough, Sides &amp; Garnish, and Specials.
+          </p>
+        </button>
+
+        <button type="button" onclick="setRecipeDivision('bakehouse')" class="bg-white hover:border-brand-terracotta border border-brand-border rounded-2xl p-6 sm:p-7 text-left shadow-xs hover:shadow-md transition group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-cream text-brand-terracotta border border-brand-border flex items-center justify-center text-2xl group-hover:scale-105 transition">
+              <i class="ph-bold ph-cookie"></i>
+            </div>
+            <span id="bakehouse-division-count" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-brand-cream text-brand-rust border border-brand-border">0 specs</span>
+          </div>
+          <h3 class="text-lg font-black text-brand-forest uppercase tracking-wide">LULA Bakehouse</h3>
+          <p class="text-xs text-brand-forest/75 mt-1.5 leading-relaxed">
+            Brownies, Blondies, Cookies, Cookie Pie, Cakes, No Bake, and Pastry.
           </p>
         </button>
       </div>
@@ -820,9 +864,33 @@ html_code = '''<!DOCTYPE html>
     const STORAGE_ZONES = ['Fridges', 'Freezers', 'Dry Store & Chem', 'Barista & Drinks'];
 
     const DEFAULT_CATEGORIES = {
-      recipes: ['Main Recipes', 'Sauces & Dressings', 'Bread & Doughs', 'Bakes', 'NYC Cookies', 'Cookie Pies'],
+      recipes: [
+        'Main Recipes',
+        'Sauces & Dressings',
+        'Bread & Dough',
+        'Sides & Garnish',
+        'Specials',
+        'Brownies',
+        'Blondies',
+        'Cookies',
+        'Cookie Pie',
+        'Cakes',
+        'No Bake',
+        'Pastry'
+      ],
       sops: ['Breakfast', 'Brunch', 'Lunch', 'Sides & Garnishes'],
       barista: ['Espresso & Iced', 'Matcha & Specialty', 'House Syrups & Cold Foams', 'Cocktails & Booze']
+    };
+
+    const RECIPE_DIVISIONS = {
+      kitchen: {
+        label: 'LULA Kitchen',
+        categories: ['Main Recipes', 'Sauces & Dressings', 'Bread & Dough', 'Sides & Garnish', 'Specials']
+      },
+      bakehouse: {
+        label: 'LULA Bakehouse',
+        categories: ['Brownies', 'Blondies', 'Cookies', 'Cookie Pie', 'Cakes', 'No Bake', 'Pastry']
+      }
     };
 
     const DEFAULT_SUPPLIERS = {
@@ -894,6 +962,7 @@ html_code = '''<!DOCTYPE html>
       }
     };
 
+    // Stock lines pre-seeded directly from LULA Master Supplier Purchasing & Order Comparison Sheet
     const DEFAULT_STOCK_ITEMS = [
       {
         id: 'eggs_180',
@@ -1090,7 +1159,8 @@ html_code = '''<!DOCTYPE html>
       id,
       title,
       section: 'recipes',
-      category: 'NYC Cookies',
+      division: 'bakehouse',
+      category: 'Cookies',
       subCategory,
       baseUnit,
       probeTemp: 'Core: 86°C–88°C (Gooey Centre)',
@@ -1110,7 +1180,8 @@ html_code = '''<!DOCTYPE html>
         id: 'nyc-master-base-a',
         title: 'MASTER BASE A — Golden Vanilla NYC Cookie Dough (30L Mixer)',
         section: 'recipes',
-        category: 'NYC Cookies',
+        division: 'bakehouse',
+        category: 'Cookies',
         subCategory: '0. Master Bases (30L Mixer)',
         baseUnit: '60 Cookies (~8,740g → 4x 2,175g Tubs)',
         probeTemp: 'Dough Temp <18°C (Cold Cubed Butter)',
@@ -1141,7 +1212,8 @@ html_code = '''<!DOCTYPE html>
         id: 'nyc-master-base-b',
         title: 'MASTER BASE B — Dark Cocoa NYC Cookie Dough (30L Mixer)',
         section: 'recipes',
-        category: 'NYC Cookies',
+        division: 'bakehouse',
+        category: 'Cookies',
         subCategory: '0. Master Bases (30L Mixer)',
         baseUnit: '60 Cookies (~8,740g → 4x 2,175g Tubs)',
         probeTemp: 'Dough Temp <18°C (Cold Cubed Butter)',
@@ -1173,7 +1245,8 @@ html_code = '''<!DOCTYPE html>
         id: 'nyc-master-base-c',
         title: 'MASTER BASE C — Red Velvet NYC Cookie Dough (30L Mixer)',
         section: 'recipes',
-        category: 'NYC Cookies',
+        division: 'bakehouse',
+        category: 'Cookies',
         subCategory: '0. Master Bases (30L Mixer)',
         baseUnit: '60 Cookies (~8,770g → 4x 2,175g Tubs)',
         probeTemp: 'Dough Temp <18°C (Cold Cubed Butter)',
@@ -1206,7 +1279,8 @@ html_code = '''<!DOCTYPE html>
         id: 'nyc-master-base-d',
         title: 'MASTER BASE D — Spiced Pumpkin & Ginger NYC Dough (30L Mixer)',
         section: 'recipes',
-        category: 'NYC Cookies',
+        division: 'bakehouse',
+        category: 'Cookies',
         subCategory: '0. Master Bases (30L Mixer)',
         baseUnit: '60 Cookies (~8,940g → 4x 2,235g Tubs)',
         probeTemp: 'Dough Temp <18°C (Blotted Pumpkin)',
@@ -1243,7 +1317,8 @@ html_code = '''<!DOCTYPE html>
         id: 'cookie-pie-master-base',
         title: 'MASTER COOKIE PIE BASE DOUGH (1x Pan / Scale 4x for 30L Mixer)',
         section: 'recipes',
-        category: 'Cookie Pies',
+        division: 'bakehouse',
+        category: 'Cookie Pie',
         subCategory: '0. Master Cookie Pie Base',
         baseUnit: '1x MasterClass Pan 35x24x5cm (~2.50kg Dough / 12 Slices)',
         probeTemp: 'Overnight Chill Mandatory Before Slicing',
@@ -1275,7 +1350,8 @@ html_code = '''<!DOCTYPE html>
         id: 'cookie-pie-nutella-bueno',
         title: 'Nutella & Kinder Bueno Cookie Pie (1x Pan Filling)',
         section: 'recipes',
-        category: 'Cookie Pies',
+        division: 'bakehouse',
+        category: 'Cookie Pie',
         subCategory: 'Cookie Pie Flavours',
         baseUnit: '1x MasterClass Pan (12 Slices)',
         probeTemp: 'Service Flash: 180°C for 90s',
@@ -1298,7 +1374,8 @@ html_code = '''<!DOCTYPE html>
         id: 'cookie-pie-biscoff',
         title: 'Lotus Biscoff Cookie Pie (1x Pan Filling)',
         section: 'recipes',
-        category: 'Cookie Pies',
+        division: 'bakehouse',
+        category: 'Cookie Pie',
         subCategory: 'Cookie Pie Flavours',
         baseUnit: '1x MasterClass Pan (12 Slices)',
         probeTemp: 'Service Flash: 180°C for 90s',
@@ -1320,7 +1397,8 @@ html_code = '''<!DOCTYPE html>
         id: 'cookie-pie-white-choc-pistachio',
         title: 'White Choc Hazelnut & Pistachio Cookie Pie (1x Pan Filling)',
         section: 'recipes',
-        category: 'Cookie Pies',
+        division: 'bakehouse',
+        category: 'Cookie Pie',
         subCategory: 'Cookie Pie Flavours',
         baseUnit: '1x MasterClass Pan (12 Slices)',
         probeTemp: 'Service Flash: 180°C for 90s',
@@ -1342,7 +1420,8 @@ html_code = '''<!DOCTYPE html>
         id: 'cookie-pie-caramel-freddo',
         title: 'Caramel & Cadbury Freddo Cookie Pie (1x Pan Filling)',
         section: 'recipes',
-        category: 'Cookie Pies',
+        division: 'bakehouse',
+        category: 'Cookie Pie',
         subCategory: 'Cookie Pie Flavours',
         baseUnit: '1x MasterClass Pan (12 Slices)',
         probeTemp: 'Service Flash: 180°C for 90s',
@@ -1362,11 +1441,12 @@ html_code = '''<!DOCTYPE html>
         timestamp: 1732200820000
       },
 
-      // ==================== EXISTING KITCHEN, SAUCES, BREADS & BAKES ====================
+      // ==================== EXISTING KITCHEN, SAUCES, BREAD & BAKES ====================
       {
         id: 'sample-granola',
         title: 'Granola (~1.47kg Base Batch)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Main Recipes',
         baseUnit: 'Approx. 1.47kg (per 1x Batch)',
         probeTemp: 'Even Golden Crisp',
@@ -1397,6 +1477,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-lemon-dijon-dressing',
         title: 'House Lemon & Dijon Sandwich Dressing & Finishing Oil',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: '~500ml Emulsion (70–100 Portions @ 5–7ml)',
         probeTemp: 'Cold <5°C / Oil 60°C–65°C Steep',
@@ -1425,6 +1506,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-chilli-lime-dressing',
         title: 'Chilli & Lime Dressing (~1.0L / 1,028g)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: '1.0L Batch (~1,028g)',
         probeTemp: 'Cold Holding <5°C',
@@ -1455,6 +1537,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-house-aioli',
         title: 'House Aioli (~1.0L / 988g)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: '1.0 Litre Batch (~988g)',
         probeTemp: 'Cold Holding <4°C',
@@ -1480,6 +1563,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-house-chilli-oil',
         title: 'House Chilli Oil (500ml Base)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: '500ml Base Batch',
         probeTemp: 'Flash Oil: Strictly 180°C',
@@ -1507,6 +1591,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-nut-free-pesto',
         title: 'Nut-Free Green Pesto (Half Batch)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: '~550g Yield (0.5x Half Batch)',
         probeTemp: 'Toast 180°C / Cool Before Blend',
@@ -1534,6 +1619,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-smoke-maple-glaze',
         title: 'Signature Smoke & Maple Glaze (~1.5kg)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: 'Approx. 1.5kg Yield',
         probeTemp: 'Hold 45°C–50°C / Fat ~50°C',
@@ -1560,6 +1646,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-smokey-harissa',
         title: 'Smokey Harissa Sauce (~3.0L / 3,450g)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         baseUnit: '3,450g (~3.0 Litres)',
         probeTemp: 'Cool Uncovered / Chill <5°C',
@@ -1589,6 +1676,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-shakshuka',
         title: 'Shakshuka Base (Zero-Hob Rational Method)',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Main Recipes',
         baseUnit: '20 Portions (5kg / 1x GN)',
         probeTemp: 'Hold >63°C / Chill <5°C in 90m',
@@ -1619,6 +1707,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-fried-chicken',
         title: 'LULA Fried Chicken',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Main Recipes',
         baseUnit: '5kg Chicken Batch (~6.29kg Marinade + GF Panko)',
         probeTemp: 'Steam Core 65°C → Fry 175–180°C (≥75°C Core)',
@@ -1653,7 +1742,8 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-flatbreads',
         title: 'Par-Baked Flatbreads & Panuozzo Bases',
         section: 'recipes',
-        category: 'Bread & Doughs',
+        division: 'kitchen',
+        category: 'Bread & Dough',
         baseUnit: '12x 130g Balls (~1,560g)',
         probeTemp: 'Target FDT: 23°C–25°C',
         targetTime: 'Lincat Deck Oven 350°C (90s–2m)',
@@ -1677,8 +1767,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-brownies',
         title: 'Fudgy Counter Brownies (Master Bowl)',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'Brownies',
+        division: 'bakehouse',
+        category: 'Brownies',
+        subCategory: '',
         baseUnit: '17–18 Tins (900g/tin)',
         probeTemp: 'Slight centre wobble at 24m',
         targetTime: 'Rational 165°C Dry Heat | 0% Hum | 23–25m',
@@ -1703,6 +1794,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-house-hash-browns',
         title: 'House Hash Browns',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Main Recipes',
         baseUnit: '1x Prep Batch',
         probeTemp: 'Core >75°C / Crisp Golden',
@@ -1722,6 +1814,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-buttermilk-pancakes',
         title: 'Buttermilk Pancakes',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Main Recipes',
         baseUnit: '1x Batter Batch',
         probeTemp: 'Golden both sides',
@@ -1743,8 +1836,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-krispie-slice',
         title: 'Chocolate Orange Rice Krispies & Cookie Dough Slice',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'No-Bake',
+        division: 'bakehouse',
+        category: 'No Bake',
+        subCategory: '',
         baseUnit: '1x Tray / Slab',
         probeTemp: 'Set chilled',
         targetTime: 'No-Bake / Blast Chill Set',
@@ -1764,8 +1858,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-sticky-toffee-pudding',
         title: 'Sticky Toffee Pudding',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'Puddings',
+        division: 'bakehouse',
+        category: 'Pastry',
+        subCategory: 'Puddings & Sponges',
         baseUnit: '1x Gastronorm Batch',
         probeTemp: 'Piping hot through centre',
         targetTime: 'Rational Combi 160°C | 20% Steam | Fan 3 | 32–35 Mins',
@@ -1786,8 +1881,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-honeycomb-shards',
         title: 'Golden Honeycomb Shards',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'No-Bake',
+        division: 'bakehouse',
+        category: 'No Bake',
+        subCategory: '',
         baseUnit: '1x Tray Batch',
         probeTemp: 'Hard crack 149°C–150°C',
         targetTime: '12 Mins Active Prep | 60 Mins Ambient Cool',
@@ -1807,6 +1903,7 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-spiced-mayo',
         title: 'Spiced Mayo',
         section: 'recipes',
+        division: 'kitchen',
         category: 'Sauces & Dressings',
         subCategory: '',
         baseUnit: '~955g (1.0L Batch)',
@@ -1833,7 +1930,8 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-40mm-french-toast',
         title: '40mm French Toast (Prep & Set)',
         section: 'recipes',
-        category: 'Bread & Doughs',
+        division: 'kitchen',
+        category: 'Bread & Dough',
         subCategory: '',
         baseUnit: '4 Loaves',
         probeTemp: 'Core: 74°C Exact',
@@ -1865,7 +1963,8 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-lula-focaccia',
         title: 'LULA Focaccia (3-Tray Batch)',
         section: 'recipes',
-        category: 'Bread & Doughs',
+        division: 'kitchen',
+        category: 'Bread & Dough',
         subCategory: '',
         baseUnit: '3x 1/1 GN Trays',
         probeTemp: 'Internal >94°C / Golden Crust',
@@ -1890,8 +1989,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-biscoff-millionaires',
         title: "Lotus Biscoff Millionaire's Shortbread",
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'No-Bake',
+        division: 'bakehouse',
+        category: 'No Bake',
+        subCategory: '',
         baseUnit: '1x MasterClass Deep Tin (16 Slabs / 24 Fingers)',
         probeTemp: 'Set Solid Before Hot-Knife Cut',
         targetTime: 'No-Bake / Induction Caramel 3–4m + 2h Chill',
@@ -1918,8 +2018,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-miso-cornflake-tart',
         title: 'Miso Cornflake Tart (Thick Cut 1.5x)',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'Puddings',
+        division: 'bakehouse',
+        category: 'Pastry',
+        subCategory: 'Tarts',
         baseUnit: '2 Tins (24 Slabs / 32 Fingers)',
         probeTemp: 'Caramel Boil 112°C–114°C',
         targetTime: 'Rational 165°C Dry 22–25m → 155°C Set 8–10m',
@@ -1951,8 +2052,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-giant-cinnamon-rolls',
         title: 'Bakery-Style Giant Cinnamon Rolls (Tangzhong)',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'Loaf Cakes & Sponges',
+        division: 'bakehouse',
+        category: 'Pastry',
+        subCategory: 'Enriched Doughs & Rolls',
         baseUnit: '40 Rolls (5 Tins of 35x25cm)',
         probeTemp: 'Core: 88°C–90°C',
         targetTime: 'Rational Hot Air 165°C | 10% Steam | Fan 3 | 23–26 Mins',
@@ -1990,8 +2092,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-fudgy-blondies',
         title: 'Fudgy Counter Blondies',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'Brownies',
+        division: 'bakehouse',
+        category: 'Blondies',
+        subCategory: '',
         baseUnit: '15–16 Square Slabs (~920g/Tin)',
         probeTemp: 'Glossy Mirror Crust / Fudgy Core',
         targetTime: 'Rational 165°C Dry Heat | 0% Hum | Fan 2–3 | 28–30 Mins',
@@ -2016,8 +2119,9 @@ html_code = '''<!DOCTYPE html>
         id: 'sample-old-school-sponge',
         title: 'Old School Sponge',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'Loaf Cakes & Sponges',
+        division: 'bakehouse',
+        category: 'Cakes',
+        subCategory: '',
         baseUnit: '1x Standard Tin Base (~1.6kg)',
         probeTemp: 'Springy Light/Medium Gold',
         targetTime: 'Rational Sponge Setting | 30–35 Mins',
@@ -2034,14 +2138,15 @@ html_code = '''<!DOCTYPE html>
           'Add eggs, self-raising flour, and vanilla essence; mix on low only until just incorporated (do not overmix).',
           'Transfer to lined tin and bake on Sponge Cake setting for 30–35 mins until light/medium golden and center springs back gently; cool on wire racks before icing and portioning.'
         ],
-        timestamp: 1732100027000
+        timestamp: 1732099994000
       },
       {
         id: 'sample-mars-bar-crispy-slab',
         title: 'Mars Bar Crispy Slab',
         section: 'recipes',
-        category: 'Bakes',
-        subCategory: 'No-Bake',
+        division: 'bakehouse',
+        category: 'No Bake',
+        subCategory: '',
         baseUnit: '1x Deep Tray Slab (16 Portions)',
         probeTemp: 'Set Solid Before Hot-Knife Cut',
         targetTime: 'No-Bake / Induction Melt + 2h Chill',
@@ -2331,6 +2436,7 @@ html_code = '''<!DOCTYPE html>
     let managerPin = '1404';
 
     window.currentSection = 'home';
+    let currentRecipeDivision = null;
     let currentCategory = 'all';
     let searchQuery = '';
     let isManager = false;
@@ -2404,7 +2510,7 @@ html_code = '''<!DOCTYPE html>
                   db.collection("lula_specs").doc(doc.id).delete().catch(() => {});
                   return;
                 }
-                items.push({ id: doc.id, ...doc.data() });
+                items.push(normalizeRecipeCategoryAndDivision({ id: doc.id, ...doc.data() }));
               });
               const existingIds = new Set(items.map(s => s.id));
               const existingTitles = new Set(items.map(s => (s.title || '').trim().toLowerCase()));
@@ -2430,13 +2536,52 @@ html_code = '''<!DOCTYPE html>
       }
     }
 
+    function normalizeRecipeCategoryAndDivision(spec) {
+      if (!spec || spec.section !== 'recipes') return spec;
+      const copy = { ...spec };
+      const catLower = (copy.category || '').trim().toLowerCase();
+      const subLower = (copy.subCategory || '').trim().toLowerCase();
+      const titleLower = (copy.title || '').trim().toLowerCase();
+
+      if (catLower === 'bread & doughs') {
+        copy.category = 'Bread & Dough';
+        copy.division = 'kitchen';
+      } else if (catLower === 'sides & garnishes') {
+        copy.category = 'Sides & Garnish';
+        copy.division = 'kitchen';
+      } else if (catLower === 'nyc cookies') {
+        copy.category = 'Cookies';
+        copy.division = 'bakehouse';
+      } else if (catLower === 'cookie pies') {
+        copy.category = 'Cookie Pie';
+        copy.division = 'bakehouse';
+      } else if (catLower === 'bakes') {
+        copy.division = 'bakehouse';
+        if (subLower === 'brownies' || titleLower.includes('brownie')) {
+          copy.category = 'Brownies';
+          if (subLower === 'brownies') copy.subCategory = '';
+        } else if (subLower === 'blondies' || titleLower.includes('blondie')) {
+          copy.category = 'Blondies';
+          if (subLower === 'blondies') copy.subCategory = '';
+        } else if (subLower === 'no-bake' || subLower === 'no bake' || titleLower.includes('krispie') || titleLower.includes('millionaire') || titleLower.includes('honeycomb') || titleLower.includes('mars bar')) {
+          copy.category = 'No Bake';
+          if (subLower === 'no-bake' || subLower === 'no bake') copy.subCategory = '';
+        } else {
+          copy.category = 'Pastry';
+        }
+      } else if (!copy.division) {
+        copy.division = specMatchesDivision(copy, 'bakehouse') ? 'bakehouse' : 'kitchen';
+      }
+      return copy;
+    }
+
     function mergeMissingSampleSpecsLocally() {
-      const current = (Array.isArray(window.specs) ? [...window.specs] : []).filter(
-        s => !LEGACY_COOKIE_IDS.has(s.id)
-      );
+      const current = (Array.isArray(window.specs) ? [...window.specs] : [])
+        .filter(s => !LEGACY_COOKIE_IDS.has(s.id))
+        .map(normalizeRecipeCategoryAndDivision);
       const byId = new Map(current.map(s => [s.id, s]));
       const existingTitles = new Set(current.map(s => (s.title || '').trim().toLowerCase()));
-      let changed = current.length !== (window.specs || []).length;
+      let changed = true;
 
       const mergedList = Array.from(byId.values());
       SAMPLE_SPECS.forEach(sample => {
@@ -2466,12 +2611,38 @@ html_code = '''<!DOCTYPE html>
       return { num: null, unit: str, isNumber: false };
     }
 
-    function getAllCategoriesForSection(sec) {
+    function getAllCategoriesForSection(sec, division) {
+      if (sec === 'recipes' && division && RECIPE_DIVISIONS[division]) {
+        const divCats = new Set(RECIPE_DIVISIONS[division].categories);
+        (window.specs || []).forEach(s => {
+          if (s.section === 'recipes' && s.category && s.category.trim()) {
+            const catTrim = s.category.trim();
+            if (specMatchesDivision(s, division)) {
+              divCats.add(catTrim);
+            }
+          }
+        });
+        return Array.from(divCats);
+      }
       const set = new Set(DEFAULT_CATEGORIES[sec] || []);
       (window.specs || []).forEach(s => {
         if (s.section === sec && s.category && s.category.trim()) set.add(s.category.trim());
       });
       return Array.from(set);
+    }
+
+    function specMatchesDivision(item, division) {
+      if (!division) return true;
+      const cat = (item.category || '').trim().toLowerCase();
+      const bakeCats = new Set(RECIPE_DIVISIONS.bakehouse.categories.map(c => c.toLowerCase()));
+      const kitchenCats = new Set(RECIPE_DIVISIONS.kitchen.categories.map(c => c.toLowerCase()));
+      if (bakeCats.has(cat)) return division === 'bakehouse';
+      if (kitchenCats.has(cat)) return division === 'kitchen';
+      if (item.division === 'bakehouse' || item.division === 'kitchen') {
+        return item.division === division;
+      }
+      const isBake = /bake|brownie|blondie|cookie|pie|no bake|pastry|cake|tart|sponge|slab/i.test(cat);
+      return division === 'bakehouse' ? isBake : !isBake;
     }
 
     function handleSmartPaste(raw) {
@@ -2546,7 +2717,8 @@ html_code = '''<!DOCTYPE html>
     function updateCategoryDropdown(sectionVal, selectedCategory) {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
-      const subCats = getAllCategoriesForSection(sectionVal);
+      const activeDiv = sectionVal === 'recipes' ? currentRecipeDivision : null;
+      const subCats = getAllCategoriesForSection(sectionVal, activeDiv);
       select.innerHTML = subCats.map(c => `<option value="${c}">${c}</option>`).join('') + `<option value="__custom__">Custom...</option>`;
 
       if (selectedCategory && subCats.includes(selectedCategory)) {
@@ -2659,6 +2831,18 @@ html_code = '''<!DOCTYPE html>
 
     function setSection(sec) {
       window.currentSection = sec;
+      if (sec === 'recipes') {
+        currentRecipeDivision = null;
+      }
+      currentCategory = 'all';
+      updateManagerToolbarButtons();
+      renderCategoryPills();
+      renderActiveView();
+    }
+
+    function setRecipeDivision(div) {
+      window.currentSection = 'recipes';
+      currentRecipeDivision = div;
       currentCategory = 'all';
       updateManagerToolbarButtons();
       renderCategoryPills();
@@ -2675,6 +2859,7 @@ html_code = '''<!DOCTYPE html>
       searchQuery = (val || '').trim().toLowerCase();
       if (window.currentSection === 'home' && searchQuery.length > 0) {
         window.currentSection = 'recipes';
+        currentRecipeDivision = null;
         updateManagerToolbarButtons();
         renderCategoryPills();
       }
@@ -2684,15 +2869,22 @@ html_code = '''<!DOCTYPE html>
     function renderCategoryPills() {
       const wrapper = document.getElementById('category-bar-wrapper');
       const isSpecSection = ['recipes', 'sops', 'barista'].includes(window.currentSection);
-      if (!isSpecSection) {
+      if (!isSpecSection || (window.currentSection === 'recipes' && !currentRecipeDivision && !searchQuery)) {
         wrapper.classList.add('hidden');
         return;
       }
       wrapper.classList.remove('hidden');
 
       const el = document.getElementById('category-pills');
-      const cats = ["All", ...getAllCategoriesForSection(window.currentSection)];
-      el.innerHTML = cats.map(c => `
+      const cats = ["All", ...getAllCategoriesForSection(window.currentSection, currentRecipeDivision)];
+      const divisionToggleHtml = window.currentSection === 'recipes' ? `
+        <div class="flex items-center bg-white border border-brand-border rounded-lg p-0.5 mr-1">
+          <button type="button" onclick="setRecipeDivision('kitchen')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'kitchen' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Kitchen</button>
+          <button type="button" onclick="setRecipeDivision('bakehouse')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'bakehouse' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bakehouse</button>
+        </div>
+      ` : '';
+
+      el.innerHTML = divisionToggleHtml + cats.map(c => `
         <button type="button" onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
           currentCategory === c.toLowerCase() ? 'bg-brand-forest text-brand-cream shadow-2xs' : 'bg-white border border-brand-border text-brand-forest hover:bg-brand-cream'
         }">${c}</button>
@@ -2701,12 +2893,14 @@ html_code = '''<!DOCTYPE html>
 
     function renderActiveView() {
       const homeView = document.getElementById('home-view');
+      const recipesHubView = document.getElementById('recipes-hub-view');
       const catalogView = document.getElementById('catalog-view');
       const stockView = document.getElementById('stock-view');
       const haccpView = document.getElementById('haccp-view');
       const emptyState = document.getElementById('empty-state');
 
       homeView.classList.add('hidden');
+      recipesHubView.classList.add('hidden');
       catalogView.classList.add('hidden');
       stockView.classList.add('hidden');
       haccpView.classList.add('hidden');
@@ -2714,6 +2908,15 @@ html_code = '''<!DOCTYPE html>
 
       if (window.currentSection === 'home') {
         homeView.classList.remove('hidden');
+      } else if (window.currentSection === 'recipes' && !currentRecipeDivision && !searchQuery) {
+        const recipeSpecs = (window.specs || []).filter(s => s.section === 'recipes');
+        const kitchenCount = recipeSpecs.filter(s => specMatchesDivision(s, 'kitchen')).length;
+        const bakehouseCount = recipeSpecs.filter(s => specMatchesDivision(s, 'bakehouse')).length;
+        const kEl = document.getElementById('kitchen-division-count');
+        const bEl = document.getElementById('bakehouse-division-count');
+        if (kEl) kEl.textContent = `${kitchenCount} specs`;
+        if (bEl) bEl.textContent = `${bakehouseCount} specs`;
+        recipesHubView.classList.remove('hidden');
       } else if (window.currentSection === 'stock') {
         stockView.classList.remove('hidden');
         renderStockEngine();
@@ -2731,6 +2934,7 @@ html_code = '''<!DOCTYPE html>
       const empty = document.getElementById('empty-state');
       const items = (window.specs || []).filter(item => {
         if (item.section !== window.currentSection) return false;
+        if (window.currentSection === 'recipes' && currentRecipeDivision && !specMatchesDivision(item, currentRecipeDivision)) return false;
         if (currentCategory !== 'all' && item.category?.toLowerCase() !== currentCategory) return false;
         if (searchQuery && !item.title?.toLowerCase().includes(searchQuery) && !item.category?.toLowerCase().includes(searchQuery) && !item.subCategory?.toLowerCase().includes(searchQuery)) return false;
         return true;
@@ -2779,10 +2983,9 @@ html_code = '''<!DOCTYPE html>
         'Base D (Spiced)',
         'Specialty / GF / Protein',
         'Cookie Pie Flavours',
-        'Brownies',
-        'No-Bake',
-        'Loaf Cakes & Sponges',
-        'Puddings'
+        'Enriched Doughs & Rolls',
+        'Tarts',
+        'Puddings & Sponges'
       ];
 
       const renderGroupedBySubCategory = (groupItems, isInsideAllView) => {
@@ -2847,7 +3050,7 @@ html_code = '''<!DOCTYPE html>
       };
 
       if (currentCategory === 'all') {
-        const orderedCategories = getAllCategoriesForSection(window.currentSection);
+        const orderedCategories = getAllCategoriesForSection(window.currentSection, currentRecipeDivision);
         const groupsHtml = orderedCategories.map(catName => {
           const groupItems = items
             .filter(it => (it.category || '').trim().toLowerCase() === catName.toLowerCase());
@@ -3182,6 +3385,7 @@ html_code = '''<!DOCTYPE html>
       document.getElementById('deliveryWindowSelect').value = stockState.deliveryWindow;
       document.getElementById('bigWalkDaySelect').value = stockState.bigWalkDay;
 
+      // Standing orders
       const standingContainer = document.getElementById('standingOrdersContainer');
       const standingSups = ['rogers', 'milkman'].map(id => stockState.suppliers[id]).filter(Boolean);
       standingContainer.innerHTML = standingSups.map(sup => {
@@ -3205,6 +3409,7 @@ html_code = '''<!DOCTYPE html>
         `;
       }).join('');
 
+      // Supplier baskets & rebalancer
       const baskets = computeSupplierBaskets();
       const anyShortfall = Object.values(baskets).some(b => b.minOrder > 0 && b.shortfall > 0.009);
       const hasMoves = Object.keys(stockState.rebalancedMoves || {}).length > 0;
@@ -3294,6 +3499,7 @@ html_code = '''<!DOCTYPE html>
         `;
       }).join('');
 
+      // Zone pills
       const zones = ['ALL', ...STORAGE_ZONES];
       document.getElementById('zoneFilterPills').innerHTML = zones.map(z => {
         const active = stockState.activeZone === z;
@@ -3316,6 +3522,7 @@ html_code = '''<!DOCTYPE html>
         ? 'Manager Unlocked: Edit Weekday & Weekend Pars directly on any row below'
         : 'Unlock Manager Mode (1404) to edit Weekday & Weekend Pars';
 
+      // Filter and group stock lines
       const filtered = stockState.items.filter(item => {
         if (stockState.countMode === 'quick' && !item.quickCount) return false;
         if (stockState.activeZone !== 'ALL' && item.zone !== stockState.activeZone) return false;
@@ -3705,6 +3912,8 @@ html_code = '''<!DOCTYPE html>
 
     function scaleMethodText(stepText, scale) {
       if (!stepText || scale === 1) return stepText;
+      // Only scale batch ingredient measurements (g, kg, ml, l, pcs, pc, eggs, yolks)
+      // Automatically leaves temperatures (°C), percentages (%), times (mins/s/h), and dimensions (cm/mm) untouched
       return stepText.replace(
         /(^|[\s(\[\/\-–])(\d+(?:\.\d+)?)\s*(kg|g|ml|l|pcs|pc|eggs?|yolks?)(?![a-zA-Z0-9°%])/gi,
         (match, prefix, numStr, unit) => {
@@ -3980,6 +4189,7 @@ html_code = '''<!DOCTYPE html>
         id: specId,
         title,
         section: sec,
+        division: sec === 'recipes' ? (currentRecipeDivision || undefined) : undefined,
         category: cat,
         subCategory,
         baseUnit,
@@ -4006,7 +4216,11 @@ html_code = '''<!DOCTYPE html>
       isSavingSpec = false;
 
       closeImportModal();
-      setSection(sec);
+      if (sec === 'recipes' && currentRecipeDivision) {
+        setRecipeDivision(currentRecipeDivision);
+      } else {
+        setSection(sec);
+      }
       showToast(editId ? `Updated "${title}".` : `Saved "${title}" to ${cat}.`);
     }
 
@@ -4054,9 +4268,4 @@ html_code = '''<!DOCTYPE html>
     }
   </script>
 </body>
-</html>'''
-
-with open("index.html", "w", encoding="utf-8") as f:
-    f.write(html_code)
-
-print("Generated index.html successfully, size:", len(html_code))
+</html>
