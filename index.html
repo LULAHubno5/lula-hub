@@ -179,7 +179,7 @@
           </div>
           <h3 class="text-base font-black uppercase tracking-wide">Recipes</h3>
           <p class="text-xs text-brand-cream/80 mt-1">
-            LULA Kitchen &amp; LULA Bakehouse batch specs &amp; scaling.
+            LULA Kitchen, Bakehouse &amp; Bar batch specs &amp; scaling.
           </p>
         </button>
 
@@ -215,7 +215,7 @@
       </div>
     </section>
 
-    <!-- RECIPES DIVISION LAUNCHER (LULA Kitchen vs. LULA Bakehouse) -->
+    <!-- RECIPES DIVISION LAUNCHER (LULA Kitchen vs. LULA Bakehouse vs. LULA Bar) -->
     <section id="recipes-hub-view" class="hidden space-y-5">
       <div class="flex items-center justify-between border-b border-brand-border pb-3 gap-3">
         <div class="flex items-center gap-3">
@@ -230,7 +230,7 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-4xl">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl">
         <button type="button" onclick="setRecipeDivision('kitchen')" class="bg-brand-forest text-brand-cream hover:bg-brand-dark border border-brand-forest rounded-2xl p-6 sm:p-7 text-left shadow-sm hover:shadow-md transition group">
           <div class="flex items-center justify-between mb-4">
             <div class="w-12 h-12 rounded-xl bg-brand-terracotta text-white flex items-center justify-center text-2xl group-hover:scale-105 transition">
@@ -254,6 +254,19 @@
           <h3 class="text-lg font-black text-brand-forest uppercase tracking-wide">LULA Bakehouse</h3>
           <p class="text-xs text-brand-forest/75 mt-1.5 leading-relaxed">
             Brownies, Blondies, Cookies, Cookie Pie, Cakes, No Bake, and Pastry.
+          </p>
+        </button>
+
+        <button type="button" onclick="setRecipeDivision('bar')" class="bg-white hover:border-brand-terracotta border border-brand-border rounded-2xl p-6 sm:p-7 text-left shadow-xs hover:shadow-md transition group">
+          <div class="flex items-center justify-between mb-4">
+            <div class="w-12 h-12 rounded-xl bg-brand-cream text-brand-forest border border-brand-border flex items-center justify-center text-2xl group-hover:scale-105 transition">
+              <i class="ph-bold ph-coffee"></i>
+            </div>
+            <span id="bar-division-count" class="text-[11px] font-bold px-2.5 py-1 rounded-full bg-brand-cream text-brand-rust border border-brand-border">0 specs</span>
+          </div>
+          <h3 class="text-lg font-black text-brand-forest uppercase tracking-wide">LULA Bar</h3>
+          <p class="text-xs text-brand-forest/75 mt-1.5 leading-relaxed">
+            House Syrups &amp; Cold Foams, Espresso &amp; Iced, Matcha &amp; Specialty, and Cocktails &amp; Booze.
           </p>
         </button>
       </div>
@@ -876,7 +889,11 @@
         'Cookie Pie',
         'Cakes',
         'No Bake',
-        'Pastry'
+        'Pastry',
+        'House Syrups & Cold Foams',
+        'Espresso & Iced',
+        'Matcha & Specialty',
+        'Cocktails & Booze'
       ],
       sops: ['Breakfast', 'Brunch', 'Lunch', 'Sides & Garnishes'],
       barista: ['Espresso & Iced', 'Matcha & Specialty', 'House Syrups & Cold Foams', 'Cocktails & Booze']
@@ -890,6 +907,10 @@
       bakehouse: {
         label: 'LULA Bakehouse',
         categories: ['Brownies', 'Blondies', 'Cookies', 'Cookie Pie', 'Cakes', 'No Bake', 'Pastry']
+      },
+      bar: {
+        label: 'LULA Bar',
+        categories: ['House Syrups & Cold Foams', 'Espresso & Iced', 'Matcha & Specialty', 'Cocktails & Booze']
       }
     };
 
@@ -2537,13 +2558,23 @@
     }
 
     function normalizeRecipeCategoryAndDivision(spec) {
-      if (!spec || spec.section !== 'recipes') return spec;
+      if (!spec) return spec;
       const copy = { ...spec };
+      if (copy.section === 'barista') {
+        copy.section = 'recipes';
+        copy.division = 'bar';
+        if (!copy.category || !copy.category.trim()) {
+          copy.category = 'House Syrups & Cold Foams';
+        }
+      }
+      if (copy.section !== 'recipes') return copy;
       const catLower = (copy.category || '').trim().toLowerCase();
       const subLower = (copy.subCategory || '').trim().toLowerCase();
       const titleLower = (copy.title || '').trim().toLowerCase();
 
-      if (catLower === 'bread & doughs') {
+      if (catLower.includes('syrup') || catLower.includes('foam') || catLower.includes('espresso') || catLower.includes('matcha') || catLower.includes('cocktail') || catLower.includes('booze') || catLower.includes('bar') || catLower.includes('drink')) {
+        copy.division = 'bar';
+      } else if (catLower === 'bread & doughs') {
         copy.category = 'Bread & Dough';
         copy.division = 'kitchen';
       } else if (catLower === 'sides & garnishes') {
@@ -2570,7 +2601,9 @@
           copy.category = 'Pastry';
         }
       } else if (!copy.division) {
-        copy.division = specMatchesDivision(copy, 'bakehouse') ? 'bakehouse' : 'kitchen';
+        if (specMatchesDivision(copy, 'bar')) copy.division = 'bar';
+        else if (specMatchesDivision(copy, 'bakehouse')) copy.division = 'bakehouse';
+        else copy.division = 'kitchen';
       }
       return copy;
     }
@@ -2634,13 +2667,17 @@
     function specMatchesDivision(item, division) {
       if (!division) return true;
       const cat = (item.category || '').trim().toLowerCase();
+      const barCats = new Set(RECIPE_DIVISIONS.bar.categories.map(c => c.toLowerCase()));
       const bakeCats = new Set(RECIPE_DIVISIONS.bakehouse.categories.map(c => c.toLowerCase()));
       const kitchenCats = new Set(RECIPE_DIVISIONS.kitchen.categories.map(c => c.toLowerCase()));
+      if (barCats.has(cat)) return division === 'bar';
       if (bakeCats.has(cat)) return division === 'bakehouse';
       if (kitchenCats.has(cat)) return division === 'kitchen';
-      if (item.division === 'bakehouse' || item.division === 'kitchen') {
+      if (item.division === 'bar' || item.division === 'bakehouse' || item.division === 'kitchen') {
         return item.division === division;
       }
+      const isBar = /syrup|foam|espresso|iced|matcha|cocktail|booze|lemonade|latte|bar|foh|drink/i.test(cat);
+      if (isBar) return division === 'bar';
       const isBake = /bake|brownie|blondie|cookie|pie|no bake|pastry|cake|tart|sponge|slab/i.test(cat);
       return division === 'bakehouse' ? isBake : !isBake;
     }
@@ -2881,6 +2918,7 @@
         <div class="flex items-center bg-white border border-brand-border rounded-lg p-0.5 mr-1">
           <button type="button" onclick="setRecipeDivision('kitchen')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'kitchen' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Kitchen</button>
           <button type="button" onclick="setRecipeDivision('bakehouse')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'bakehouse' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bakehouse</button>
+          <button type="button" onclick="setRecipeDivision('bar')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'bar' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bar</button>
         </div>
       ` : '';
 
@@ -2912,10 +2950,13 @@
         const recipeSpecs = (window.specs || []).filter(s => s.section === 'recipes');
         const kitchenCount = recipeSpecs.filter(s => specMatchesDivision(s, 'kitchen')).length;
         const bakehouseCount = recipeSpecs.filter(s => specMatchesDivision(s, 'bakehouse')).length;
+        const barCount = recipeSpecs.filter(s => specMatchesDivision(s, 'bar')).length;
         const kEl = document.getElementById('kitchen-division-count');
         const bEl = document.getElementById('bakehouse-division-count');
+        const barEl = document.getElementById('bar-division-count');
         if (kEl) kEl.textContent = `${kitchenCount} specs`;
         if (bEl) bEl.textContent = `${bakehouseCount} specs`;
+        if (barEl) barEl.textContent = `${barCount} specs`;
         recipesHubView.classList.remove('hidden');
       } else if (window.currentSection === 'stock') {
         stockView.classList.remove('hidden');
