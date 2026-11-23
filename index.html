@@ -890,13 +890,13 @@
         'Cakes',
         'No Bake',
         'Pastry',
-        'House Syrups & Cold Foams',
+        'House Syrups',
         'Espresso & Iced',
         'Matcha & Specialty',
         'Cocktails & Booze'
       ],
       sops: ['Breakfast', 'Brunch', 'Lunch', 'Sides & Garnishes'],
-      barista: ['Espresso & Iced', 'Matcha & Specialty', 'House Syrups & Cold Foams', 'Cocktails & Booze']
+      barista: ['Espresso & Iced', 'Matcha & Specialty', 'House Syrups', 'Cocktails & Booze']
     };
 
     const RECIPE_DIVISIONS = {
@@ -910,7 +910,7 @@
       },
       bar: {
         label: 'LULA Bar',
-        categories: ['House Syrups & Cold Foams', 'Espresso & Iced', 'Matcha & Specialty', 'Cocktails & Booze']
+        categories: ['House Syrups', 'Espresso & Iced', 'Matcha & Specialty', 'Cocktails & Booze']
       }
     };
 
@@ -983,7 +983,6 @@
       }
     };
 
-    // Stock lines pre-seeded directly from LULA Master Supplier Purchasing & Order Comparison Sheet
     const DEFAULT_STOCK_ITEMS = [
       {
         id: 'eggs_180',
@@ -1128,7 +1127,6 @@
     ];
 
     const NYC_COOKIE_FLAVORS = [
-      // Base A — Golden Vanilla
       ['nyc-choc-chip-callets', 'Chocolate Chip (Callets or Feves) NYC Cookie', 'Base A (Golden)', '15 Cookies (~2,925g total)', 'Base A — Golden Vanilla (1 Tub): 2175g\nDark & Milk Choc Callets/Feves: 675g\nFlaky Sea Salt (Finish): 5g', 'Fold 675g chocolate callets/feves into 2,175g Base A on Speed 1 for 10s. Portion into 15 x ~190g craggy mounds, chill/freeze, and bake at 175°C Dry Heat (Low Fan) for 11–13 mins. Top with flaky sea salt.'],
       ['nyc-og-choc-chip', 'OG Chocolate Chip NYC Cookie', 'Base A (Golden)', '15 Cookies (~2,925g total)', 'Base A — Golden Vanilla (1 Tub): 2175g\nHand-Chopped Dark Choc Chunks: 450g\nMilk Choc Chunks: 225g\nMaldon Sea Salt Flakes: 5g', 'Fold chopped dark and milk chocolate chunks into 2,175g Base A. Portion into 15 x ~190g tall craggy balls, chill/freeze, and bake at 175°C Dry Heat (Low Fan) for 11–13 mins.'],
       ['nyc-brown-butter-cc', 'Brown Butter CC NYC Cookie', 'Base A (Golden)', '15 Cookies (~2,925g total)', 'Base A — Golden Vanilla (1 Tub): 2175g\nToasted Milk Powder (Browned): 45g\nDark Choc Feves (70%): 675g\nMaldon Sea Salt: 5g', 'Toast 45g milk powder in dry pan until golden hazelnut-brown, cool, and fold into 2,175g Base A with 675g dark choc feves. Portion 15 x ~190g balls, chill/freeze, bake 175°C 11–13m.'],
@@ -1150,8 +1148,6 @@
       ['nyc-iced-oatmeal', 'Iced Oatmeal NYC Cookie', 'Base A (Golden)', '15 Cookies (~3,050g total)', 'Base A — Golden Vanilla (1 Tub): 2175g\nRolled Porridge Oats: 375g\nGround Cinnamon & Nutmeg: 12g\nRaisins or White Choc (Optional): 150g\nThick Vanilla Spiced Icing Dip: 330g', 'Fold rolled oats, cinnamon, nutmeg, and optional raisins/white choc into 2,175g Base A. Portion 15 x 180g balls, bake 175°C 11–13m, cool, and dip craggy tops into thick vanilla icing so peaks stay visible.'],
       ['nyc-pecan-pie', 'Pecan Pie NYC Cookie', 'Base A (Golden)', '15 Cookies (~3,180g total)', 'Base A — Golden Vanilla (1 Tub): 2175g\nToasted Pecans (Dough): 300g\nDark Choc Chunks: 225g\nBrown Butter Maple Pecan Filling: 450g\nMaldon Sea Salt: 5g', 'Fold toasted pecans and dark choc chunks into 2,175g Base A, portion 15 x 180g balls, indent center, and bake 175°C 11–13m. Spoon warm brown-butter maple pecan filling into warm center and finish with flaky salt.'],
       ['nyc-matcha-strawberry', 'Matcha Strawberry NYC Cookie', 'Base A (Golden)', '15 Cookies (~3,150g total)', 'Base A — Golden Vanilla (1 Tub): 2175g\nCeremonial / Culinary Matcha Powder: 45g\nStrawberry Cream Cheese Cores (15x 22g): 330g\nWhite Choc Chunks: 450g\nFreeze-Dried Strawberry Dust: 15g', 'Freeze 15 x 22g strawberry-cream cheese cores. Paddle 45g matcha powder into 2,175g Base A until uniform green, then fold in white choc chunks. Wrap 175g dough around frozen core, chill, bake 175°C 11–13m, and dust with strawberry powder.'],
-
-      // Base B — Dark Cocoa
       ['nyc-black-forest', 'Black Forest NYC Cookie', 'Base B (Dark Cocoa)', '15 Cookies (~3,180g total)', 'Base B — Dark Cocoa (1 Tub): 2175g\nHouse Cherry Jam Frozen Cores (15x 22g): 330g\nWhite Choc Chunks: 450g\nDark Choc Chips: 225g', 'Freeze 15 x 22g thick cherry jam cores solid. Fold white choc chunks and dark choc chips into 2,175g Base B. Wrap 190g dough around frozen cherry core, chill, and bake 175°C 11–13m.'],
       ['nyc-tiramisu', 'Tiramisu (Filled) NYC Cookie', 'Base B (Dark Cocoa)', '15 Cookies (~3,225g total)', 'Base B — Dark Cocoa (1 Tub): 2175g\nEspresso Powder (Castroni Fine): 25g\nMascarpone Cream Cores (15x 25g): 375g\nWhite Choc Chips: 375g\nCocoa Powder & Mascarpone Finish: 275g', 'Freeze 15 x 25g sweetened mascarpone cores. Fold espresso powder and white choc chips into 2,175g Base B. Wrap 170g dough around frozen core, chill, bake 175°C 11–13m, cool, pipe mascarpone dollop, and dust heavily with cocoa.'],
       ['nyc-brownie-cookie', 'Brownie NYC Cookie', 'Base B (Dark Cocoa)', '15 Cookies (~3,050g total)', 'Base B — Dark Cocoa (1 Tub): 2175g\nDark Choc Chunks (70%): 450g\nMilk Choc Chunks: 225g\nSalted Caramel Drizzle: 180g\nFlaky Sea Salt: 5g', 'Fold dark and milk chocolate chunks into 2,175g Base B. Portion 15 x 190g craggy balls, chill/freeze, bake at 175°C for 10–12m (pull slightly underbaked for fudgy brownie center), and drizzle with salted caramel & sea salt.'],
@@ -1160,18 +1156,12 @@
       ['nyc-og-cookies-cream', 'OG Cookies & Cream NYC Cookie', 'Base B (Dark Cocoa)', '15 Cookies (~3,100g total)', 'Base B — Dark Cocoa (1 Tub): 2175g\nCrushed Sandwich Cookies: 450g\nWhite Choc Chunks: 375g\nMilk Choc Chips: 150g', 'Fold crushed sandwich cookies, white choc chunks, and milk choc chips into 2,175g Base B. Portion 15 x 195g craggy balls, chill/freeze, and bake 175°C 11–13m.'],
       ['nyc-dulce-pecan-brownie', 'Dulce Pecan Brownie NYC Cookie', 'Base B (Dark Cocoa)', '15 Cookies (~3,225g total)', 'Base B — Dark Cocoa (1 Tub): 2175g\nDulce de Leche Frozen Cores (15x 22g): 330g\nToasted Pecan Halves: 300g\nDark Choc Chunks: 375g\nFlaky Sea Salt: 5g', 'Freeze 15 x 22g dulce de leche cores solid. Fold toasted pecans and dark choc chunks into 2,175g Base B. Wrap 190g dough around frozen core, chill, bake 175°C 11–13m, and finish with flaky sea salt.'],
       ['nyc-choc-peanut-butter', 'Chocolate Peanut Butter NYC Cookie', 'Base B (Dark Cocoa)', '15 Cookies (~3,225g total)', 'Base B — Dark Cocoa (1 Tub): 2175g\nSmooth Peanut Butter Frozen Cores (15x 22g): 330g\nPeanut Butter Chips / Chopped Reeses: 375g\nDark Choc Chips: 300g', 'Freeze 15 x 22g peanut butter cores solid. Fold peanut butter chips/Reese cups and dark choc chips into 2,175g Base B. Wrap 190g dough around frozen core, chill, and bake 175°C 11–13m.'],
-
-      // Base C — Red Velvet
       ['nyc-red-velvet-monster', 'Red Velvet Cookie Monster', 'Base C (Red Velvet)', '15 Cookies (~3,350g total)', 'Base C — Red Velvet (1 Tub): 2175g\nRaw Choc Chip Cookie Dough Cores (15x 30g): 450g\nWhite Choc Chips: 375g\nDark Choc Chunks: 300g', 'Scoop 15 x 30g balls of Base A choc-chip dough and freeze solid. Fold white & dark choc chunks into 2,175g Base C. Wrap 190g Red Velvet dough around each frozen cookie-dough core, chill, and bake 175°C 11–13m.'],
       ['nyc-red-velvet-og', 'Red Velvet NYC Cookie', 'Base C (Red Velvet)', '15 Cookies (~3,150g total)', 'Base C — Red Velvet (1 Tub): 2175g\nCream Cheese Frosting Cores (15x 22g): 330g\nWhite Choc Chunks: 525g', 'Freeze 15 x 22g sweet cream cheese cores solid. Fold 525g white choc chunks into 2,175g Base C. Wrap 180g dough around each frozen cheesecake core, chill, and bake 175°C 11–13m.'],
-
-      // Base D — Spiced Pumpkin & Gingerbread
       ['nyc-brown-butter-pumpkin-cinn', 'Brown Butter Pumpkin Cinnamon Roll NYC Cookie', 'Base D (Spiced)', '15 Cookies (~3,180g total)', 'Base D — Spiced Pumpkin & Ginger (1 Tub): 2175g\nCinnamon Brown Sugar Paste: 250g\nWhite Choc Chips: 300g\nVanilla Cream Cheese Glaze: 450g', 'Fold white choc chips into 2,175g Base D and ripple cinnamon brown sugar paste through dough. Portion 15 x 180g balls, bake 175°C 11–13m, and glaze with vanilla cream cheese icing.'],
       ['nyc-caramel-cheesecake-ginger', 'Caramel Cheesecake Gingerbread NYC Cookie', 'Base D (Spiced)', '15 Cookies (~3,225g total)', 'Base D — Spiced Pumpkin & Ginger (1 Tub): 2175g\nGround Ginger & Molasses Boost: 40g\nCream Cheese Frozen Cores (15x 22g): 330g\nWhite Choc Chips: 375g\nSalted Caramel Drizzle: 225g', 'Freeze 15 x 22g cream cheese cores. Fold extra ginger, molasses, and white choc chips into 2,175g Base D. Wrap 175g dough around frozen core, chill, bake 175°C 11–13m, and drizzle salted caramel.'],
       ['nyc-choco-pumpkin-flan', 'Choco-Pumpkin Flan NYC Cookie', 'Base D (Spiced)', '15 Cookies (~3,300g total)', 'Base D — Spiced Pumpkin & Ginger (1 Tub): 2175g\nDark Cocoa Powder Boost: 90g\nDark Choc Chips: 375g\nSet Caramel Flan Custard Rounds (15pc): 600g', 'Paddle 90g dark cocoa and 375g dark choc chips into 2,175g Base D. Portion 15 x 175g balls, press flat well in center, bake 175°C 11–13m, cool, and top with chilled caramel flan custard round.'],
       ['nyc-salted-caramel-pumpkin', 'Salted Caramel Pumpkin Cheesecake NYC Cookie', 'Base D (Spiced)', '15 Cookies (~3,225g total)', 'Base D — Spiced Pumpkin & Ginger (1 Tub): 2175g\nCream Cheese Frozen Cores (15x 22g): 330g\nWhite Choc Chips: 375g\nSalted Caramel + Maldon Salt Finish: 225g', 'Freeze 15 x 22g cream cheese cores. Fold white choc chips into 2,175g Base D, wrap 175g dough around frozen core, chill, bake 175°C 11–13m, and finish with salted caramel drizzle & flaky sea salt.'],
-
-      // Dedicated Specialty Formulas (Outliers)
       ['nyc-protein-double-choc', 'Protein Double Chocolate Chip NYC Cookie (Standalone)', 'Specialty / GF / Protein', '15 Cookies (~2,700g total)', 'Oat Flour (Blended Fine): 900g\nChocolate Whey/Casein Blend: 450g\nDark Cocoa Powder: 120g\nCoconut Oil / Unsalted Butter: 360g\nLight Brown Sugar / Sweetener: 375g\nWhole Eggs (5 pcs): 275g\nDark Choc Chips: 450g\nBaking Powder & Sea Salt: 18g', 'Cream fat and sugar, beat in eggs, then fold in oat flour, protein powder, cocoa, baking powder, salt, and dark choc chips (do not overmix or protein toughens). Portion 15 x 175g balls, chill 30m, and bake 170°C Dry Heat for 10–11m.'],
       ['nyc-protein-choc-chip', 'Protein Chocolate Chip NYC Cookie (Standalone)', 'Specialty / GF / Protein', '15 Cookies (~2,700g total)', 'Oat Flour (Blended Fine): 975g\nVanilla Whey/Casein Blend: 450g\nUnsalted Butter (Softened): 360g\nLight Brown Sugar: 375g\nWhole Eggs (5 pcs): 275g\nDark & Milk Choc Chips: 450g\nVanilla Paste, Baking Powder & Salt: 25g', 'Cream butter and sugar, beat in eggs and vanilla, then fold in oat flour, vanilla protein powder, baking powder, salt, and choc chips. Portion 15 x 175g balls, chill 30m, and bake 170°C Dry Heat for 10–11m.'],
       ['nyc-gf-choc-chip', 'Gluten-Free Chocolate Chip NYC Cookie (Standalone)', 'Specialty / GF / Protein', '15 Cookies (~2,850g total)', 'Doves Farm GF Plain Flour Blend: 1050g\nXanthan Gum: 8g\nCornflour: 60g\nUnsalted Butter (Cold Cubed): 630g\nLight Brown Sugar: 480g\nCaster Sugar: 270g\nWhole Eggs (4 pcs): 220g\nDark & Milk Choc Chunks: 675g\nBicarb, Baking Powder & Sea Salt: 22g', 'Use dedicated clean mixer bowl/paddle to prevent cross-contamination. Cream cold cubed butter and sugars, add eggs, fold in GF flour, xanthan gum, cornflour, leaveners, salt, and choc chunks. Rest dough 60m chilled so GF starches hydrate, portion 15 x 185g balls, bake 175°C 11–13m.'],
@@ -1196,7 +1186,6 @@
     }));
 
     const SAMPLE_SPECS = [
-      // ==================== NYC COOKIES: MASTER BASES (PINNED AT TOP) ====================
       {
         id: 'nyc-master-base-a',
         title: 'MASTER BASE A — Golden Vanilla NYC Cookie Dough (30L Mixer)',
@@ -1332,8 +1321,6 @@
         timestamp: 1732200870000
       },
       ...NYC_COOKIE_FLAVORS,
-
-      // ==================== COOKIE PIES: MASTER BASE + FILLINGS ====================
       {
         id: 'cookie-pie-master-base',
         title: 'MASTER COOKIE PIE BASE DOUGH (1x Pan / Scale 4x for 30L Mixer)',
@@ -1461,8 +1448,6 @@
         ],
         timestamp: 1732200820000
       },
-
-      // ==================== EXISTING KITCHEN, SAUCES, BREAD & BAKES ====================
       {
         id: 'sample-granola',
         title: 'Granola (~1.47kg Base Batch)',
@@ -1881,7 +1866,7 @@
         section: 'recipes',
         division: 'bakehouse',
         category: 'Pastry',
-        subCategory: 'Puddings & Sponges',
+        subCategory: '',
         baseUnit: '1x Gastronorm Batch',
         probeTemp: 'Piping hot through centre',
         targetTime: 'Rational Combi 160°C | 20% Steam | Fan 3 | 32–35 Mins',
@@ -2041,7 +2026,7 @@
         section: 'recipes',
         division: 'bakehouse',
         category: 'Pastry',
-        subCategory: 'Tarts',
+        subCategory: '',
         baseUnit: '2 Tins (24 Slabs / 32 Fingers)',
         probeTemp: 'Caramel Boil 112°C–114°C',
         targetTime: 'Rational 165°C Dry 22–25m → 155°C Set 8–10m',
@@ -2075,7 +2060,7 @@
         section: 'recipes',
         division: 'bakehouse',
         category: 'Pastry',
-        subCategory: 'Enriched Doughs & Rolls',
+        subCategory: '',
         baseUnit: '40 Rolls (5 Tins of 35x25cm)',
         probeTemp: 'Core: 88°C–90°C',
         targetTime: 'Rational Hot Air 165°C | 10% Steam | Fan 3 | 23–26 Mins',
@@ -2159,7 +2144,7 @@
           'Add eggs, self-raising flour, and vanilla essence; mix on low only until just incorporated (do not overmix).',
           'Transfer to lined tin and bake on Sponge Cake setting for 30–35 mins until light/medium golden and center springs back gently; cool on wire racks before icing and portioning.'
         ],
-        timestamp: 1732099994000
+        timestamp: 1732100027000
       },
       {
         id: 'sample-mars-bar-crispy-slab',
@@ -2190,8 +2175,9 @@
       {
         id: 'sample-brownie-batter-syrup',
         title: 'Brownie Batter Iced Latte & Syrup Base',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '~480ml (~15 Servings @ 30ml)',
         probeTemp: 'Simmer 85°C Flour Cook-Out',
@@ -2214,8 +2200,9 @@
       {
         id: 'sample-vanilla-bean-syrup',
         title: 'Vanilla Bean Syrup',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '2000ml (2.0L Yield)',
         probeTemp: 'Pull Immediately When Clear',
@@ -2237,8 +2224,9 @@
       {
         id: 'sample-strawberry-fruit-mix',
         title: 'Strawberry "Fruit Mix" Syrup (GF / Vegan)',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '~1.8kg (~60 Portions @ 30ml)',
         probeTemp: 'Immediate Ice Bath Shock',
@@ -2261,8 +2249,9 @@
       {
         id: 'sample-blueberry-fruit-mix',
         title: 'Blueberry "Fruit Mix" Syrup',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '~1.8kg (~60 Portions @ 30ml)',
         probeTemp: 'Immediate Ice Bath Shock',
@@ -2286,8 +2275,9 @@
       {
         id: 'sample-cloudy-lemonade-syrup',
         title: 'Cloudy Lemonade Syrup Base',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '~3.5 Litres',
         probeTemp: 'Ice Bath <5°C Before Sealing',
@@ -2310,8 +2300,9 @@
       {
         id: 'sample-house-cherry-syrup',
         title: 'House Cherry Syrup Base',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '~1.0L Base Syrup',
         probeTemp: 'Reduce Volume by 25%',
@@ -2333,8 +2324,9 @@
       {
         id: 'sample-raspberry-lemonade-concentrate',
         title: 'Raspberry Lemonade Concentrate',
-        section: 'barista',
-        category: 'House Syrups & Cold Foams',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
         subCategory: '',
         baseUnit: '~3.2L Concentrate (60–64 Servings)',
         probeTemp: 'Blast Chill / Ice Bath <5°C',
@@ -2354,6 +2346,37 @@
           'Pass through fine chinois into warm syrup, whisk in 15g citric acid, ice-bath chill <5°C, and decant into 1L squeeze bottles.'
         ],
         timestamp: 1732100035000
+      },
+      {
+        id: 'sample-house-apple-pie-syrup',
+        title: 'House Apple Pie Syrup',
+        section: 'recipes',
+        division: 'bar',
+        category: 'House Syrups',
+        subCategory: '',
+        baseUnit: '50 Portions / 1000ml Finished Prep (20ml Portion)',
+        probeTemp: 'Cool <60°C before vanilla & lemon | £0.06/portion (82.8% GP)',
+        targetTime: 'Simmer 3m | Strain through Chinois',
+        shelfLife: '21 Days Chilled in Bar Fridge (≤5°C FIFO)',
+        ingredients: [
+          { name: 'Pure Pressed Cloudy Apple Juice (Base)', amount: '750ml', unit: '' },
+          { name: 'Soft Light Brown Sugar (Sweetener)', amount: '650g', unit: '' },
+          { name: 'Caster Sugar (Sweetener)', amount: '150g', unit: '' },
+          { name: 'Ground Cinnamon (Spice Infusion)', amount: '8g', unit: '' },
+          { name: 'Ground Nutmeg (Spice Infusion)', amount: '2g', unit: '' },
+          { name: 'Ground Allspice (Spice Infusion)', amount: '2g', unit: '' },
+          { name: 'Vanilla Bean Paste (Off-Heat Infusion)', amount: '10g', unit: '' },
+          { name: 'Fresh Lemon Juice (Off-Heat Balance)', amount: '25ml', unit: '' },
+          { name: 'Fine Sea Salt (Flavour Balance)', amount: '1g', unit: '' }
+        ],
+        steps: [
+          'Dissolve Base: Combine 750ml pure pressed cloudy apple juice, 650g soft light brown sugar, 150g caster sugar, 8g ground cinnamon, 2g ground nutmeg, 2g ground allspice, and 1g fine sea salt in a medium saucepan over medium heat, whisking until sugar fully dissolves.',
+          'Gentle Simmer: Bring to a gentle simmer for 3 minutes to infuse the spices and lightly concentrate the apple base without boiling hard.',
+          'Strain and Finish Off-Heat: Pass the hot syrup through a fine-mesh chinois into a clean heatproof jug to trap spice sediment so pump nozzles stay clear, allow to cool below 60°C (approx 8 to 10 minutes), then whisk in 10g vanilla bean paste and 25ml fresh lemon juice.',
+          'Pass Service Build: Dispense 20ml (approx 2.5 pumps) apple pie syrup into the base of an 8oz or 10oz cup, add chai base, top with steamed milk, and finish with a light dusting of ground cinnamon.',
+          'HACCP and Allergen Controls: Allergens: None (check spice and vanilla labels for sulphites). Cool rapidly, funnel into a sanitised 1L glass bottle, label with prep date and plus 21 day expiry, and store chilled at or below 5°C.'
+        ],
+        timestamp: 1732100045000
       },
       {
         id: 'sample-sop-pass',
@@ -2383,6 +2406,63 @@
       { id: 'hc-3', label: 'FIFO Date-Dot & Allergen Labelling Check', done: false },
       { id: 'hc-4', label: 'Rational Combi & Line Sanitizer / Chem Check', done: false }
     ];
+
+    function normalizeRecipeCategoryAndDivision(spec) {
+      if (!spec) return spec;
+      const copy = { ...spec };
+      if (copy.section === 'barista') {
+        copy.section = 'recipes';
+        copy.division = 'bar';
+        if (!copy.category || !copy.category.trim()) {
+          copy.category = 'House Syrups';
+        }
+      }
+      if (copy.section !== 'recipes') return copy;
+      const catLower = (copy.category || '').trim().toLowerCase();
+      const subLower = (copy.subCategory || '').trim().toLowerCase();
+      const titleLower = (copy.title || '').trim().toLowerCase();
+
+      if (catLower === 'house syrups & cold foams') {
+        copy.category = 'House Syrups';
+        copy.division = 'bar';
+      } else if (catLower.includes('syrup') || catLower.includes('foam') || catLower.includes('espresso') || catLower.includes('matcha') || catLower.includes('cocktail') || catLower.includes('booze') || catLower.includes('bar') || catLower.includes('drink')) {
+        copy.division = 'bar';
+      } else if (catLower === 'bread & doughs') {
+        copy.category = 'Bread & Dough';
+        copy.division = 'kitchen';
+      } else if (catLower === 'nyc cookies') {
+        copy.category = 'Cookies';
+        copy.division = 'bakehouse';
+      } else if (catLower === 'cookie pies') {
+        copy.category = 'Cookie Pie';
+        copy.division = 'bakehouse';
+      } else if (catLower === 'bakes') {
+        copy.division = 'bakehouse';
+        if (subLower === 'brownies' || titleLower.includes('brownie')) {
+          copy.category = 'Brownies';
+          if (subLower === 'brownies') copy.subCategory = '';
+        } else if (subLower === 'blondies' || titleLower.includes('blondie')) {
+          copy.category = 'Blondies';
+          if (subLower === 'blondies') copy.subCategory = '';
+        } else if (subLower === 'no-bake' || subLower === 'no bake' || titleLower.includes('millionaire') || titleLower.includes('krispie') || titleLower.includes('mars bar') || titleLower.includes('honeycomb')) {
+          copy.category = 'No Bake';
+          if (subLower === 'no-bake' || subLower === 'no bake') copy.subCategory = '';
+        } else if (titleLower.includes('sponge') || titleLower.includes('cake')) {
+          copy.category = 'Cakes';
+        } else {
+          copy.category = 'Pastry';
+          if (subLower === 'loaf cakes & sponges' || subLower === 'puddings') copy.subCategory = '';
+        }
+      }
+
+      if (!copy.division) {
+        const finalCat = (copy.category || '').trim().toLowerCase();
+        const isBakehouse = RECIPE_DIVISIONS.bakehouse.categories.some(c => c.toLowerCase() === finalCat);
+        const isBar = RECIPE_DIVISIONS.bar.categories.some(c => c.toLowerCase() === finalCat);
+        copy.division = isBakehouse ? 'bakehouse' : (isBar ? 'bar' : 'kitchen');
+      }
+      return copy;
+    }
 
     function createDefaultStockState() {
       const todayName = DAYS_OF_WEEK[new Date().getDay()];
@@ -2450,8 +2530,7 @@
       }
     }
 
-    // Global State
-    window.specs = loadFromStorage(STORAGE_KEYS.specs, SAMPLE_SPECS);
+    window.specs = loadFromStorage(STORAGE_KEYS.specs, SAMPLE_SPECS).map(normalizeRecipeCategoryAndDivision);
     let stockState = loadStockState();
     let haccpChecks = loadFromStorage(STORAGE_KEYS.haccp, SAMPLE_HACCP);
     let managerPin = '1404';
@@ -2490,10 +2569,8 @@
       }, 3600);
     }
 
-    // Legacy IDs replaced by the new NYC Cookies & Cookie Pies architecture
     const LEGACY_COOKIE_IDS = new Set(['sample-cookie-dough', 'sample-cookie-pie-base']);
 
-    // Firebase Sync for Specs & Shared Manager PIN (1404 default across all devices)
     function initFirebaseSync() {
       try {
         const firebaseConfig = {
@@ -2531,7 +2608,11 @@
                   db.collection("lula_specs").doc(doc.id).delete().catch(() => {});
                   return;
                 }
-                items.push(normalizeRecipeCategoryAndDivision({ id: doc.id, ...doc.data() }));
+                const normalized = normalizeRecipeCategoryAndDivision({ id: doc.id, ...doc.data() });
+                items.push(normalized);
+                if (normalized.division !== doc.data().division || normalized.category !== doc.data().category) {
+                  db.collection("lula_specs").doc(doc.id).set(normalized, { merge: true }).catch(() => {});
+                }
               });
               const existingIds = new Set(items.map(s => s.id));
               const existingTitles = new Set(items.map(s => (s.title || '').trim().toLowerCase()));
@@ -2557,59 +2638,8 @@
       }
     }
 
-    function normalizeRecipeCategoryAndDivision(spec) {
-      if (!spec) return spec;
-      const copy = { ...spec };
-      if (copy.section === 'barista') {
-        copy.section = 'recipes';
-        copy.division = 'bar';
-        if (!copy.category || !copy.category.trim()) {
-          copy.category = 'House Syrups & Cold Foams';
-        }
-      }
-      if (copy.section !== 'recipes') return copy;
-      const catLower = (copy.category || '').trim().toLowerCase();
-      const subLower = (copy.subCategory || '').trim().toLowerCase();
-      const titleLower = (copy.title || '').trim().toLowerCase();
-
-      if (catLower.includes('syrup') || catLower.includes('foam') || catLower.includes('espresso') || catLower.includes('matcha') || catLower.includes('cocktail') || catLower.includes('booze') || catLower.includes('bar') || catLower.includes('drink')) {
-        copy.division = 'bar';
-      } else if (catLower === 'bread & doughs') {
-        copy.category = 'Bread & Dough';
-        copy.division = 'kitchen';
-      } else if (catLower === 'sides & garnishes') {
-        copy.category = 'Sides & Garnish';
-        copy.division = 'kitchen';
-      } else if (catLower === 'nyc cookies') {
-        copy.category = 'Cookies';
-        copy.division = 'bakehouse';
-      } else if (catLower === 'cookie pies') {
-        copy.category = 'Cookie Pie';
-        copy.division = 'bakehouse';
-      } else if (catLower === 'bakes') {
-        copy.division = 'bakehouse';
-        if (subLower === 'brownies' || titleLower.includes('brownie')) {
-          copy.category = 'Brownies';
-          if (subLower === 'brownies') copy.subCategory = '';
-        } else if (subLower === 'blondies' || titleLower.includes('blondie')) {
-          copy.category = 'Blondies';
-          if (subLower === 'blondies') copy.subCategory = '';
-        } else if (subLower === 'no-bake' || subLower === 'no bake' || titleLower.includes('krispie') || titleLower.includes('millionaire') || titleLower.includes('honeycomb') || titleLower.includes('mars bar')) {
-          copy.category = 'No Bake';
-          if (subLower === 'no-bake' || subLower === 'no bake') copy.subCategory = '';
-        } else {
-          copy.category = 'Pastry';
-        }
-      } else if (!copy.division) {
-        if (specMatchesDivision(copy, 'bar')) copy.division = 'bar';
-        else if (specMatchesDivision(copy, 'bakehouse')) copy.division = 'bakehouse';
-        else copy.division = 'kitchen';
-      }
-      return copy;
-    }
-
     function mergeMissingSampleSpecsLocally() {
-      const current = (Array.isArray(window.specs) ? [...window.specs] : [])
+      const current = (Array.isArray(window.specs) ? window.specs : [])
         .filter(s => !LEGACY_COOKIE_IDS.has(s.id))
         .map(normalizeRecipeCategoryAndDivision);
       const byId = new Map(current.map(s => [s.id, s]));
@@ -2644,42 +2674,41 @@
       return { num: null, unit: str, isNumber: false };
     }
 
-    function getAllCategoriesForSection(sec, division) {
-      if (sec === 'recipes' && division && RECIPE_DIVISIONS[division]) {
-        const divCats = new Set(RECIPE_DIVISIONS[division].categories);
-        (window.specs || []).forEach(s => {
-          if (s.section === 'recipes' && s.category && s.category.trim()) {
-            const catTrim = s.category.trim();
-            if (specMatchesDivision(s, division)) {
-              divCats.add(catTrim);
+    function specMatchesDivision(spec, division) {
+      if (!division) return true;
+      const specDiv = spec.division;
+      if (specDiv) return specDiv === division;
+      const catLower = (spec.category || '').trim().toLowerCase();
+      const isBake = RECIPE_DIVISIONS.bakehouse.categories.some(c => c.toLowerCase() === catLower);
+      const isBar = RECIPE_DIVISIONS.bar.categories.some(c => c.toLowerCase() === catLower);
+      if (division === 'bakehouse') return isBake;
+      if (division === 'bar') return isBar;
+      return !isBake && !isBar;
+    }
+
+    function getAllCategoriesForSection(sec, divisionOverride) {
+      if (sec === 'recipes') {
+        const div = divisionOverride || currentRecipeDivision;
+        if (div && RECIPE_DIVISIONS[div]) {
+          const baseCats = [...RECIPE_DIVISIONS[div].categories];
+          const baseLower = new Set(baseCats.map(c => c.toLowerCase()));
+          (window.specs || []).forEach(s => {
+            if (s.section === 'recipes' && specMatchesDivision(s, div) && s.category && s.category.trim()) {
+              const trimmed = s.category.trim();
+              if (!baseLower.has(trimmed.toLowerCase())) {
+                baseCats.push(trimmed);
+                baseLower.add(trimmed.toLowerCase());
+              }
             }
-          }
-        });
-        return Array.from(divCats);
+          });
+          return baseCats;
+        }
       }
       const set = new Set(DEFAULT_CATEGORIES[sec] || []);
       (window.specs || []).forEach(s => {
         if (s.section === sec && s.category && s.category.trim()) set.add(s.category.trim());
       });
       return Array.from(set);
-    }
-
-    function specMatchesDivision(item, division) {
-      if (!division) return true;
-      const cat = (item.category || '').trim().toLowerCase();
-      const barCats = new Set(RECIPE_DIVISIONS.bar.categories.map(c => c.toLowerCase()));
-      const bakeCats = new Set(RECIPE_DIVISIONS.bakehouse.categories.map(c => c.toLowerCase()));
-      const kitchenCats = new Set(RECIPE_DIVISIONS.kitchen.categories.map(c => c.toLowerCase()));
-      if (barCats.has(cat)) return division === 'bar';
-      if (bakeCats.has(cat)) return division === 'bakehouse';
-      if (kitchenCats.has(cat)) return division === 'kitchen';
-      if (item.division === 'bar' || item.division === 'bakehouse' || item.division === 'kitchen') {
-        return item.division === division;
-      }
-      const isBar = /syrup|foam|espresso|iced|matcha|cocktail|booze|lemonade|latte|bar|foh|drink/i.test(cat);
-      if (isBar) return division === 'bar';
-      const isBake = /bake|brownie|blondie|cookie|pie|no bake|pastry|cake|tart|sponge|slab/i.test(cat);
-      return division === 'bakehouse' ? isBake : !isBake;
     }
 
     function handleSmartPaste(raw) {
@@ -2699,15 +2728,21 @@
         } else if (line.match(/^Section\s*:\s*/i)) {
           if (isEditingExisting) return;
           let sec = line.replace(/^Section\s*:\s*/i, '').trim().toLowerCase();
-          if (sec.includes('prep') || sec.includes('recipe')) sec = 'recipes';
-          else if (sec.includes('sop') || sec.includes('kitchen')) sec = 'sops';
-          else if (sec.includes('bar') || sec.includes('drink') || sec.includes('barista')) sec = 'barista';
+          if (sec.includes('bar') || sec.includes('drink') || sec.includes('barista')) {
+            sec = 'recipes';
+            currentRecipeDivision = 'bar';
+          } else if (sec.includes('prep') || sec.includes('recipe')) {
+            sec = 'recipes';
+          } else if (sec.includes('sop') || sec.includes('kitchen')) {
+            sec = 'sops';
+          }
           document.getElementById('import-section').value = sec;
           updateCategoryDropdown(sec);
           updateSubCategoryDropdown(sec);
         } else if (line.match(/^Category\s*:\s*/i)) {
           if (isEditingExisting) return;
-          const cat = line.replace(/^Category\s*:\s*/i, '').trim();
+          let cat = line.replace(/^Category\s*:\s*/i, '').trim();
+          if (cat.toLowerCase() === 'house syrups & cold foams') cat = 'House Syrups';
           const sec = document.getElementById('import-section').value;
           updateCategoryDropdown(sec, cat);
           updateSubCategoryDropdown(sec, cat);
@@ -2751,11 +2786,10 @@
       if (stepLines.length) document.getElementById('import-steps').value = stepLines.join('\n');
     }
 
-    function updateCategoryDropdown(sectionVal, selectedCategory) {
+    function updateCategoryDropdown(sectionVal, selectedCategory, divisionOverride) {
       const select = document.getElementById('import-category-select');
       const customInput = document.getElementById('import-category-custom');
-      const activeDiv = sectionVal === 'recipes' ? currentRecipeDivision : null;
-      const subCats = getAllCategoriesForSection(sectionVal, activeDiv);
+      const subCats = getAllCategoriesForSection(sectionVal, divisionOverride);
       select.innerHTML = subCats.map(c => `<option value="${c}">${c}</option>`).join('') + `<option value="__custom__">Custom...</option>`;
 
       if (selectedCategory && subCats.includes(selectedCategory)) {
@@ -2905,24 +2939,26 @@
 
     function renderCategoryPills() {
       const wrapper = document.getElementById('category-bar-wrapper');
-      const isSpecSection = ['recipes', 'sops', 'barista'].includes(window.currentSection);
-      if (!isSpecSection || (window.currentSection === 'recipes' && !currentRecipeDivision && !searchQuery)) {
+      const isSpecSection = (window.currentSection === 'recipes' && Boolean(currentRecipeDivision)) || ['sops', 'barista'].includes(window.currentSection);
+      if (!isSpecSection) {
         wrapper.classList.add('hidden');
         return;
       }
       wrapper.classList.remove('hidden');
 
       const el = document.getElementById('category-pills');
-      const cats = ["All", ...getAllCategoriesForSection(window.currentSection, currentRecipeDivision)];
-      const divisionToggleHtml = window.currentSection === 'recipes' ? `
-        <div class="flex items-center bg-white border border-brand-border rounded-lg p-0.5 mr-1">
-          <button type="button" onclick="setRecipeDivision('kitchen')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'kitchen' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Kitchen</button>
-          <button type="button" onclick="setRecipeDivision('bakehouse')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'bakehouse' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bakehouse</button>
-          <button type="button" onclick="setRecipeDivision('bar')" class="px-2 py-0.5 rounded-md text-[11px] font-black transition ${currentRecipeDivision === 'bar' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bar</button>
+      const cats = ["All", ...getAllCategoriesForSection(window.currentSection)];
+
+      const divisionSwitcherHtml = window.currentSection === 'recipes' ? `
+        <div class="flex items-center bg-white border border-brand-border rounded-full p-0.5 mr-1 shadow-2xs">
+          <button type="button" onclick="setRecipeDivision('kitchen')" class="px-2.5 py-0.5 rounded-full text-[11px] font-black transition ${currentRecipeDivision === 'kitchen' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Kitchen</button>
+          <button type="button" onclick="setRecipeDivision('bakehouse')" class="px-2.5 py-0.5 rounded-full text-[11px] font-black transition ${currentRecipeDivision === 'bakehouse' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bakehouse</button>
+          <button type="button" onclick="setRecipeDivision('bar')" class="px-2.5 py-0.5 rounded-full text-[11px] font-black transition ${currentRecipeDivision === 'bar' ? 'bg-brand-terracotta text-white' : 'text-brand-forest hover:bg-brand-cream'}">Bar</button>
         </div>
+        <span class="h-4 w-px bg-brand-border mr-0.5"></span>
       ` : '';
 
-      el.innerHTML = divisionToggleHtml + cats.map(c => `
+      el.innerHTML = divisionSwitcherHtml + cats.map(c => `
         <button type="button" onclick="setCategory('${c}')" class="px-2.5 py-1 rounded-full text-xs font-bold transition ${
           currentCategory === c.toLowerCase() ? 'bg-brand-forest text-brand-cream shadow-2xs' : 'bg-white border border-brand-border text-brand-forest hover:bg-brand-cream'
         }">${c}</button>
@@ -2969,13 +3005,14 @@
       }
     }
 
-    // Compact clickable list rows with Master Bases pinned at top of NYC Cookies & Cookie Pies
     function renderCatalog() {
       const list = document.getElementById('catalog-view');
       const empty = document.getElementById('empty-state');
       const items = (window.specs || []).filter(item => {
         if (item.section !== window.currentSection) return false;
-        if (window.currentSection === 'recipes' && currentRecipeDivision && !specMatchesDivision(item, currentRecipeDivision)) return false;
+        if (window.currentSection === 'recipes' && currentRecipeDivision && !searchQuery) {
+          if (!specMatchesDivision(item, currentRecipeDivision)) return false;
+        }
         if (currentCategory !== 'all' && item.category?.toLowerCase() !== currentCategory) return false;
         if (searchQuery && !item.title?.toLowerCase().includes(searchQuery) && !item.category?.toLowerCase().includes(searchQuery) && !item.subCategory?.toLowerCase().includes(searchQuery)) return false;
         return true;
@@ -3023,10 +3060,7 @@
         'Base C (Red Velvet)',
         'Base D (Spiced)',
         'Specialty / GF / Protein',
-        'Cookie Pie Flavours',
-        'Enriched Doughs & Rolls',
-        'Tarts',
-        'Puddings & Sponges'
+        'Cookie Pie Flavours'
       ];
 
       const renderGroupedBySubCategory = (groupItems, isInsideAllView) => {
@@ -3091,7 +3125,7 @@
       };
 
       if (currentCategory === 'all') {
-        const orderedCategories = getAllCategoriesForSection(window.currentSection, currentRecipeDivision);
+        const orderedCategories = getAllCategoriesForSection(window.currentSection);
         const groupsHtml = orderedCategories.map(catName => {
           const groupItems = items
             .filter(it => (it.category || '').trim().toLowerCase() === catName.toLowerCase());
@@ -3426,7 +3460,6 @@
       document.getElementById('deliveryWindowSelect').value = stockState.deliveryWindow;
       document.getElementById('bigWalkDaySelect').value = stockState.bigWalkDay;
 
-      // Standing orders
       const standingContainer = document.getElementById('standingOrdersContainer');
       const standingSups = ['rogers', 'milkman'].map(id => stockState.suppliers[id]).filter(Boolean);
       standingContainer.innerHTML = standingSups.map(sup => {
@@ -3450,7 +3483,6 @@
         `;
       }).join('');
 
-      // Supplier baskets & rebalancer
       const baskets = computeSupplierBaskets();
       const anyShortfall = Object.values(baskets).some(b => b.minOrder > 0 && b.shortfall > 0.009);
       const hasMoves = Object.keys(stockState.rebalancedMoves || {}).length > 0;
@@ -3540,7 +3572,6 @@
         `;
       }).join('');
 
-      // Zone pills
       const zones = ['ALL', ...STORAGE_ZONES];
       document.getElementById('zoneFilterPills').innerHTML = zones.map(z => {
         const active = stockState.activeZone === z;
@@ -3563,7 +3594,6 @@
         ? 'Manager Unlocked: Edit Weekday & Weekend Pars directly on any row below'
         : 'Unlock Manager Mode (1404) to edit Weekday & Weekend Pars';
 
-      // Filter and group stock lines
       const filtered = stockState.items.filter(item => {
         if (stockState.countMode === 'quick' && !item.quickCount) return false;
         if (stockState.activeZone !== 'ALL' && item.zone !== stockState.activeZone) return false;
@@ -3953,8 +3983,6 @@
 
     function scaleMethodText(stepText, scale) {
       if (!stepText || scale === 1) return stepText;
-      // Only scale batch ingredient measurements (g, kg, ml, l, pcs, pc, eggs, yolks)
-      // Automatically leaves temperatures (°C), percentages (%), times (mins/s/h), and dimensions (cm/mm) untouched
       return stepText.replace(
         /(^|[\s(\[\/\-–])(\d+(?:\.\d+)?)\s*(kg|g|ml|l|pcs|pc|eggs?|yolks?)(?![a-zA-Z0-9°%])/gi,
         (match, prefix, numStr, unit) => {
@@ -4047,7 +4075,8 @@
 
       const sec = ['recipes', 'sops', 'barista'].includes(currentModalSpec.section) ? currentModalSpec.section : 'recipes';
       document.getElementById('import-section').value = sec;
-      updateCategoryDropdown(sec, currentModalSpec.category);
+      const specDiv = currentModalSpec.division || currentRecipeDivision || undefined;
+      updateCategoryDropdown(sec, currentModalSpec.category, specDiv);
       updateSubCategoryDropdown(sec, currentModalSpec.category, currentModalSpec.subCategory || '');
 
       document.getElementById('import-title').value = currentModalSpec.title || '';
@@ -4226,11 +4255,19 @@
       const parsedSteps = rawSteps.split('\n').filter(Boolean).map(line => line.replace(/^\d+[\.\)]?\s*/, '').trim());
 
       const specId = editId || ('spec-' + Date.now());
+      let resolvedDivision = currentRecipeDivision;
+      if (!resolvedDivision && sec === 'recipes') {
+        const catLow = cat.toLowerCase();
+        const isBake = RECIPE_DIVISIONS.bakehouse.categories.some(c => c.toLowerCase() === catLow);
+        const isBar = RECIPE_DIVISIONS.bar.categories.some(c => c.toLowerCase() === catLow);
+        resolvedDivision = isBake ? 'bakehouse' : (isBar ? 'bar' : 'kitchen');
+      }
+
       const payload = {
         id: specId,
         title,
         section: sec,
-        division: sec === 'recipes' ? (currentRecipeDivision || undefined) : undefined,
+        ...(sec === 'recipes' ? { division: resolvedDivision } : {}),
         category: cat,
         subCategory,
         baseUnit,
@@ -4257,8 +4294,8 @@
       isSavingSpec = false;
 
       closeImportModal();
-      if (sec === 'recipes' && currentRecipeDivision) {
-        setRecipeDivision(currentRecipeDivision);
+      if (sec === 'recipes' && resolvedDivision) {
+        setRecipeDivision(resolvedDivision);
       } else {
         setSection(sec);
       }
